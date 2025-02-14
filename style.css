@@ -1,4 +1,4 @@
-/* Global resets & font styles */
+/* GLOBAL RESETS & BODY */
 * {
   margin: 0;
   padding: 0;
@@ -7,13 +7,20 @@
 
 body {
   font-family: "Arial", sans-serif;
+  background: #F9FAFB;  /* near-white background */
   color: #333;
-  background: #fff;
   line-height: 1.6;
 }
 
-header, nav, footer {
-  background: #f8f8f8;
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* HEADER & NAV */
+header, footer {
+  background: #FAFAFA;
   padding: 1em;
 }
 
@@ -33,18 +40,22 @@ nav a {
   color: #333;
   font-weight: bold;
   padding: 0.2em 0.5em;
+  transition: background 0.2s ease;
 }
 
 nav a:hover {
-  background: #ddd;
+  background: #009688; /* teal */
+  color: #fff;
   border-radius: 4px;
 }
 
 .active {
-  background: #ccc;
+  background: #009688;
+  color: #fff;
   border-radius: 4px;
 }
 
+/* MAIN CONTENT WRAPPER */
 main {
   margin: 1.5em auto;
   max-width: 800px;
@@ -59,35 +70,35 @@ section {
   margin-bottom: 2em;
 }
 
-.interests ul, .portfolio ul, .cv-content ul {
-  list-style: disc;
-  margin-left: 1.5em;
-  margin-bottom: 1em;
+/* PROFILE PIC (HOME PAGE) */
+.profile-pic {
+  max-width: 150px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 1em;
 }
 
-.cta {
-  margin-top: 2em;
-  text-align: center;
-}
-
+/* BUTTON */
 .button {
   display: inline-block;
   padding: 0.7em 1.2em;
-  background: #333;
+  background: #009688; /* teal */
   color: #fff;
   text-decoration: none;
   border-radius: 4px;
+  transition: background 0.2s ease;
 }
 
 .button:hover {
-  background: #555;
+  background: #FF6B6B; /* coral */
+  color: #fff;
 }
 
+/* FOOTER */
 footer {
   text-align: center;
   font-size: 0.9rem;
   padding: 1em 0;
-  background: #FAFAFA; /* If you’re using a light gray or near-white background */
 }
 
 .social-links {
@@ -97,62 +108,14 @@ footer {
 .social-links a {
   margin: 0 0.5em;
   text-decoration: none;
-  color: #333; /* Or your accent color, e.g., #009688 */
+  color: #333;
   font-weight: bold;
 }
-
 .social-links a:hover {
-  color: #009688; /* Hover state can match your accent color */
+  color: #009688;
 }
 
-/* Profile pic styling (Home page) */
-.profile-pic {
-  max-width: 150px;
-  border-radius: 50%;
-  display: block;
-  margin: 0 auto 1em;
-}
-
-/* Portfolio gallery */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1em;
-  margin-top: 1em;
-}
-
-.screenshot {
-  border: 1px solid #ccc;
-  padding: 1em;
-  background-color: #fafafa;
-  border-radius: 4px;
-  transition: box-shadow 0.2s ease-in-out;
-}
-
-.screenshot:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.screenshot img {
-  width: 100%;
-  height: auto;
-  display: block;
-  margin-bottom: 0.5em;
-  border-radius: 4px;
-}
-
-.screenshot h3 {
-  margin-bottom: 0.3em;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.screenshot p {
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
-/* CV Content */
+/* CV PAGE */
 .cv-content h2 {
   margin-top: 0;
   margin-bottom: 1em;
@@ -170,8 +133,115 @@ footer {
   color: #444;
 }
 
-.cv-content p, .cv-content li {
+.cv-content p,
+.cv-content li {
   margin-bottom: 0.5em;
 }
 
+/* PORTFOLIO GALLERY */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1em;
+  margin-top: 1em;
+}
 
+.screenshot {
+  border: 1px solid #ddd;
+  background-color: #fafafa;
+  padding: 1em;
+  border-radius: 4px;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.screenshot:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.screenshot h3 {
+  margin-top: 0.5em;
+  margin-bottom: 0.3em;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.screenshot p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* THUMBNAIL CONTAINER / CROPPING */
+.thumbnail-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;  /* or 1 / 1 for a square */
+  overflow: hidden;
+  border-radius: 4px;
+  margin-bottom: 0.5em;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* LIGHTBOX OVERLAY (JS approach) */
+.lightbox {
+  display: none; 
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 2em 1em;
+  overflow-y: auto; 
+}
+
+/* When .show is added by JS, we display the overlay */
+.lightbox.show {
+  display: block;
+}
+
+.lightbox-content {
+  background-color: #fff;
+  margin: 3em auto;
+  max-width: 800px;
+  padding: 2em 1em 1em;
+  border-radius: 8px;
+  position: relative;
+}
+
+/* The container for images inside the modal */
+.lightbox-images {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+/* A subtle divider between images */
+.lightbox-images img:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+
+/* Close link styling */
+.close-btn {
+  color: #333;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  background: #eee;
+  padding: 0.5em 0.75em;
+  border-radius: 4px;
+}
+.close-btn:hover {
+  background: #FF6B6B;
+  color: #fff;
+}

@@ -12,8 +12,8 @@
     <nav>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="cv.html">CV</a></li>
         <li><a href="portfolio.html" class="active">Portfolio</a></li>
+        <li><a href="cv.html">CV</a></li>
       </ul>
     </nav>
   </header>
@@ -22,56 +22,353 @@
     <section class="portfolio">
       <h2>My Portfolio</h2>
       <p>
-        Below are a few screenshots from projects I’ve worked on over the years.
-        Click any image to view a larger version.
-        <br><em>*Access to more detailed case studies is currently restricted—please contact me for more info.</em>
+        Below are some selected projects I’ve worked on or built in a personal or
+        professional capacity. Each listing is just a brief snapshot—feel free to
+        reach out if you’d like more details.
       </p>
 
       <div class="gallery">
-        <!-- Example Project 1 -->
+        <!-- SPACE WHISPERER -->
         <div class="screenshot">
-          <a href="images/project1_full.jpg" target="_blank">
-            <img src="images/project1_thumb.jpg" alt="Screenshot of Project 1">
+          <a href="#" data-target="space-whisperer-lightbox">
+            <div class="thumbnail-container">
+              <img 
+                src="images/space-whisperer/image1.jpg"
+                alt="Space Whisperer Screenshot" 
+                class="thumbnail"
+              >
+            </div>
           </a>
-          <h3>Project 1</h3>
+          <h3>Space Whisperer</h3>
           <p>
-            A brief description of this project and your primary contribution.
+            A WhatsApp bot to access GPT-4 on mobile with voice prompts, 
+            built before the official ChatGPT app.
           </p>
         </div>
 
-        <!-- Example Project 2 -->
+        <!-- The lightbox overlay (hidden by default) -->
+        <div class="lightbox" id="space-whisperer-lightbox">
+          <div class="lightbox-content">
+            <a href="#" class="close-btn">Close [X]</a>
+            <div class="lightbox-images">
+              <img src="images/space-whisperer/image1.jpg" alt="Space Whisperer Screenshot 1">
+              <img src="images/space-whisperer/image2.jpg" alt="Space Whisperer Screenshot 2">
+            </div>
+          </div>
+        </div>
+
+        <!-- PREMIO SANTANDER -->
         <div class="screenshot">
-          <a href="images/project2_full.jpg" target="_blank">
-            <img src="images/project2_thumb.jpg" alt="Screenshot of Project 2">
+          <a href="#" data-target="premio-santander-lightbox">
+            <div class="thumbnail-container">
+              <img 
+                src="images/premio-santander/image1.png"
+                alt="Premio Santander Screenshot" 
+                class="thumbnail"
+              >
+            </div>
           </a>
-          <h3>Project 2</h3>
+          <h3>Premio Santander</h3>
           <p>
-            Another short description—focus on the goal and outcome.
+            A full platform for the Premio Santander a la Innovación Empresarial, 
+            managing applications and judging panels.
           </p>
         </div>
 
-        <!-- Example Project 3 -->
+        <div class="lightbox" id="premio-santander-lightbox">
+          <div class="lightbox-content">
+            <a href="#" class="close-btn">Close [X]</a>
+            <div class="lightbox-images">
+              <img src="images/premio-santander/image1.png" alt="Premio Santander Screenshot 1">
+              <img src="images/premio-santander/image2.png" alt="Premio Santander Screenshot 2">
+              <img src="images/premio-santander/image3.png" alt="Premio Santander Screenshot 3">
+            </div>
+          </div>
+        </div>
+
+        <!-- SEALED AIR -->
         <div class="screenshot">
-          <a href="images/project3_full.jpg" target="_blank">
-            <img src="images/project3_thumb.jpg" alt="Screenshot of Project 3">
+          <a href="#" data-target="sealed-air-lightbox">
+            <div class="thumbnail-container">
+              <img 
+                src="images/sealed-air/image1.png"
+                alt="Sealed Air Screenshot"
+                class="thumbnail"
+              >
+            </div>
           </a>
-          <h3>Project 3</h3>
+          <h3>Sealed Air</h3>
           <p>
-            Another short description—could be the technology used or highlights.
+            A logistics and shipment tracking platform to manage orders and inventory 
+            with real-time updates.
           </p>
         </div>
-      </div>
+
+        <div class="lightbox" id="sealed-air-lightbox">
+          <div class="lightbox-content">
+            <a href="#" class="close-btn">Close [X]</a>
+            <div class="lightbox-images">
+              <img src="images/sealed-air/image1.png" alt="Sealed Air Screenshot 1">
+              <img src="images/sealed-air/image2.png" alt="Sealed Air Screenshot 2">
+            </div>
+          </div>
+        </div>
+
+        <!-- PUBLICOMEX -->
+        <div class="screenshot">
+          <a href="#" data-target="publicomex-lightbox">
+            <div class="thumbnail-container">
+              <img 
+                src="images/publicomex/image1.png"
+                alt="Publicomex Screenshot"
+                class="thumbnail"
+              >
+            </div>
+          </a>
+          <h3>Publicomex</h3>
+          <p>
+            A platform to handle marketing design requests from teams,
+            centralizing workflow and approvals.
+          </p>
+        </div>
+
+        <div class="lightbox" id="publicomex-lightbox">
+          <div class="lightbox-content">
+            <a href="#" class="close-btn">Close [X]</a>
+            <div class="lightbox-images">
+              <img src="images/publicomex/image1.png" alt="Publicomex Screenshot 1">
+              <img src="images/publicomex/image2.png" alt="Publicomex Screenshot 2">
+            </div>
+          </div>
+        </div>
+
+        <!-- MINUTE -->
+        <div class="screenshot">
+          <a href="#" data-target="minute-lightbox">
+            <div class="thumbnail-container">
+              <img 
+                src="images/minute/image1.png"
+                alt="Minute Screenshot"
+                class="thumbnail"
+              >
+            </div>
+          </a>
+          <h3>Minute</h3>
+          <p>
+            A productivity app focused on task scheduling and time tracking 
+            to boost personal efficiency.
+          </p>
+        </div>
+
+        <div class="lightbox" id="minute-lightbox">
+          <div class="lightbox-content">
+            <a href="#" class="close-btn">Close [X]</a>
+            <div class="lightbox-images">
+              <img src="images/minute/image1.png" alt="Minute Screenshot 1">
+              <img src="images/minute/image2.png" alt="Minute Screenshot 2">
+              <img src="images/minute/image3.png" alt="Minute Screenshot 3">
+              <img src="images/minute/image4.png" alt="Minute Screenshot 4">
+            </div>
+          </div>
+        </div>
+
+        <!-- CANOU -->
+        <div class="screenshot">
+          <a href="#" data-target="canou-lightbox">
+            <div class="thumbnail-container">
+              <img 
+                src="images/canou/image1.png"
+                alt="Canou Screenshot"
+                class="thumbnail"
+              >
+            </div>
+          </a>
+          <h3>Canou</h3>
+          <p>
+            A tool for building online Business Model Canvases,
+            enabling teams to define and iterate on their strategy.
+          </p>
+        </div>
+
+        <div class="lightbox" id="canou-lightbox">
+          <div class="lightbox-content">
+            <a href="#" class="close-btn">Close [X]</a>
+            <div class="lightbox-images">
+              <img src="images/canou/image1.png" alt="Canou Screenshot 1">
+              <img src="images/canou/image2.png" alt="Canou Screenshot 2">
+              <img src="images/canou/image3.png" alt="Canou Screenshot 3">
+              <img src="images/canou/image4.png" alt="Canou Screenshot 4">
+            </div>
+          </div>
+        </div>
+
+        <!-- TENOLI -->
+        <div class="screenshot">
+          <a href="#" data-target="tenoli-lightbox">
+            <div class="thumbnail-container">
+              <img 
+                src="images/tenoli/image1.png"
+                alt="Tenoli Screenshot"
+                class="thumbnail"
+              >
+            </div>
+          </a>
+          <h3>Tenoli</h3>
+          <p>
+            A logistics and fleet management system with path optimization 
+            for delivery routes.
+          </p>
+        </div>
+
+        <div class="lightbox" id="tenoli-lightbox">
+          <div class="lightbox-content">
+            <a href="#" class="close-btn">Close [X]</a>
+            <div class="lightbox-images">
+              <img src="images/tenoli/image1.png" alt="Tenoli Screenshot 1">
+              <img src="images/tenoli/image2.png" alt="Tenoli Screenshot 2">
+              <img src="images/tenoli/image3.png" alt="Tenoli Screenshot 3">
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJECT STATUS -->
+        <div class="screenshot">
+          <a href="#" data-target="project-status-lightbox">
+            <div class="thumbnail-container">
+              <img 
+                src="images/project-status/image1.png"
+                alt="Project Status Screenshot"
+                class="thumbnail"
+              >
+            </div>
+          </a>
+          <h3>Project Status</h3>
+          <p>
+            An internal tool to keep clients updated on progress,
+            deadlines, and feedback loops.
+          </p>
+        </div>
+
+        <div class="lightbox" id="project-status-lightbox">
+          <div class="lightbox-content">
+            <a href="#" class="close-btn">Close [X]</a>
+            <div class="lightbox-images">
+              <img src="images/project-status/image1.png" alt="Project Status Screenshot 1">
+              <img src="images/project-status/image2.png" alt="Project Status Screenshot 2">
+              <img src="images/project-status/image3.png" alt="Project Status Screenshot 3">
+              <img src="images/project-status/image4.png" alt="Project Status Screenshot 4">
+            </div>
+          </div>
+        </div>
+
+        <!-- QUOTER -->
+        <div class="screenshot">
+          <a href="#" data-target="quoter-lightbox">
+            <div class="thumbnail-container">
+              <img 
+                src="images/quoter/image1.png"
+                alt="Quoter Screenshot"
+                class="thumbnail"
+              >
+            </div>
+          </a>
+          <h3>Quoter</h3>
+          <p>
+            An internal CRM tool to quickly generate quotes and track leads 
+            across various pipelines.
+          </p>
+        </div>
+
+        <div class="lightbox" id="quoter-lightbox">
+          <div class="lightbox-content">
+            <a href="#" class="close-btn">Close [X]</a>
+            <div class="lightbox-images">
+              <img src="images/quoter/image1.png" alt="Quoter Screenshot 1">
+              <img src="images/quoter/image2.png" alt="Quoter Screenshot 2">
+            </div>
+          </div>
+        </div>
+
+        <!-- ALARM SYSTEM -->
+        <div class="screenshot">
+          <a href="#" data-target="alarm-system-lightbox">
+            <div class="thumbnail-container">
+              <img 
+                src="images/alarm-system/image1.png"
+                alt="Alarm System Screenshot"
+                class="thumbnail"
+              >
+            </div>
+          </a>
+          <h3>Alarm System</h3>
+          <p>
+            A platform to track temperature sensor metrics and trigger smartwatch 
+            notifications when out of range.
+          </p>
+        </div>
+
+        <div class="lightbox" id="alarm-system-lightbox">
+          <div class="lightbox-content">
+            <a href="#" class="close-btn">Close [X]</a>
+            <div class="lightbox-images">
+              <img src="images/alarm-system/image1.png" alt="Alarm System Screenshot 1">
+            </div>
+          </div>
+        </div>
+
+      </div> <!-- end .gallery -->
     </section>
   </main>
 
   <footer>
     <p>&copy; 2025 Luis Herrada. All rights reserved.</p>
-
-		<div class="social-links">
-			<a href="https://www.linkedin.com/in/luisehk" target="_blank">LinkedIn</a>
-			<a href="https://github.com/luisehk" target="_blank">GitHub</a>
-		</div>
+    <div class="social-links">
+      <a href="https://www.linkedin.com/in/luisehk" target="_blank">LinkedIn</a>
+      <a href="https://github.com/luisehk" target="_blank">GitHub</a>
+    </div>
   </footer>
+
+  <!-- Minimal JavaScript for opening/closing modals & ESC key -->
+  <script>
+    // 1. Open the lightbox
+    document.querySelectorAll('a[data-target]').forEach(link => {
+      link.addEventListener('click', event => {
+        event.preventDefault();
+        const targetId = link.getAttribute('data-target');
+        const overlay = document.getElementById(targetId);
+        if (overlay) {
+          overlay.classList.add('show');
+        }
+      });
+    });
+
+    // 2. Close when clicking "Close [X]" or outside content
+    document.querySelectorAll('.lightbox').forEach(overlay => {
+      const closeBtn = overlay.querySelector('.close-btn');
+      
+      // Close on Close [X] link
+      closeBtn.addEventListener('click', evt => {
+        evt.preventDefault();
+        overlay.classList.remove('show');
+      });
+      
+      // Close if user clicks outside the .lightbox-content
+      overlay.addEventListener('click', evt => {
+        if (evt.target === overlay) {
+          overlay.classList.remove('show');
+        }
+      });
+    });
+
+    // 3. Close on ESC key
+    document.addEventListener('keydown', evt => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        document.querySelectorAll('.lightbox.show').forEach(overlay => {
+          overlay.classList.remove('show');
+        });
+      }
+    });
+  </script>
 </body>
 </html>
 
