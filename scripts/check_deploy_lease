@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+"""Check a Smithy deploy before `make cd` applies the manifest (app.mk, ADR 0010).
+
+Reads Smithy's answer to GET /api/v1/deploys/<id> on stdin. Exits 0 only when
+the answer is a JSON object whose `state` is "running" and whose `lease_until`
+is a timezone-aware ISO 8601 time still in the future, and, when the answer
+names a `sha`, only when it is the commit being deployed. Anything else prints
+the reason and exits 1, so `make cd` refuses to apply.
+
+Stdlib only. Usage: curl ... | scripts/check_deploy_lease <deploy id> <sha>
+"""
+from __future__ import annotations
+
+import datetime as dt
+import json
+import sys
+
+
+def refuse(deploy_id: str, why: str) -> int:
+    print(f"cd: deploy {deploy_id} {why}; refusing to apply")
+    return 1
+
+
+def main(argv: list[str]) -> int:
+    if len(argv) != 3:
+        print("usage: check_deploy_lease <deploy id> <sha>", file=sys.stderr)
+        return 2
+    deploy_id, sha = argv[1], argv[2]
+    try:
+        answer = json.load(sys.stdin)
+    except ValueError:
+        return refuse(deploy_id, "answered with something that is not JSON")
+    if not isinstance(answer, dict):
+        return refuse(deploy_id, "answered with JSON that is not an object")
+
+    state = answer.get("state")
+    if state != "running":
+        return refuse(deploy_id, f"is {state!r}, not 'running'")
+
+    named_sha = answer.get("sha")
+    if named_sha is not None and named_sha != sha:
+        return refuse(deploy_id, f"is for {named_sha!r}, not {sha}")
+
+    lease = answer.get("lease_until")
+    if not isinstance(lease, str):
+        return refuse(deploy_id, "has no lease_until")
+    try:
+        until = dt.datetime.fromisoformat(lease.replace("Z", "+00:00"))
+    except ValueError:
+        return refuse(deploy_id, f"has a lease_until that is not ISO 8601: {lease!r}")
+    if until.tzinfo is None:
+        return refuse(deploy_id, f"has a lease_until without a timezone: {lease!r}")
+    if until <= dt.datetime.now(dt.timezone.utc):
+        return refuse(deploy_id, f"has a lease that lapsed at {lease}")
+
+    print(f"cd: deploy {deploy_id} is running, lease until {lease}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
