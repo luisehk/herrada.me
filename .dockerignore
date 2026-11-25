@@ -2,6 +2,11 @@
 # nothing else (no .git, no k8s, no make files, no CNAME).
 *
 !index.html
+!how-i-build.html
+!404.html
 !style.css
+!script.js
 !images
+!fonts
+!assets
 !docker/nginx.conf

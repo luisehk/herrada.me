@@ -1,0 +1,395 @@
+{
+  "_about": "Every word and number on herrada.me. scripts/build.py writes index.html, how-i-build.html and 404.html from this file and the templates in src/. Text values are HTML fragments. {n:key} prints a count, {over:key} prints a count rounded down to 50, {read:key} prints a count's read date and {date:YYYY-MM-DD} prints a date. Every count carries the date it was read and where it was read from. After an edit, run `python3 scripts/build.py` and commit the pages with this file. `make ci` fails when they differ.",
+
+  "site": {
+    "preview": true,
+    "bumpy": true,
+    "name": "Luis Herrada",
+    "title": "Luis Herrada, software engineer",
+    "description": "Luis Herrada is a software engineer in Monterrey. He builds Rentaventa, Smithy and a few things for the love of it.",
+    "label": "software engineer",
+    "city": "Monterrey",
+    "since": 2008,
+    "lede": "I build <b>Rentaventa</b>, a real-estate platform, with a partner, and <b>Smithy</b>, the workshop where AI agents build my software.",
+    "year": 2026,
+    "colophon_preview": "Preview. One of five directions for this site, drawn by AI agents as a work item on my own board.",
+    "colophon": "This site is a work item on my own board. Agents drew five directions, argued about them and refined them. I picked one, and agents built it.",
+    "links": [
+      {"label": "LinkedIn", "href": "https://www.linkedin.com/in/luisehk"},
+      {"label": "GitHub", "href": "https://github.com/luisehk"}
+    ]
+  },
+
+  "counts": {
+    "smithy_projects": {"value": 9, "read": "2026-11-25", "from": "private record: projects on Smithy's board"},
+    "smithy_items": {"value": 676, "read": "2026-11-25", "from": "private record: Smithy work items"},
+    "smithy_done": {"value": 248, "read": "2026-11-25", "from": "private record: Smithy work items done"},
+    "smithy_verdicts": {"value": 1154, "read": "2026-11-25", "from": "private record: gate verdicts"},
+    "smithy_adrs": {"value": 63, "read": "2026-11-25", "from": "private record: Smithy's own decision records"},
+    "smithy_reports": {"value": 184, "read": "2026-11-25", "from": "private record: reports"},
+    "smithy_days": {"value": 40, "read": "2026-11-25", "from": "days since Smithy began on 2026-10-16"},
+    "adrs_all": {"value": 256, "read": "2026-11-25", "from": "private record: decision records across seven projects"},
+    "rentaventa_adrs": {"value": 86, "read": "2026-11-25", "from": "private record: Rentaventa decision records"},
+    "rentaventa_months": {"value": 27, "read": "2026-11-25", "from": "private record: months with work since August 2024"},
+    "arbopedia_sheets": {"value": 396, "read": "2026-11-25", "from": "arbopedia.mx: published species sheets"},
+    "arbopedia_pages": {"value": 1421, "read": "2026-11-25", "from": "arbopedia: printed pages read"},
+    "arbopedia_works": {"value": 10, "read": "2026-11-25", "from": "arbopedia: printed works read"},
+    "vim_puzzles": {"value": 200, "read": "2026-11-25", "from": "vim.herrada.me: puzzles"},
+    "vim_categories": {"value": 11, "read": "2026-11-25", "from": "vim.herrada.me: categories"},
+    "vim_lessons": {"value": 16, "read": "2026-11-25", "from": "vim.herrada.me: lessons"},
+    "minigames_games": {"value": 13, "read": "2026-11-25", "from": "minigames repo: games, done August 2026"},
+    "minigames_tests": {"value": 570, "read": "2026-11-25", "from": "minigames repo: tests, shown as more than"},
+    "minigames_adrs": {"value": 10, "read": "2026-11-25", "from": "minigames repo: decision records"}
+  },
+
+  "rows": [
+    {
+      "id": "smithy", "label": "smithy", "open": "#smithy", "open_name": "Smithy", "motion": "loop",
+      "fact": "The workshop where AI agents build my software. In daily use since October 2026.",
+      "hook": "let agents build, keep the decisions",
+      "alt": "The pane: a card hops up three steps and takes a stamp on the way."
+    },
+    {
+      "id": "rentaventa", "label": "rentaventa", "open": "#rentaventa", "open_name": "Rentaventa", "motion": "loop",
+      "fact": "Rent and sale listings for brokers in Monterrey, built with a partner. Pre-launch.",
+      "hook": "list a house from a chat",
+      "alt": "The pane: two chat bubbles, then a pin drops on a small map."
+    },
+    {
+      "id": "arbopedia", "label": "arbopedia", "open": "#arbopedia", "open_name": "arbopedia", "motion": "loop",
+      "fact": "An open archive of the trees of Mexico. Live, {n:arbopedia_sheets} sheets on {read:arbopedia_sheets}.",
+      "hook": "name the tree, cite the page",
+      "alt": "The pane: a tree grows beside a person, and three months come into flower."
+    },
+    {
+      "id": "vim-puzzles", "label": "vim-puzzles", "open": "#vim-puzzles", "open_name": "vim-puzzles", "motion": "loop",
+      "fact": "{n:vim_puzzles} vim puzzles, scored against par. Live at vim.herrada.me, never announced.",
+      "hook": "fewer keys, more stars",
+      "alt": "The pane: three keys clear a line. Par is three, so three stars."
+    },
+    {
+      "id": "lichess-irl", "label": "lichess-irl", "open": "#lichess-irl", "open_name": "lichess-irl", "motion": "loop",
+      "fact": "Online chess on a real board. Code complete, the first full game still ahead.",
+      "hook": "move the piece, press space",
+      "alt": "The pane: a board from above with a printed marker at each corner. A move, the space bar, the reply."
+    },
+    {
+      "id": "minigames", "label": "minigames", "open": "#minigames", "open_name": "minigames", "motion": "game",
+      "note": "needs JavaScript to play",
+      "fact": "A real game of catch, the first of thirteen tiny games. Built in one week, August 2026.",
+      "hook": "catch what falls",
+      "alt": "The pane: a paddle at the foot and one block falling."
+    },
+    {
+      "id": "budgeter", "label": "budgeter", "open": "#budgeter", "open_name": "budgeter", "motion": "still",
+      "fact": "A budget that stays in your browser. Live, in Spanish.",
+      "hook": "statements in, budget out",
+      "alt": "The pane: a bank statement on the left, a budget in four bars on the right."
+    },
+    {
+      "id": "the-desk", "label": "the desk", "open": "#the-desk", "open_name": "the desk", "motion": "still",
+      "fact": "i3, tmux and vim. Distractions blocked.",
+      "hook": "keyboard first",
+      "alt": "The pane: three tiles with thin frames under one status bar."
+    },
+    {
+      "id": "how-i-build", "label": "how i build", "open": "/how-i-build.html", "open_name": "How I build with agents", "motion": "still",
+      "fact": "How a work item gets from an idea to production, in eight levels.",
+      "hook": "agents build, gates check, I decide",
+      "alt": "The pane: eight numbered levels on one path, with a flag at the end."
+    },
+    {
+      "id": "record", "label": "record", "open": "#record", "open_name": "the record", "motion": "still",
+      "fact": "2008 to 2019: four companies, BanregioLABS, Vordem. Then the projects.",
+      "hook": "since 2008",
+      "alt": "The pane: three blocks on a line from 2008 to 2019, then one square per project where it began, seven of them in 2026."
+    },
+    {
+      "id": "about", "label": "about", "open": "#about", "open_name": "about", "motion": "still",
+      "fact": "Software engineer in Monterrey, Mexico. The one picture of me on this site.",
+      "hook": "just start and keep practicing"
+    }
+  ],
+
+  "home": {
+    "hero": "I build software, and the workshop that builds it with me.",
+    "creed": "Simple, maintainable solutions to complex problems.",
+    "about": {
+      "kind": "software engineer, Monterrey, Mexico",
+      "body": "I'm Luis, a software engineer in Monterrey, Mexico. I have spent 18+ years taking products from the first idea to production, and I still like the simple solution best. Today I build Rentaventa, a real-estate platform for the city's brokers, with a partner. I also build Smithy, the workshop where AI agents do most of my building and I keep the decisions. The rest is for the love of it: an archive of Mexico's trees, a vim trainer, chess on a real board, a box of tiny games."
+    },
+    "now": {
+      "kind": "November 2026",
+      "lead": "Getting Rentaventa ready for launch, and handing Smithy more of the work."
+    },
+    "projects": [
+      {
+        "id": "smithy", "name": "Smithy", "block": "#E65A5A",
+        "kind": "a personal tool, for one user",
+        "state": "In daily use since October 2026. Private.",
+        "score": "{n:smithy_projects} projects on one board. {n:smithy_items} work items, {n:smithy_done} done. Read {read:smithy_items}.",
+        "lead": "The workshop where AI agents build my software and I keep the decisions.",
+        "challenge": "AI agents can write code faster than one person can follow.",
+        "answer": "A board that moves only on facts, a ledger of decisions, and one short list of what needs me.",
+        "body": ["Smithy is the tool I built to build everything else. Agents do the work and stamp each gate."],
+        "link": {"href": "/how-i-build.html", "label": "How I build with agents"}
+      },
+      {
+        "id": "rentaventa", "name": "Rentaventa", "block": "#F0963C",
+        "kind": "a product, built with a partner",
+        "state": "Pre-launch. Since August 2024.",
+        "score": "{n:rentaventa_adrs} decision records in {n:rentaventa_months} months with work. Read {read:rentaventa_adrs}.",
+        "lead": "Rent and sale listings for Monterrey, built for brokers who work from WhatsApp.",
+        "challenge": "Brokers in Monterrey live in WhatsApp.",
+        "answer": "Meet them there. A broker publishes a listing, sends photos or works a lead in a chat with an agent.",
+        "body": ["Listings for rent and sale on a map, a CRM for leads, and two ways to work without opening a dashboard: a WhatsApp agent for brokers and a Claude connector for the team."],
+        "link": {"href": "https://rentaventa.mx", "label": "rentaventa.mx", "note": "(in Spanish)"}
+      },
+      {
+        "id": "arbopedia", "name": "arbopedia", "block": "#F0C85A",
+        "kind": "an open archive",
+        "state": "Live. {n:arbopedia_sheets} sheets on {read:arbopedia_sheets}. In progress, and it says so.",
+        "score": "{n:arbopedia_pages} pages read across {n:arbopedia_works} printed works, as of {read:arbopedia_pages}. One Instagram post a day.",
+        "lead": "An open archive of the trees of Mexico.",
+        "challenge": "Every tree of Mexico, with a source behind every fact.",
+        "answer": "One sheet per species, read from printed field guides page by page. What is not verified prints <span lang=\"es\">[pendiente]</span>, the archive's word for pending.",
+        "body": ["Every species gets a sheet: its scientific name, the names people use where it grows, its height drawn next to a person, where it has been found and the months it flowers. Every fact cites the page it came from."],
+        "link": {"href": "https://arbopedia.mx", "label": "arbopedia.mx", "note": "(in Spanish)"}
+      },
+      {
+        "id": "vim-puzzles", "name": "vim-puzzles", "block": "#96D264",
+        "kind": "a trainer",
+        "state": "Live at vim.herrada.me. Never announced.",
+        "score": "{n:vim_puzzles} puzzles in {n:vim_categories} categories, {n:vim_lessons} lessons.",
+        "lead": "Vim puzzles, scored against par.",
+        "challenge": "I use vim all day, and this is the trainer I wanted.",
+        "answer": "{n:vim_puzzles} short puzzles in a real vim emulation, each scored against par. No accounts and no backend.",
+        "body": ["Every solution is replayed by the real engine before it ships, so no puzzle goes out unless it is provably solvable at its par. It looks like tmux panes in Solarized Dark, because that is what my terminal looks like."],
+        "link": {"href": "https://vim.herrada.me", "label": "vim.herrada.me"}
+      },
+      {
+        "id": "lichess-irl", "name": "lichess-irl", "block": "#64B4DC",
+        "kind": "a tool for one desk",
+        "state": "Code complete.",
+        "score": "First full game on the board: not yet.",
+        "lead": "Online chess on a real board.",
+        "challenge": "Chess is better on a real board.",
+        "answer": "A webcam above the board, four printed markers at its corners, a voice for the opponent's move, and the space bar as the clock.",
+        "body": ["Earlier chess work, December 2025: a 3D piece set for the board package behind the Lichess mobile app. A branch on my public fork, not merged upstream."],
+        "link": {"href": "https://github.com/luisehk/flutter-chessground/tree/add-cubesandpi-3d-piece-set", "label": "the piece set", "note": "(a branch on GitHub)"}
+      },
+      {
+        "id": "minigames", "name": "minigames", "block": "#50C878",
+        "kind": "games",
+        "state": "Done. Built in one week, August 2026. Private.",
+        "score": "{n:minigames_games} games, more than {n:minigames_tests} tests, {n:minigames_adrs} decision records.",
+        "lead": "Thirteen tiny games, one architecture.",
+        "challenge": "Thirteen games without thirteen architectures.",
+        "answer": "One pure function steps every world. The same seed and the same inputs give the same game, so every game is tested without a screen.",
+        "body": ["Every shape is a placeholder you can swap for your own drawing in two lines. Music and sound effects are generated in code. I built it in a week, and yes, the tiny games have decision records too."],
+        "frames": [
+          {"src": "/assets/game-breakout.png", "alt": "breakout: five rows of bricks, a ball and a paddle"},
+          {"src": "/assets/game-snake.png", "alt": "snake: a short green snake and one red square"},
+          {"src": "/assets/game-platformer.png", "alt": "platformer: a green block among platforms and yellow coins"},
+          {"src": "/assets/game-invaders.png", "alt": "invaders: six rows of small blocks above a green ship"},
+          {"src": "/assets/game-hockey.png", "alt": "hockey: two round mallets, a puck and two goals"},
+          {"src": "/assets/game-racer.png", "alt": "racer: small cars on a grey track seen from above"}
+        ],
+        "frames_caption": "Six of the thirteen: breakout, snake, platformer, invaders, hockey and racer.",
+        "link": {"href": "#menu", "label": "play catch in the menu", "select": "minigames"}
+      }
+    ],
+    "lines": [
+      {"id": "budgeter", "name": "budgeter", "kind": "live, in Spanish", "open": true,
+       "text": "A budget that stays in your browser. Bank statements in, a budget out, nothing uploaded. It is at least my third try at this since 2015. Try it at <a href=\"https://budgeter.herrada.me\">budgeter.herrada.me</a>."},
+      {"id": "rentaventa-meet", "name": "rentaventa-meet", "kind": "used by the Rentaventa team, private",
+       "text": "Video calls that file their own action items."},
+      {"id": "the-desk", "name": "the desk", "kind": "private dotfiles", "open": true,
+       "text": "i3, tmux and vim. Keyboard first, distractions blocked."},
+      {"id": "crispy-wookie", "name": "crispy-wookie", "kind": "earlier, 2015, public",
+       "text": "My first try at one place for everything. It is still <a href=\"https://github.com/luisehk/crispy-wookie\">on GitHub</a>."}
+    ],
+    "how_i_work": {
+      "kind": "a balanced approach",
+      "body": [
+        "From 2016 to 2019 I ran Vordem, a digital product agency. Its home page had a heading I still work by: “A balanced approach.” Strategists, developers, designers and product managers on one problem, looking for the simple answer. Today agents hold some of those seats. One shapes the work with me. One argues with the design before any code exists. One builds. A panel of reviewers reads the result and never sees the plan. The decisions stay with me.",
+        "I work in a terminal: i3, tmux, vim. Every project I own has one command that has to pass before anything ships, and a written record of why things are the way they are. That holds for the real-estate platform and for the tiny games."
+      ],
+      "rules": [
+        "One command gates every repo. Nothing ships that does not pass.",
+        "I write down why. More than {over:adrs_all} decision records across seven projects, ten of them for thirteen tiny games.",
+        "Status is stated as it is. Pre-launch means pre-launch.",
+        "Machines check the work. Every vim puzzle is replayed in CI. Every game is replayed from a seed."
+      ]
+    },
+    "beyond": {
+      "kind": "away from the keyboard",
+      "body": "Away from the keyboard: guitar, chess, science articles and a good book.",
+      "rows": [
+        {"term": "guitar", "text": "Self-taught as a teenager. Mostly leads where a few notes carry the line."},
+        {"term": "chess", "text": "Rapid, 15+10. Soon on a real board."}
+      ],
+      "motto": "My advice has been the same since 2019: just start and keep practicing."
+    },
+    "record": {
+      "kind": "2008 to 2019",
+      "years": [
+        {"term": "2008", "text": "First software job. Mobile, web and games at four companies until 2014."},
+        {"term": "2013", "text": "B.S. in Software Development, Universidad Tec Milenio, Monterrey."},
+        {"term": "2014 <span class=\"to\">to</span> 2016", "text": "Tech lead at BanregioLABS, Monterrey. Banking APIs and mobile banking. Led the move to service-oriented architecture and brought in continuous integration."},
+        {"term": "2016 <span class=\"to\">to</span> 2019", "text": "Founder and head of tech at Vordem, a remote-first digital product agency in Monterrey. A team of ten, 10+ products shipped, for startups and big companies in finance, retail, transportation and education."},
+        {"term": "2019", "text": "Talks at local meetups and three posts on my site. “Just start and keep practicing.”"}
+      ],
+      "after": "The rest of the record is <a href=\"https://www.linkedin.com/in/luisehk\">on LinkedIn</a>."
+    }
+  },
+
+  "how_i_build": {
+    "title": "How I build with agents",
+    "description": "How Luis Herrada builds software with AI agents: Smithy, a personal system where agents do the building and he keeps the decisions.",
+    "kicker": "how to play",
+    "sub": ["Smithy <span aria-hidden=\"true\">·</span> in daily use since October 2026", "numbers read {read:smithy_items}"],
+    "idea": {
+      "kind": "one person, many agents, one record",
+      "lead": "AI agents can write code faster than one person can follow. Smithy is my answer: a personal system where agents do the building and I can still see the design, the decisions and the state of everything."
+    },
+    "balanced": {
+      "kind": "ten years on",
+      "body": [
+        "In 2016 I started an agency called Vordem. Its home page put our way of working under one heading, “A balanced approach”: strategists, developers, designers and product managers on the same problem, looking for a simple and elegant answer. We were ten people and shipped 10+ products.",
+        "The workshop I run today works the same way, with agents in most of the seats. One shapes an idea into a work item with me. One argues with the design before any code exists. One builds. A panel of reviewers checks correctness, security, QA and UX from the diff and the evidence, and never sees the plan. The decisions stay with me."
+      ]
+    },
+    "seats": [
+      {"seat": "Strategy", "then": "A strategist.", "now": "An agent and I shape an idea into a work item with a problem, context, acceptance criteria and a test plan."},
+      {"seat": "Design", "then": "Designers.", "now": "Bigger items get a written design, and an agent argues with it before any code exists."},
+      {"seat": "Development", "then": "Developers.", "now": "The smiths. Each claims an item, works in its own copy of the repo and opens a pull request."},
+      {"seat": "Product", "then": "Product managers.", "now": "A board that moves only on facts, and one list of what needs me."}
+    ],
+    "parts": {
+      "kind": "four named after a forge, and two more",
+      "intro": "Smithy has four parts named after a forge, and two more I use every day.",
+      "rows": [
+        {"term": "The shop floor", "text": "A board of work items. Columns change only through events."},
+        {"term": "The ledger", "text": "Decision records. Short, numbered, never rewritten, only superseded."},
+        {"term": "The tools on the wall", "text": "Reusable skills and harnesses the agents pick up: a design review, the gauntlet, end-to-end runs, reports."},
+        {"term": "The smiths", "text": "Claude Code sessions on my own machines."},
+        {"term": "Needs you", "text": "The one list of what waits on me: questions, steps for my hands, reviews."},
+        {"term": "The window", "text": "The web view of the record. It reads. I steer through a session."}
+      ]
+    },
+    "board": {
+      "kind": "the life of a work item",
+      "read": "2026-11-25",
+      "columns": ["Grooming", "Backlog", "Next up", "In dev", "In QA", "In code review", "To be deployed", "Done"],
+      "body": [
+        "A card moves only when something real happens: a claim, a gate verdict, a pull request marked ready, a merge, a deploy, an answer. There is no command to move a card.",
+        "Needs input is a flag over any column. It is raised only for a blocker, a design decision, a destructive action or a question of intent.",
+        "An item leaves grooming only when its definition is complete for its size: a problem, context and acceptance criteria, then a design, a test plan and risks for bigger items, plus a diagram and a design review for the biggest."
+      ],
+      "caption": "The level map: eight columns and nine real work items, where they stood on {date:2026-11-25}.",
+      "held": ["HM-0002"],
+      "placed": {"In dev": ["HM-0001"], "Done": ["VP-0002", "VP-0003", "VP-0006", "VP-0007", "VP-0008", "VP-0010", "AR-0001"]},
+      "on_the_way": [
+        {"id": "HM-0001", "title": "Five design directions for herrada.me, each a working prototype, critiqued, refined and curated.", "state": "Autonomous. In dev. Filed {date:2026-11-25}."},
+        {"id": "HM-0002", "title": "Build the herrada.me direction Luis picks.", "state": "Review. Held."}
+      ],
+      "done_note": "The other seven: autonomous, done.",
+      "done": [
+        {"id": "VP-0002", "title": "Readability pass on the Solarized palette: every text pair at WCAG AA, a visible visual-mode selection."},
+        {"id": "VP-0003", "title": "About page as window 3, a vim-style 404 and error boundary, per-route document titles."},
+        {"id": "VP-0006", "title": "Twelve puzzles for the unused tags and six one-key motion warm-ups (corpus to 200)."},
+        {"id": "VP-0007", "title": "Phones and touch: a desktop-keyboard notice in the player, a status bar that never clips."},
+        {"id": "VP-0008", "title": "Keyboard flow: Enter and r after a solve, ex commands for reset, skip, give up and quit."},
+        {"id": "VP-0010", "title": "Copy fix: stop promising a daily set until one exists."},
+        {"id": "AR-0001", "title": "Stop posting Instagram stories, keep the daily feature posts."}
+      ]
+    },
+    "loop": {
+      "kind": "eight levels",
+      "intro": "Every work item plays the same eight levels, in this order. Each picture below is one still frame."
+    },
+    "levels": [
+      {"name": "Shape", "text": "An idea becomes a work item with a problem, context, acceptance criteria and a test plan. Its mode is set here: autonomous or review.",
+       "alt": "An idea in a dashed box, an arrow, and a work item with four filled lines and a mode chip."},
+      {"name": "Review the design", "text": "Bigger items get a written design and an adversarial review before any code exists.",
+       "alt": "A written design stands between two agents. The one on the right has left three red marks on it."},
+      {"name": "Build", "text": "An agent claims the item, works in its own copy of the repo and opens a pull request.",
+       "alt": "A branch leaves the main line. An agent stands at its tip after three commits, and a dashed line points back to the main line."},
+      {"name": "Pass the gates", "text": "<code>make ci</code> on the exact commit. A gauntlet of reviewers for correctness, security, QA and UX, who see the diff and the evidence and never the plan. An end-to-end run against a real local stack. Each gate leaves a stamp: a verdict tied to a commit.",
+       "note": "Gates: ci, review, qa, design-review, deploy. Verdicts: pass, pass with notes, blocked, needs human, skipped, error.",
+       "alt": "A card under the third of three gates. It carries two stamps and a third is coming down."},
+      {"name": "Land", "text": "An autonomous item merges and deploys when every stamp is green, and leaves a summary to read later. A review item stops at a ready pull request and waits for me.",
+       "alt": "A stamped card at a fork. One path climbs to a platform with a flag. The other stops at a red bar in front of a person."},
+      {"name": "Ask only what matters", "text": "Critical questions arrive with options, a recommended answer, the cost to reverse and what happens if I do nothing. The agent then moves to other work. Every other judgment call is made, logged with its reason and reviewed later.",
+       "alt": "One question in a short list, with two options and one of them marked. The agent has already moved on to another card."},
+      {"name": "Learn", "text": "On a fixed rhythm each session turns what it learned into a skill, a note or a new work item.",
+       "alt": "Five tools hang on a wall. The newest is yellow, and the agent that made it stands under it."},
+      {"name": "Pace", "text": "A governor starts new runs only when there is headroom, so a long night of work never hits a wall.",
+       "alt": "A meter with six of ten slots filled. Three agents run in their lanes and a fourth waits behind a yellow bar."}
+    ],
+    "after": "Calls feed the record. After a call with my partner an agent writes the notes and files the action items.",
+    "story": {
+      "kind": "a speedrun in four splits",
+      "item": "VP-0010",
+      "paragraphs": [
+        "<b>VP-0010</b>, “Copy fix: stop promising a daily set until one exists”. The vim-puzzles dashboard still said “Daily vim puzzles” after the daily set was gone. An agent found the gap while grooming the app's backlog: the new About page would have repeated a promise the product no longer kept.",
+        "It raised one question for me, with two options and a recommended answer. I had told the agents not to get blocked, so the recommended answer was taken and logged for me to read.",
+        "Thirteen minutes later the fix was built and had passed CI. Fourteen minutes after that it had passed review. It was deployed four and a half hours after the decision. The line it left on the dashboard is the app's line today: “Vim puzzles, scored against par.”"
+      ],
+      "before": [
+        "<b>Filed</b>, {date:2026-10-19}. <span class=\"col\">Column: Grooming</span>",
+        "<b>Groomed</b> the same day. Its definition is complete: a small item, copy only, gates ci and review, one question open. <span class=\"col\">Column: Backlog</span>",
+        "<b>Decided</b>, {date:2026-10-20}: the recommended answer, drop the promise. The item is ranked. <span class=\"col\">Column: Next up</span>"
+      ],
+      "splits": [
+        {"name": "built", "minutes": 13, "note": "Claimed and built. A branch and a pull request. <span class=\"stamp\">ci: pass</span> <span class=\"col\">Column: In dev</span>"},
+        {"name": "reviewed", "minutes": 27, "note": "<span class=\"stamp\">review: pass</span> <span class=\"col\">Column: In code review</span>"},
+        {"name": "merged", "minutes": 159, "note": "<span class=\"col\">Column: To be deployed</span>"},
+        {"name": "deployed", "minutes": 270, "note": "<span class=\"stamp\">deploy: pass</span> <span class=\"col\">Column: Done</span>"}
+      ],
+      "close": "The card visits seven of the eight columns. It never stops in In QA: a copy fix has no QA gate. Dates are UTC."
+    },
+    "rules": {
+      "kind": "twelve decisions from the ledger, shortened",
+      "items": [
+        "Record decisions as short records. Bodies never change. A new record supersedes an old one.",
+        "Columns are derived from facts.",
+        "Convention over configuration: the standard make targets are the contract with every project.",
+        "An item's mode is set at grooming: autonomous items land and deploy when green, review items wait for me.",
+        "The window is a viewer. Every change goes through a session and the API.",
+        "Reports are a first-class record.",
+        "Every working session turns its lessons into skills.",
+        "Gated pull requests land by default.",
+        "Nothing waits for me unless it is destructive.",
+        "Everything that waits on me lives in one list.",
+        "Pace the agents with a governor.",
+        "Calls feed the record: each transcript becomes a summary and work items."
+      ]
+    },
+    "score": {
+      "kind": "read {read:smithy_items}, {n:smithy_days} days in",
+      "began": "2026-10-16",
+      "rows": [
+        {"n": "{n:smithy_projects}", "text": "projects on one board"},
+        {"n": "{n:smithy_items}", "text": "work items, {n:smithy_done} of them done"},
+        {"n": "{n:smithy_verdicts}", "text": "gate verdicts"},
+        {"n": "{n:smithy_adrs}", "text": "decision records in Smithy's own ledger, more than {over:adrs_all} across seven of my projects"},
+        {"n": "{n:smithy_reports}", "text": "reports"}
+      ]
+    },
+    "close": {
+      "lead": "Smithy is its own first project: it was built with itself from the first day. This site is on the board too."
+    }
+  },
+
+  "not_found": {
+    "title": "Not in the menu",
+    "description": "There is no page at this address on herrada.me.",
+    "sub": "there is no page at this address",
+    "label": "no such row",
+    "lead": "The menu has {rows} rows. This is not one of them.",
+    "bumpy_line": "Bumpy naps where it would be. No abilities, no weapon, no ambitions.",
+    "plain_line": "The cursor rests where it would be."
+  }
+}

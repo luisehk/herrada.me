@@ -2,8 +2,11 @@
 # Container smoke for `make ci` (RK-0029 test T-RK-29-1).
 #
 # Runs the image on 127.0.0.1, on the first free port from 8650 to 8659, and
-# checks what it serves: the three site files byte for byte, /health, a 404 for
-# a missing path and for every repo file that must not ship, dot paths denied,
+# checks what it serves: every site file byte for byte (HM-0002: the three
+# pages, style.css, script.js, images/, fonts/ and assets/), a page without its
+# .html, /health, the site's 404 page with a 404 for a missing path, for
+# /images/ (HM-0002 criterion 4) and for every repo file that must not ship,
+# dot paths denied,
 # the security headers, the cache policy (the page no-cache, assets ten minutes
 # on a 200 or a 304, a 404 never cached publicly), no redirect on plain HTTP for
 # either host, the nginx master's capability set, the web root holding the site
@@ -95,10 +98,25 @@ req /style.css -H "If-Modified-Since: $lm"
 cc="$(header cache-control)"
 if [ "$code" = 304 ] && [ "$cc" = "public, max-age=600" ]; then ok "a conditional GET /style.css -> 304 with Cache-Control: $cc"; else bad "a conditional GET /style.css -> $code with Cache-Control '$cc', expected 304 with public, max-age=600"; fi
 
-for f in images/*; do
+# Every other site file, byte for byte (HM-0002).
+for f in how-i-build.html 404.html script.js $(git ls-files images fonts assets); do
 	req "/$f"
 	if [ "$code" = 200 ] && cmp -s "$tmp/body" "$f"; then ok "GET /$f -> 200, unchanged"; else bad "GET /$f -> $code, expected 200 with $f"; fi
 done
+for pair in how-i-build.html:text/html script.js:application/javascript fonts/bricolage-grotesque-latin.woff2:font/woff2 assets/avatar-128.webp:image/webp; do
+	f="${pair%%:*}"
+	want="${pair#*:}"
+	req "/$f"
+	ct="$(header content-type)"
+	if [ "$code" = 200 ] && [ "${ct%%;*}" = "$want" ]; then ok "GET /$f is $want"; else bad "GET /$f -> $code as '$ct', expected 200 as $want"; fi
+done
+req /fonts/bricolage-grotesque-latin.woff2
+cc="$(header cache-control)"
+if [ "$cc" = "public, max-age=600" ]; then ok "GET /fonts/bricolage-grotesque-latin.woff2 has Cache-Control: $cc"; else bad "the font has Cache-Control '$cc', expected public, max-age=600"; fi
+
+# A page answers without its .html, as on GitHub Pages.
+req /how-i-build
+if [ "$code" = 200 ] && cmp -s "$tmp/body" how-i-build.html; then ok "GET /how-i-build -> 200 with how-i-build.html"; else bad "GET /how-i-build -> $code, expected 200 with how-i-build.html"; fi
 req /images/avatar.webp
 ct="$(header content-type)"
 if [ "$code" = 200 ] && [ "$ct" = image/webp ]; then ok "GET /images/avatar.webp is image/webp"; else bad "GET /images/avatar.webp -> $code as '$ct', expected 200 as image/webp"; fi
@@ -108,10 +126,23 @@ if [ "$cc" = "public, max-age=600" ]; then ok "GET /images/avatar.webp has Cache
 req /health
 if [ "$code" = 200 ] && [ "$(tr -d '\n' < "$tmp/body")" = healthy ]; then ok "GET /health -> 200 healthy"; else bad "GET /health -> $code '$(head -c 40 "$tmp/body")', expected 200 healthy"; fi
 
-# A missing path is a 404, never the home page, and keeps the security headers.
+# A missing path is a 404 with the site's own 404 page, never the home page,
+# and keeps the security headers. It is never cached.
 req /no-such-page
 if [ "$code" = 404 ]; then ok "GET /no-such-page -> 404"; else bad "GET /no-such-page -> $code, expected 404"; fi
+if cmp -s "$tmp/body" 404.html; then ok "GET /no-such-page serves 404.html"; else bad "GET /no-such-page does not serve 404.html"; fi
 if [ -n "$(header X-Content-Type-Options)" ] && [ -n "$(header X-Frame-Options)" ]; then ok "the 404 keeps the security headers"; else bad "the 404 has no security headers"; fi
+cc="$(header cache-control)"
+if [ "$cc" = no-cache ]; then ok "the 404 has Cache-Control: no-cache"; else bad "the 404 has Cache-Control '$cc', expected no-cache"; fi
+req /a/deeper/missing/path
+if [ "$code" = 404 ] && cmp -s "$tmp/body" 404.html; then ok "GET /a/deeper/missing/path -> 404 with 404.html"; else bad "GET /a/deeper/missing/path -> $code, expected 404 with 404.html"; fi
+
+# A directory with no index answers 404 like GitHub Pages, never nginx's 403
+# (HM-0002 criterion 4, from RK-0029's gate).
+for p in /images/ /fonts/ /assets/; do
+	req "$p"
+	if [ "$code" = 404 ] && cmp -s "$tmp/body" 404.html; then ok "GET $p -> 404 with 404.html"; else bad "GET $p -> $code, expected 404 with 404.html"; fi
+done
 
 # A 404 on an asset-like path is never cached publicly.
 req /images/missing.webp
@@ -120,7 +151,8 @@ if [ "$code" = 404 ]; then ok "GET /images/missing.webp -> 404"; else bad "GET /
 if [ -n "$cc" ] && ! printf '%s' "$cc" | grep -qi public; then ok "the asset 404 has Cache-Control: $cc"; else bad "the asset 404 has Cache-Control '$cc', expected one without public"; fi
 
 # Repo files that must not ship.
-for p in /CNAME /Makefile /app.mk /docker/Dockerfile /k8s/deployment.yml /docker/nginx.conf /_config.yml /scripts/smoke.sh /50x.html; do
+for p in /CNAME /Makefile /app.mk /docker/Dockerfile /k8s/deployment.yml /docker/nginx.conf /_config.yml /scripts/smoke.sh /50x.html \
+	/src/site.json /src/templates/index.html /src/art/bumpy.svg /scripts/build.py /tests/test_site.py /tests/catch.test.js; do
 	req "$p"
 	if [ "$code" = 404 ]; then ok "GET $p -> 404"; else bad "GET $p -> $code, expected 404"; fi
 done
@@ -148,7 +180,7 @@ capbnd="$(docker exec "$name" awk '/^CapBnd:/ { print $2 }' /proc/1/status 2>/de
 if [ "$capbnd" = 00000000000004c1 ]; then ok "the nginx master's capability bounding set is CHOWN, SETGID, SETUID and NET_BIND_SERVICE"; else bad "the nginx master's capability bounding set is '$capbnd', expected 00000000000004c1"; fi
 
 # The web root holds the site files and nothing else.
-want="$( { printf '%s\n' index.html style.css; git ls-files images; } | sort)"
+want="$( { printf '%s\n' index.html how-i-build.html 404.html style.css script.js; git ls-files images fonts assets; } | sort)"
 got="$(docker exec "$name" find /usr/share/nginx/html -type f 2>/dev/null | sed 's:^/usr/share/nginx/html/::' | sort)"
 if [ "$got" = "$want" ]; then ok "the web root holds only: $(echo $want)"; else bad "the web root holds: $(echo $got), expected: $(echo $want)"; fi
 

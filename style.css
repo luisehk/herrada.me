@@ -1,99 +1,1668 @@
-/* GLOBAL RESETS & BODY */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* herrada.me, direction E: Select Screen (HM-0002, built from the HM-0001 prototype).
+   One family, flat fills, hard 2px frames. A menu on top, a plain page under it.
+   Contents: the font, tokens, base, top bar and marquee, the menu, Bumpy, the pane
+   and its loops, the page, the inner page, the 404, the footer, print.
+
+   Type scale, in rem so the reader's own size holds: 0.75 inside the pane only,
+   0.875 for labels, 0.9375 for facts, 1 for controls, 1.0625 for reading,
+   1.25 for leads, 1.375 for rows on a phone, 1.5 for names and for rows on a desk.
+   Above them the display sizes: the name, the hero line, the creed, the score. */
+
+/* ---------- the font ---------- */
+
+/* Bricolage Grotesque, self-hosted under the SIL Open Font License 1.1 (fonts/OFL.txt).
+   The two files Google Fonts serves for the optical size and weight axes, split by
+   script as Google splits them: a page in English loads the latin file alone. The
+   site makes no request to another host. */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/bricolage-grotesque-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/bricolage-grotesque-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ---------- tokens ---------- */
+
+/* Stand-ins while Bricolage loads, or if it never does. Their sizes were measured
+   against Bricolage so that lines break in the same places and nothing moves. */
+@font-face {
+  font-family: "Bricolage Fallback";
+  font-weight: 400 500;
+  src: local("Arial"), local("Liberation Sans"), local("Helvetica Neue"), local("Helvetica");
+  size-adjust: 104%;
+  ascent-override: 89%;
+  descent-override: 26%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Bricolage Fallback";
+  font-weight: 600 800;
+  src: local("Arial Bold"), local("Liberation Sans Bold"), local("Helvetica Neue Bold"), local("Helvetica Bold");
+  size-adjust: 97%;
+  ascent-override: 96%;
+  descent-override: 28%;
+  line-gap-override: 0%;
+}
+
+:root {
+  color-scheme: dark;
+
+  /* the home scheme: night blue and marquee yellow, sampled from the games */
+  --ground: #181A2E;
+  --text: #C8CDE1;
+  --bright: #F0F0F0;
+  --dim: #8C91AF;
+  --title: #F0C85A;
+  --sel: #3C4876;
+  --sel-text: #F0F0F0;
+  --frame: #3C4876;
+  --rule: #2B3054;
+  --focus: #F0C85A;
+  --mark: #F0C85A;
+  --zz: #D8DEE9;
+
+  /* the marquee: lit letters at night, a painted board by day (see the light scheme) */
+  --band: #181A2E;
+  --band-title: #F0C85A;
+  --band-text: #C8CDE1;
+  --band-dim: #8C91AF;
+  --band-sel: #3C4876;
+  --band-sel-text: #F0F0F0;
+  --band-pad: 0px;
+  --cursor-frame: transparent;
+
+  /* the pane is a screen in both schemes, so its colours never change */
+  --pane: #16182C;
+  --pane-text: #C8CDE1;
+  --pane-dim: #8C91AF;
+  --red: #E65A5A;
+  --orange: #F0963C;
+  --yellow: #F0C85A;
+  --green: #96D264;
+  --blue: #64B4DC;
+  --player: #50C878;
+  --slate: #5A648C;
+  --indigo: #3C4876;
+  --night: #181A2E;
+  --white: #F0F0F0;
+
+  --row: 48px;
+  --gutter: 16px;
+  --col-list: minmax(280px, 400px);
+  --col-pane: minmax(0, 504px);
+  --col-gap: clamp(32px, 5.5vw, 56px);
+  --loop: 4.16s; /* 50 frames at about 12 a second, so one frame is 2% */
+  --font: "Bricolage Grotesque", "Bricolage Fallback", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* The light scheme: the printed manual. White paper, ink, indigo, and the screen stays
+   a screen. The marquee yellow cannot be letters on paper (1.4 to 1), so by day it is
+   the board the name is painted on: a yellow band with the name in ink (10.7 to 1). */
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --ground: #F7F7F4;
+    --text: #181A2E;
+    --bright: #181A2E;
+    --dim: #5A5F7D;
+    --title: #3C4876;
+    --sel: #F0C85A;
+    --sel-text: #181A2E;
+    --frame: #3C4876;
+    --rule: #DBDBD3;
+    --focus: #3C4876;
+    --mark: #3C4876;
+    --zz: #5A5F7D;
+
+    --band: #F0C85A;
+    --band-title: #181A2E;
+    --band-text: #181A2E;
+    --band-dim: #3C4876;
+    --band-sel: #181A2E;
+    --band-sel-text: #F0C85A;
+    --band-pad: 18px;
+    --cursor-frame: #181A2E;
+  }
+}
+@media (prefers-color-scheme: light) and (min-width: 820px) {
+  :root { --band-pad: 30px; }
+}
+
+/* ---------- base ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 16px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 body {
-  font-family: "Arial", sans-serif;
-  background: #F9FAFB;  /* near-white background */
-  color: #333;
-  line-height: 1.6;
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font: 400 1.0625rem/1.6875rem var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-wrap: break-word;
 }
 
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
+::selection { background: var(--sel); color: var(--sel-text); }
+
+a {
+  color: var(--bright);
+  text-decoration: underline;
+  text-decoration-color: var(--mark);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+/* a hovered link takes the selection bar, like a row in the menu */
+a:hover {
+  background: var(--sel);
+  color: var(--sel-text);
+  text-decoration-color: transparent;
 }
 
-/* HEADER & FOOTER */
-header, footer {
-  background: #FAFAFA;
-  padding: 1em;
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
 
-.site-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+button { font-family: inherit; border-radius: 0; }
+
+time { white-space: nowrap; } /* a date never breaks at its hyphens */
+
+p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
+
+.vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
-nav ul {
+.wrap {
+  width: min(100% - 2 * var(--gutter), 960px);
+  margin-inline: auto;
+}
+
+.skip {
+  position: absolute;
+  left: var(--gutter);
+  top: -80px;
+  z-index: 20;
+  padding: 10px 14px;
+  background: var(--sel);
+  color: var(--sel-text);
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip:focus { top: 8px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 0.5ch;
+  min-height: 44px;
+  padding: 7px 14px;
+  border: 2px solid currentColor;
+  color: var(--bright);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.375rem;
+  text-decoration: none;
+}
+.btn:hover { background: var(--sel); color: var(--sel-text); border-color: var(--sel-text); }
+/* buttons go down two pixels when pressed, like the space bar in the chess pane */
+.btn:active, .row-go:active, .pane-btn:active { translate: 0 2px; }
+.btn-note { font-weight: 400; color: var(--dim); }
+.btn:hover .btn-note { color: inherit; }
+
+/* ---------- top bar ---------- */
+
+.top {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+}
+.top ul {
+  display: flex;
+  gap: 6px;
+  padding: 0;
   list-style: none;
-  gap: 1em;
 }
-
-nav a {
+.top a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 7px;
+  color: var(--band-dim);
+  font-weight: 600;
+  font-size: 0.875rem;
   text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  padding: 0.2em 0.5em;
-  transition: background 0.2s ease;
+  text-transform: lowercase;
+}
+.top-site { margin-left: -7px; }
+.top nav { margin-right: -7px; }
+.top a:hover { background: var(--band-sel); color: var(--band-sel-text); }
+.top a[aria-current] {
+  color: var(--band-text);
+  text-decoration: underline;
+  text-decoration-color: var(--band-title);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+}
+.top a[aria-current]:hover { color: var(--band-sel-text); text-decoration-color: transparent; }
+/* in the bar the ring is drawn inside the link, so the edge of the window and the marquee never cut it */
+.top a:focus-visible { outline-offset: -3px; }
+@media (max-width: 359.98px) { .top .top-site { display: none; } .top { justify-content: center; } }
+
+/* ---------- the marquee ---------- */
+
+.marquee { padding: 8px 0 var(--band-pad); margin-bottom: 20px; text-align: center; }
+.marquee h1 {
+  color: var(--band-title);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 1.75rem + 3.33vw, 4.75rem);
+  line-height: 1;
+  letter-spacing: 0.012em;
+  text-transform: uppercase;
+}
+.sub {
+  margin: 9px 0 0;
+  color: var(--band-dim);
+  font-weight: 600;
+  font-size: clamp(0.875rem, 0.82rem + 0.26vw, 1.0625rem);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+/* Who, and what he builds, in one plain sentence: a visitor who never touches the
+   menu still learns it from the first screen (HM-0002). */
+.lede {
+  max-width: 34em;
+  margin: 12px auto 0;
+  color: var(--band-text);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  text-wrap: balance;
+}
+.lede b { color: var(--band-title); font-weight: 700; }
+@media (min-width: 820px) {
+  .lede { margin-top: 16px; font-size: 1.1875rem; line-height: 1.75rem; }
 }
 
-nav a:hover {
-  background: #009688; /* teal accent */
-  color: #fff;
-  border-radius: 4px;
+/* the line under the name breaks only between its parts, and never leaves a dot hanging */
+.sub .nb { white-space: nowrap; }
+@media (max-width: 599.98px) {
+  .sub-stack .sep { display: none; }
+  .sub-stack .nb { display: block; }
+}
+@media (max-width: 359.98px) {
+  .sub .nb { white-space: normal; }
+  .sub-narrow .sep { display: none; }
+  .sub-narrow .nb { display: block; }
 }
 
-.active {
-  background: #009688;
-  color: #fff;
-  border-radius: 4px;
+/* By day the top bar and the marquee are one painted board, edge to edge. The fill
+   is a border image pushed out to both sides: it paints past the column and adds
+   no width to the page. */
+@media (prefers-color-scheme: light) {
+  .top, .marquee {
+    background: var(--band);
+    border-image: conic-gradient(var(--band) 0 0) fill 0 // 0 100vw;
+  }
+  .top ::selection, .marquee ::selection { background: var(--band-sel); color: var(--band-sel-text); }
+  .top :focus-visible { outline-color: var(--band-title); }
+}
+@media (forced-colors: active) {
+  .top, .marquee { background: none; border-image: none; }
 }
 
-/* MAIN CONTENT WRAPPER */
-main {
-  margin: 1.5em auto;
-  max-width: 800px;
-  padding: 0 1em;
+/* ---------- the menu ---------- */
+
+.select {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
-/* FOOTER */
-footer {
-  text-align: center;
-  font-size: 0.9rem;
-  padding: 1em 0;
+/* the list: one radio per row, so Up and Down belong to the list and to nothing else */
+.list {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.row { position: relative; height: var(--row); }
+.row:focus-within { z-index: 2; }
+.row-radio {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.row-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 14px 0 68px;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1.375rem;
+  line-height: 1;
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+}
+.row-radio:checked + .row-label { background: var(--sel); color: var(--sel-text); }
+.row-radio:focus-visible + .row-label { outline: 3px solid var(--focus); outline-offset: 2px; }
+@media (hover: hover) {
+  .row-radio:not(:checked):hover + .row-label { color: var(--bright); }
+  /* a ghost of the cursor, where it would land */
+  .row-radio:not(:checked):hover + .row-label::before {
+    content: "";
+    position: absolute;
+    left: 29px;
+    top: calc(50% - 5px);
+    width: 10px;
+    height: 10px;
+    background: var(--dim);
+  }
 }
 
-.social-links {
-  margin-top: 0.5em;
+.row-acts {
+  position: absolute;
+  top: 0;
+  right: 12px;
+  bottom: 0;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  gap: 8px;
 }
-
-.social-links a {
-  margin: 0 0.5em;
+.row-radio:checked ~ .row-acts { display: flex; }
+.row-go {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 9px;
+  border: 2px solid currentColor;
+  background: transparent;
+  color: var(--sel-text);
+  font: 700 0.875rem/1 var(--font);
   text-decoration: none;
-  color: #333;
-  font-weight: bold;
+  cursor: pointer;
 }
-.social-links a:hover {
-  color: #009688;
+.row-go::after { content: ""; position: absolute; inset: -11px -4px; } /* a 48px target */
+.row-go:hover,
+.row-play {
+  background: var(--sel-text);
+  border-color: var(--sel-text);
+  color: var(--sel);
+}
+.row-play:hover { background: transparent; color: var(--sel-text); }
+.row-play[hidden] { display: none; }
+/* without the script the one playable row says so, on a second line under its name */
+.row-label-two { flex-direction: column; align-items: flex-start; justify-content: center; row-gap: 3px; }
+.row-note {
+  color: var(--dim);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+.row-radio:checked + .row-label .row-note { color: inherit; }
+.js .row-note { display: none; }
+/* on the narrowest phones the playable row keeps one button, play, and the note is set smaller */
+@media (max-width: 359.98px) {
+  .js #s-minigames ~ .row-acts a.row-go { display: none; }
+  .row-note { font-size: 0.75rem; }
 }
 
-/* HOME PAGE (index.html) */
-.profile-pic {
-  max-width: 150px;
-  border-radius: 50%;
+/* where the system paints its own colours the bar is gone, so the chosen row gets a frame */
+@media (forced-colors: active) {
+  .row-radio:checked + .row-label { outline: 2px solid Highlight; outline-offset: -2px; }
+}
+
+/* which row is chosen, as a number the cursor can stand on */
+.list:has(#s-rentaventa:checked) { --i: 1; }
+.list:has(#s-arbopedia:checked) { --i: 2; }
+.list:has(#s-vim-puzzles:checked) { --i: 3; }
+.list:has(#s-lichess-irl:checked) { --i: 4; }
+.list:has(#s-minigames:checked) { --i: 5; }
+.list:has(#s-budgeter:checked) { --i: 6; }
+.list:has(#s-the-desk:checked) { --i: 7; }
+.list:has(#s-how-i-build:checked) { --i: 8; }
+.list:has(#s-record:checked) { --i: 9; }
+.list:has(#s-about:checked) { --i: 10; }
+
+/* ---------- Bumpy, the cursor ---------- */
+
+.bumpy {
+  position: absolute;
+  left: 7px;
+  top: calc(var(--i, 0) * var(--row) + var(--row) - 49px);
+  z-index: 3;
+  width: 54px;
+  height: 42px;
+  visibility: hidden; /* shown by the script, or by the noscript rule in the head */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.js .bumpy { visibility: visible; }
+.bumpy svg { display: block; overflow: visible; shape-rendering: crispEdges; }
+.bumpy g { display: none; }
+.bumpy[data-pose="base"] .b-base,
+.bumpy[data-pose="squash"] .b-squash,
+.bumpy[data-pose="stretch"] .b-stretch,
+.bumpy[data-pose="sleep"] .b-sleep { display: inline; }
+.b-lid, .b-z { visibility: hidden; }
+.b-z { fill: var(--zz); }
+
+/* Every shape is a placeholder that a drawing can replace. Hide Bumpy and the
+   placeholder comes back: a flat block in the player's green. */
+.list::after {
+  content: "";
+  position: absolute;
+  left: 22px;
+  top: calc(var(--i, 0) * var(--row) + var(--row) / 2 - 7px);
+  z-index: 3;
+  display: none;
+  width: 24px;
+  height: 14px;
+  background: var(--player);
+  outline: 2px solid var(--cursor-frame); /* on the yellow row the green needs an ink edge */
+  pointer-events: none;
+}
+.no-bumpy .bumpy { display: none; }
+.no-bumpy .list::after { display: block; }
+
+@keyframes b-blink {
+  0% { visibility: hidden; }
+  93% { visibility: visible; }
+  97%, 100% { visibility: hidden; }
+}
+@keyframes b-zz {
+  0% { visibility: visible; transform: none; }
+  25% { transform: translate(1px, -1px); }
+  50% { transform: translate(1px, -2px); }
+  75% { transform: translate(2px, -3px); visibility: visible; }
+  88%, 100% { visibility: hidden; transform: translate(2px, -3px); }
+}
+
+/* ---------- the pane ---------- */
+
+.stage {
+  position: sticky; /* on a phone the pane stays in view while the list scrolls under it */
+  top: 0;
+  z-index: 5;
+  order: -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: -12px;
+  padding-top: 12px;
+  background: var(--ground);
+}
+@media (max-height: 599px) { .stage { position: relative; } }
+@media (max-width: 679.98px) { .stage { border-bottom: 2px solid var(--rule); } }
+/* a row that takes focus must come to rest under the pinned pane, never behind it:
+   the pane's top padding, the fact above it, the screen, the hook, less the page's
+   own scroll padding */
+@media (max-width: 679.98px) and (min-height: 600px) {
+  .row-radio { scroll-margin-top: calc((100vw - 2 * var(--gutter)) * 0.75 + var(--fact-h) + 46px); }
+}
+
+.pv { grid-area: 1 / 1; display: none; min-width: 0; }
+.pv-smithy { display: block; }
+.select:has(.row-radio:checked:not(#s-smithy)) .pv-smithy { display: none; }
+.select:has(#s-rentaventa:checked) .pv-rentaventa,
+.select:has(#s-arbopedia:checked) .pv-arbopedia,
+.select:has(#s-vim-puzzles:checked) .pv-vim-puzzles,
+.select:has(#s-lichess-irl:checked) .pv-lichess-irl,
+.select:has(#s-minigames:checked) .pv-minigames,
+.select:has(#s-budgeter:checked) .pv-budgeter,
+.select:has(#s-the-desk:checked) .pv-the-desk,
+.select:has(#s-how-i-build:checked) .pv-how-i-build,
+.select:has(#s-record:checked) .pv-record,
+.select:has(#s-about:checked) .pv-about { display: block; }
+
+.screen {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border: 2px solid var(--frame);
+  background: var(--pane);
+  color: var(--pane-text);
+}
+.screen svg {
+  position: absolute;
+  inset: 0;
   display: block;
-  margin: 0 auto 1em;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  shape-rendering: crispEdges;
+}
+/* the title sits in the top border, as in a tmux pane */
+.screen-title {
+  position: absolute;
+  top: -12px;
+  left: 12px;
+  z-index: 2;
+  padding: 0 7px;
+  background: var(--ground);
+  color: var(--dim);
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 20px;
+}
+.hud {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  z-index: 1;
+  color: var(--pane-text);
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+.hud-right { right: 12px; left: auto; visibility: hidden; }
+.is-live .hud-right { visibility: visible; }
+.hud-n { display: inline-grid; }
+.hud-n i { grid-area: 1 / 1; font-style: normal; visibility: hidden; }
+.hud-n i.on { visibility: visible; }
+.hud-score { display: inline-block; min-width: 3ch; } /* a fixed box, so the digits do not jump */
+.hud-dim { margin-left: 0.7ch; color: var(--pane-dim); }
+
+.screen-note {
+  position: absolute;
+  top: 44%;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  padding: 0 20px;
+  color: var(--pane-text);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  text-align: center;
+  pointer-events: none;
+}
+.js .nojs-only { display: none; }
+.screen.is-ready { cursor: pointer; }
+.screen.is-live { touch-action: none; cursor: default; }
+.screen.is-live:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.screen-face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  box-sizing: content-box;
+  width: 64px;
+  height: 64px;
+  margin: -34px 0 0 -34px;
+  border: 2px solid var(--yellow);
 }
 
-/* Home page sections */
-.intro,
-.personal-touch {
-  margin-bottom: 2em; /* Add vertical spacing between these sections */
+.pv-about .screen::after {
+  content: "";
+  position: absolute;
+  top: calc(50% + 40px);
+  right: 10%;
+  left: 10%;
+  height: 4px;
+  background: var(--slate);
 }
 
+/* The pane's two controls sit in its top border, opposite the title. Both are about
+   motion: one stops the loops, one puts the cursor's sprite away. */
+.pane-ctl {
+  position: absolute;
+  top: calc(var(--fact-h) + 2px); /* level with the title: both straddle the pane's top border, under the fact */
+  right: 10px;
+  z-index: 6;
+  display: flex;
+  gap: 6px;
+}
+.pane-btn {
+  position: relative;
+  height: 20px;
+  padding: 0 7px;
+  border: 0;
+  background: var(--ground);
+  color: var(--dim);
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 20px;
+  text-transform: lowercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pane-btn::after { content: ""; position: absolute; inset: -12px 0; } /* a 44px target */
+.pane-btn:hover { color: var(--bright); }
+.pane-btn[hidden] { display: none; }
+/* a still pane has nothing to pause (the build marks those rows data-still) */
+.select:has(.row-radio[data-still]:checked) .pane-pause { display: none; }
+
+/* Above the pane: what the thing is and its state, in plain words, so the first
+   screen informs before it plays (HM-0002). It is in the HTML and never animates, so
+   it is there to read at first paint. Every row keeps the same block height, so the
+   pane, its two controls and the list under it never move when the row changes:
+   two lines and the room the pane's title needs, three where the pane is narrow.
+   Under the pane: the hook, in the voice of the game. */
+.menu { --fact-h: 3.875rem; } /* on the menu, so the rows under the pinned pane can read it too */
+.fact {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: var(--fact-h);
+  padding-bottom: 18px;
+  color: var(--bright);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.375rem;
+  text-align: center;
+}
+.fact > span { max-width: 31em; text-wrap: balance; }
+.hook {
+  padding: 12px 0 14px;
+  color: var(--title);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.3;
+  text-align: center;
+}
+@media (max-width: 359.98px) { .menu { --fact-h: 5.25rem; } } /* the narrowest phones need a third line */
+
+.hint { padding: 14px 0 6px; color: var(--dim); text-align: center; }
+.hint-line { font-weight: 600; font-size: 0.875rem; line-height: 1.4; }
+.hint-line > span { display: none; }
+.hint-line > .hint-touch { display: inline; }
+.js .is-playing .hint-line > .hint-touch { display: none; }
+.js .is-playing .hint-line > .hint-game-touch { display: inline; }
+/* the keys are printed where there is a keyboard to read them for: wide, with a fine pointer */
+@media (min-width: 820px) and (hover: hover) and (pointer: fine) {
+  .hint-line > .hint-touch { display: none; }
+  .hint-line > .hint-plain { display: inline; }
+  .js .hint-line > .hint-plain { display: none; }
+  .js .hint-line > .hint-keys { display: inline; }
+  .js .is-playing .hint-line > .hint-keys,
+  .js .is-playing .hint-line > .hint-game-touch { display: none; }
+  .js .is-playing .hint-line > .hint-game-keys { display: inline; }
+}
+.hint-more { font-size: 0.875rem; line-height: 1.4; }
+.hint-more a {
+  display: inline-block;
+  padding-block: 12px;
+  color: var(--dim);
+  text-decoration-color: var(--dim);
+  text-decoration-thickness: 1px;
+}
+.hint-more a:hover { color: var(--sel-text); text-decoration-color: transparent; }
+
+/* from a small tablet up the menu takes its true shape: the list beside the pane */
+@media (min-width: 680px) {
+  .marquee { margin-bottom: 30px; }
+  .select {
+    grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+    column-gap: clamp(28px, 5vw, 56px);
+    align-items: start;
+  }
+  .menu { --fact-h: 5.25rem; } /* a narrow pane beside the list: three lines */
+  .stage { position: relative; order: 0; }
+  .hook { padding-bottom: 0; }
+  .hint { padding-top: 20px; }
+}
+
+@media (min-width: 820px) {
+  :root { --row: 46px; --gutter: 32px; }
+  .marquee { padding-top: 14px; margin-bottom: 40px; }
+  .sub { margin-top: 14px; }
+  .select {
+    grid-template-columns: var(--col-list) var(--col-pane);
+    column-gap: var(--col-gap);
+    justify-content: center;
+  }
+  .row-label { font-size: 1.5rem; }
+  .menu { --fact-h: 4.5rem; }
+  .fact { padding-bottom: 20px; font-size: 1.125rem; line-height: 1.625rem; }
+  .hook { padding-top: 16px; font-size: 1.25rem; }
+  .hint { padding: 20px 0 0; }
+  .hint-line { font-size: 1rem; }
+}
+
+/* On a desk the menu is one screen, with its hint line at the foot, as in the game.
+   The page starts under the fold. A very tall window stops stretching it at 61rem,
+   and an upright one is left alone. */
+@media (min-width: 820px) and (min-height: 720px) and (orientation: landscape) {
+  .home .menu {
+    display: flex;
+    flex-direction: column;
+    min-height: min(100vh - 48px, 61rem);
+    min-height: min(100svh - 48px, 61rem);
+  }
+  .home .hint { margin-top: auto; padding-bottom: 22px; }
+}
+
+/* ---------- what the pane draws ---------- */
+
+.c-r { fill: var(--red); }
+.c-o { fill: var(--orange); }
+.c-y { fill: var(--yellow); }
+.c-g { fill: var(--green); }
+.c-b { fill: var(--blue); }
+.c-p { fill: var(--player); }
+.c-s { fill: var(--slate); }
+.c-i { fill: var(--indigo); }
+.c-t { fill: var(--pane-text); }
+.c-w { fill: var(--white); }
+.c-n { fill: var(--night); }
+.bar { opacity: 0.75; }
+.bar2 { opacity: 0.45; }
+.ol, .ln-t {
+  fill: none;
+  stroke: var(--slate);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.ln-t { stroke: var(--pane-text); }
+.dash { stroke-dasharray: 6 5; }
+.ol-focus { stroke: var(--blue); stroke-width: 3; } /* 3px: the focus border of his desktop */
+
+.screen text { font-family: var(--font); font-weight: 700; text-anchor: middle; }
+.lv-num text { fill: var(--night); font-weight: 800; font-size: 17px; }
+.yr text { fill: var(--pane-dim); font-weight: 600; font-size: 11px; }
+
+/* rentaventa */
+.rv-typing { visibility: hidden; }
+.rv-typing rect { fill: var(--slate); }
+.rv-lot { fill: var(--yellow); }
+.rv-b1 { transform-box: fill-box; transform-origin: 0 100%; }
+.rv-b2 { transform-box: fill-box; transform-origin: 100% 100%; }
+/* arbopedia */
+.ar-tree { transform-origin: 220px 214px; }
+.ar-m3, .ar-m4, .ar-m5 { fill: var(--red); }
+.ar-cur { visibility: hidden; }
+/* vim-puzzles */
+.vp-bad { fill: var(--red); visibility: hidden; }
+.vp-n4 { visibility: hidden; }
+.vp-key rect { fill: var(--yellow); stroke: var(--slate); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.vp-key text { fill: var(--night); font-size: 16px; }
+.vp-s1, .vp-s2, .vp-s3, .sm-stamp, .li-say { transform-box: fill-box; transform-origin: center; }
+/* lichess-irl */
+.li-them line { stroke: var(--orange); }
+.li-me line { stroke: var(--white); }
+.li-e5 { fill: var(--night); font-weight: 800; font-size: 22px; }
+.li-cap { fill: var(--pane); stroke: var(--slate); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.li-word { fill: var(--pane-text); font-size: 12px; letter-spacing: 0.14em; }
+
+/* The loops. Each figure is drawn in the HTML as its still frame, and that is what
+   shows without the script, with reduced motion, or when a frame would be wrong.
+   With the script in, each loop starts from that still (--poster) the first time,
+   so nothing jumps on load. One frame is 2%. */
+.pv-smithy { --poster: -1.5s; }
+.pv-rentaventa { --poster: -2.33s; }
+.pv-arbopedia { --poster: -3.16s; }
+.pv-vim-puzzles { --poster: -2.66s; }
+.pv-lichess-irl { --poster: -2.58s; }
+
+.sm-card { --a: sm-card; } .sm-face { --a: sm-face; } .sm-stamp { --a: sm-stamp; }
+.sm-done1 { --a: sm-done1; } .sm-ghost { --a: sm-ghost; }
+.sm-h0 { --a: sm-h0; } .sm-h1 { --a: sm-h1; }
+.rv-b1 { --a: rv-b1; } .rv-typing { --a: rv-typing; } .rv-t1 { --a: rv-t1; } .rv-t2 { --a: rv-t2; }
+.rv-t3 { --a: rv-t3; } .rv-b2 { --a: rv-b2; } .rv-pin { --a: rv-pin; } .rv-lot { --a: rv-lot; }
+.rv-line { --a: rv-line; } .rv-h0 { --a: rv-h0; } .rv-h1 { --a: rv-h1; }
+.ar-tree { --a: ar-tree; } .ar-m3 { --a: ar-m3; } .ar-m4 { --a: ar-m4; } .ar-m5 { --a: ar-m5; }
+.ar-f1 { --a: ar-f1; } .ar-f2 { --a: ar-f2; } .ar-f3 { --a: ar-f3; }
+.ar-h0 { --a: ar-h0; } .ar-h1 { --a: ar-h1; } .ar-h2 { --a: ar-h2; } .ar-h3 { --a: ar-h3; }
+.vp-cur { --a: vp-cur; } .vp-bad { --a: vp-bad; } .vp-rest { --a: vp-rest; } .vp-n4 { --a: vp-n4; }
+.vp-k1 { --a: vp-k1; } .vp-k2 { --a: vp-k2; } .vp-k3 { --a: vp-k3; }
+.vp-l1 { --a: vp-l1; } .vp-l2 { --a: vp-l2; } .vp-l3 { --a: vp-l3; }
+.vp-s1 { --a: vp-s1; } .vp-s2 { --a: vp-s2; } .vp-s3 { --a: vp-s3; }
+.vp-h0 { --a: vp-h0; } .vp-h1 { --a: vp-h1; } .vp-h2 { --a: vp-h2; } .vp-h3 { --a: vp-h3; }
+.li-w { --a: li-w; } .li-b { --a: li-b; } .li-key { --a: li-key; } .li-cap { --a: li-cap; }
+.li-word { --a: li-word; } .li-say { --a: li-say; } .li-wave { --a: li-wave; }
+.li-h0 { --a: li-h0; } .li-h1 { --a: li-h1; } .li-h2 { --a: li-h2; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .screen .a {
+    animation: var(--a) var(--loop) step-end var(--delay, var(--poster, 0s)) infinite;
+  }
+  .js .screen .ar-cur {
+    animation:
+      ar-cur-on var(--loop) step-end var(--delay, var(--poster, 0s)) infinite,
+      ar-cur-go var(--loop) linear var(--delay, var(--poster, 0s)) infinite;
+  }
+  .js .bumpy[data-pose="base"] .b-lid { animation: b-blink 4.6s step-end infinite; }
+  .js .bumpy[data-pose="sleep"] .b-z { animation: b-zz 2.4s step-end infinite; }
+  .js .bumpy[data-pose="sleep"] .b-z2 { animation-delay: -1.2s; }
+  /* the pause control, and a stop when the pane is off screen */
+  .js .is-paused .screen *, .js .is-away .screen *,
+  .js .is-paused .bumpy *, .js .is-away .bumpy * { animation-play-state: paused !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bumpy[data-pose="sleep"] .b-z1 { visibility: visible; }
+  /* nothing moves by itself, so there is nothing to pause until the game is on */
+  .menu:not(.is-playing) .pane-pause { display: none; }
+}
+
+/* smithy: a card hops up three steps and takes a stamp on the way. The board is
+   drawn as a level, the way the inner page draws it: steps that climb to a flag. */
+@keyframes sm-card {
+  0% { transform: translate(-118px, 28px); }    /* waits on the first step */
+  14% { transform: translate(-98px, 10px); }    /* hops */
+  16% { transform: translate(-79px, -3px); }
+  18% { transform: translate(-59px, -10px); }
+  20% { transform: translate(-39px, -12px); }
+  22% { transform: translate(-20px, -9px); }
+  24% { transform: translate(0, 0); }           /* the second step, where the stamp lands */
+  52% { transform: translate(18px, -34px); }    /* hops onto the pile on the third */
+  54% { transform: translate(37px, -60px); }
+  56% { transform: translate(55px, -77px); }
+  58% { transform: translate(73px, -86px); }
+  60% { transform: translate(92px, -86px); }
+  62% { transform: translate(110px, -78px); }
+  82% { transform: translate(110px, -61px); }   /* the pile settles one slot down */
+  84% { transform: translate(110px, -45px); }
+  86%, 100% { transform: translate(110px, -28px); }
+}
+@keyframes sm-face { 0% { fill: #F0C85A; } 64%, 100% { fill: #64B4DC; } }
+@keyframes sm-stamp {
+  0% { visibility: hidden; transform: translateY(-40px); }
+  30% { visibility: visible; transform: translateY(-40px); }
+  32% { transform: translateY(-16px); }
+  34% { transform: scale(1.36); }
+  36%, 100% { visibility: visible; transform: none; }
+}
+@keyframes sm-done1 { 0% { visibility: visible; } 82%, 100% { visibility: hidden; } }
+@keyframes sm-ghost { 0% { visibility: hidden; } 14%, 100% { visibility: visible; } }
+@keyframes sm-h0 { 0% { visibility: visible; } 34%, 100% { visibility: hidden; } }
+@keyframes sm-h1 { 0% { visibility: hidden; } 34%, 100% { visibility: visible; } }
+
+/* rentaventa: two chat bubbles, then a pin drops on the map */
+@keyframes rv-b1 {
+  0% { visibility: hidden; }
+  8% { visibility: visible; transform: scale(0.8); }
+  10% { visibility: visible; transform: none; }
+  94%, 100% { visibility: hidden; }
+}
+@keyframes rv-typing { 0% { visibility: hidden; } 16% { visibility: visible; } 28%, 100% { visibility: hidden; } }
+@keyframes rv-t1 { 0% { fill: #5A648C; } 16% { fill: #C8CDE1; } 20%, 100% { fill: #5A648C; } }
+@keyframes rv-t2 { 0% { fill: #5A648C; } 20% { fill: #C8CDE1; } 24%, 100% { fill: #5A648C; } }
+@keyframes rv-t3 { 0% { fill: #5A648C; } 24% { fill: #C8CDE1; } 28%, 100% { fill: #5A648C; } }
+@keyframes rv-b2 {
+  0% { visibility: hidden; }
+  28% { visibility: visible; transform: scale(0.8); }
+  30% { visibility: visible; transform: none; }
+  94%, 100% { visibility: hidden; }
+}
+@keyframes rv-pin {
+  0% { visibility: hidden; }
+  38% { visibility: visible; transform: translateY(-120px); }
+  40% { transform: translateY(-84px); }
+  42% { transform: translateY(-52px); }
+  44% { transform: translateY(-24px); }
+  46% { transform: none; }
+  48% { transform: translateY(-8px); }
+  50% { visibility: visible; transform: none; }
+  94%, 100% { visibility: hidden; }
+}
+@keyframes rv-lot { 0% { fill: #3C4876; } 50% { fill: #F0C85A; } 94%, 100% { fill: #3C4876; } }
+@keyframes rv-line { 0% { visibility: hidden; } 54% { visibility: visible; } 94%, 100% { visibility: hidden; } }
+@keyframes rv-h0 { 0% { visibility: visible; } 50% { visibility: hidden; } 94%, 100% { visibility: visible; } }
+@keyframes rv-h1 { 0% { visibility: hidden; } 50% { visibility: visible; } 94%, 100% { visibility: hidden; } }
+
+/* arbopedia: a tree grows beside a person, then three months come into flower */
+@keyframes ar-tree {
+  0% { transform: scale(0.2); }
+  4% { transform: scale(0.36); }
+  8% { transform: scale(0.52); }
+  12% { transform: scale(0.68); }
+  16% { transform: scale(0.84); }
+  20%, 100% { transform: none; }
+}
+@keyframes ar-cur-on { 0% { visibility: hidden; } 24% { visibility: visible; } 72%, 100% { visibility: hidden; } }
+@keyframes ar-cur-go {
+  0%, 24% { transform: none; animation-timing-function: steps(12, jump-none); }
+  72%, 100% { transform: translateX(220px); }
+}
+@keyframes ar-m3 { 0% { fill: #5A648C; } 32%, 100% { fill: #E65A5A; } }
+@keyframes ar-m4 { 0% { fill: #5A648C; } 36%, 100% { fill: #E65A5A; } }
+@keyframes ar-m5 { 0% { fill: #5A648C; } 40%, 100% { fill: #E65A5A; } }
+@keyframes ar-f1 { 0% { visibility: hidden; } 32%, 100% { visibility: visible; } }
+@keyframes ar-f2 { 0% { visibility: hidden; } 36%, 100% { visibility: visible; } }
+@keyframes ar-f3 { 0% { visibility: hidden; } 40%, 100% { visibility: visible; } }
+@keyframes ar-h0 { 0% { visibility: visible; } 32%, 100% { visibility: hidden; } }
+@keyframes ar-h1 { 0% { visibility: hidden; } 32% { visibility: visible; } 36%, 100% { visibility: hidden; } }
+@keyframes ar-h2 { 0% { visibility: hidden; } 36% { visibility: visible; } 40%, 100% { visibility: hidden; } }
+@keyframes ar-h3 { 0% { visibility: hidden; } 40%, 100% { visibility: visible; } }
+
+/* vim-puzzles: j, d, d. Three keys clear the red line, then three stars */
+@keyframes vp-cur { 0% { transform: translateY(-28px); } 10%, 100% { transform: none; } }
+@keyframes vp-bad {
+  0% { visibility: visible; fill: #E65A5A; }
+  30% { visibility: visible; fill: #F0F0F0; }
+  32%, 100% { visibility: hidden; }
+}
+@keyframes vp-rest {
+  0% { transform: translateY(28px); }
+  34% { transform: translateY(19px); }
+  36% { transform: translateY(9px); }
+  38%, 100% { transform: none; }
+}
+@keyframes vp-n4 { 0% { visibility: visible; } 38%, 100% { visibility: hidden; } }
+@keyframes vp-k1 { 0% { fill: #16182C; } 10%, 100% { fill: #F0C85A; } }
+@keyframes vp-k2 { 0% { fill: #16182C; } 22%, 100% { fill: #F0C85A; } }
+@keyframes vp-k3 { 0% { fill: #16182C; } 30%, 100% { fill: #F0C85A; } }
+@keyframes vp-l1 { 0% { fill: #C8CDE1; } 10%, 100% { fill: #181A2E; } }
+@keyframes vp-l2 { 0% { fill: #C8CDE1; } 22%, 100% { fill: #181A2E; } }
+@keyframes vp-l3 { 0% { fill: #C8CDE1; } 30%, 100% { fill: #181A2E; } }
+@keyframes vp-s1 { 0% { visibility: hidden; } 46% { visibility: visible; transform: scale(1.5); } 48%, 100% { visibility: visible; transform: none; } }
+@keyframes vp-s2 { 0% { visibility: hidden; } 52% { visibility: visible; transform: scale(1.5); } 54%, 100% { visibility: visible; transform: none; } }
+@keyframes vp-s3 { 0% { visibility: hidden; } 58% { visibility: visible; transform: scale(1.5); } 60%, 100% { visibility: visible; transform: none; } }
+@keyframes vp-h0 { 0% { visibility: visible; } 10%, 100% { visibility: hidden; } }
+@keyframes vp-h1 { 0% { visibility: hidden; } 10% { visibility: visible; } 22%, 100% { visibility: hidden; } }
+@keyframes vp-h2 { 0% { visibility: hidden; } 22% { visibility: visible; } 30%, 100% { visibility: hidden; } }
+@keyframes vp-h3 { 0% { visibility: hidden; } 30%, 100% { visibility: visible; } }
+
+/* lichess-irl: my pawn, the space bar, the reply read out loud, the reply on the board */
+@keyframes li-w {
+  0% { transform: translateY(48px); }
+  12% { transform: translateY(32px); }
+  14% { transform: translateY(16px); }
+  16%, 100% { transform: none; }
+}
+@keyframes li-key { 0% { transform: none; } 24% { transform: translateY(3px); } 28%, 100% { transform: none; } }
+@keyframes li-cap { 0% { fill: #16182C; } 24% { fill: #F0C85A; } 28%, 100% { fill: #16182C; } }
+@keyframes li-word { 0% { fill: #C8CDE1; } 24% { fill: #181A2E; } 28%, 100% { fill: #C8CDE1; } }
+@keyframes li-say {
+  0% { visibility: hidden; }
+  36% { visibility: visible; transform: scale(0.8); }
+  38%, 100% { visibility: visible; transform: none; }
+}
+@keyframes li-wave {
+  0% { visibility: hidden; }
+  36% { visibility: visible; }
+  40% { visibility: hidden; }
+  44% { visibility: visible; }
+  48% { visibility: hidden; }
+  52%, 100% { visibility: visible; }
+}
+@keyframes li-b {
+  0% { transform: translateY(-48px); }
+  54% { transform: translateY(-32px); }
+  56% { transform: translateY(-16px); }
+  58%, 100% { transform: none; }
+}
+@keyframes li-h0 { 0% { visibility: visible; } 16%, 100% { visibility: hidden; } }
+@keyframes li-h1 { 0% { visibility: hidden; } 16% { visibility: visible; } 58%, 100% { visibility: hidden; } }
+@keyframes li-h2 { 0% { visibility: hidden; } 58%, 100% { visibility: visible; } }
+
+/* ---------- the page under the menu ---------- */
+
+.doc { padding-top: 36px; }
+
+.sec {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 14px;
+  padding-block: 26px;
+  scroll-margin-top: 8px;
+}
+.sec:focus { outline: none; }
+.sec-head { position: relative; min-width: 0; }
+.sec-name {
+  display: inline-block;
+  color: var(--bright);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+  text-transform: lowercase;
+}
+/* each of the six projects carries one block, in the order of a breakout wall */
+.sec-project .sec-name::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 12px;
+  background: var(--block);
+}
+.sec-kind {
+  margin-top: 4px;
+  color: var(--dim);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+/* a section opened from the menu is marked like a chosen row until focus moves on */
+.sec:focus-visible .sec-name {
+  background: var(--sel);
+  box-shadow: -8px 0 0 var(--sel), 8px 0 0 var(--sel);
+  color: var(--sel-text);
+}
+.sec-esc {
+  display: none;
+  margin-top: 6px;
+  color: var(--dim);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+.js .sec.is-open:focus-visible .sec-esc { display: block; }
+
+/* state and score sit beside the name, like the score line in a game */
+.stat {
+  display: grid;
+  row-gap: 4px;
+  margin-top: 12px;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+.stat > div { display: grid; grid-template-columns: 3em minmax(0, 1fr); column-gap: 10px; }
+.stat dt { color: var(--dim); font-weight: 700; }
+.stat dd { color: var(--text); font-weight: 600; text-wrap: pretty; }
+
+.sec-body { min-width: 0; }
+.sec-body > * + * { margin-top: 14px; }
+.sec-body p { text-wrap: pretty; }
+.sec-body p > a:not(.btn) { position: relative; }
+.sec-body p > a:not(.btn)::after { content: ""; position: absolute; inset: -11px -3px; }
+.lead, .motto {
+  color: var(--bright);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.pair { display: grid; row-gap: 10px; }
+.sec-body > .pair { margin-top: 16px; }
+.pair dt {
+  color: var(--dim);
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+.pair dd { margin-top: 1px; }
+/* The motto as the game on this page: the challenge is the block that falls, the
+   answer is the paddle under it. The words carry it; the two marks only point. */
+.sec-project .pair dt, .sec-project .pair dd { padding-left: 22px; }
+.sec-project .pair dt { position: relative; }
+.sec-project .pair dt::before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 4px);
+  left: 2px;
+  width: 8px;
+  height: 8px;
+  background: var(--orange);
+}
+.sec-project .pair > div:last-child dt::before {
+  top: calc(50% - 2px);
+  left: 0;
+  width: 12px;
+  height: 4px;
+  background: var(--player);
+}
+.sec-body > .go { margin-top: 20px; }
+.sec > .motto { margin-top: 8px; }
+
+.frames {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+}
+.sec-body > .frames { margin-top: 20px; }
+.frames img { display: block; width: 100%; height: auto; border: 2px solid var(--frame); background: var(--pane); }
+.sec-body > .cap { margin-top: 8px; color: var(--dim); font-size: 0.875rem; line-height: 1.4; }
+
+.rules { display: grid; row-gap: 8px; padding: 0; list-style: none; }
+.sec-body > .rules { margin-top: 18px; }
+.sec-side { min-width: 0; }
+.sec-side > * + * { margin-top: 20px; }
+.rules li { position: relative; padding-left: 22px; }
+.rules li::before {
+  content: "";
+  position: absolute;
+  top: 0.6em;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--mark);
+}
+
+.years { display: grid; row-gap: 14px; }
+.years dt { color: var(--bright); font-weight: 700; }
+.years .to { color: var(--dim); font-weight: 600; }
+.years-after { text-wrap: pretty; }
+.years-after > a { position: relative; }
+.years-after > a::after { content: ""; position: absolute; inset: -11px -3px; }
+
+.face { display: block; width: 64px; height: 64px; border: 2px solid var(--frame); }
+.sec-head > .face { position: absolute; top: 0; right: 0; }
+
+.sec-hero { padding-block: 20px 22px; }
+.hero-line {
+  max-width: 17em;
+  color: var(--bright);
+  font-weight: 800;
+  font-size: clamp(2rem, 1.44rem + 2.3vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+.creed {
+  margin-top: 18px;
+  color: var(--title);
+  font-weight: 600;
+  font-size: clamp(1.125rem, 1.03rem + 0.4vw, 1.375rem);
+  line-height: 1.35;
+}
+
+.sec-line { padding-block: 14px; row-gap: 6px; }
+.sec-line .sec-name { font-size: 1.25rem; }
+
+@media (min-width: 560px) {
+  .frames { gap: 8px; }
+  .years > div { display: grid; grid-template-columns: 7.75rem minmax(0, 1fr); column-gap: 16px; }
+}
+
+@media (min-width: 820px) {
+  .doc { padding-top: 44px; }
+  .sec {
+    grid-template-columns: var(--col-list) var(--col-pane);
+    column-gap: var(--col-gap);
+    justify-content: center;
+    padding-block: 34px;
+  }
+  /* names sit on the axis of the rows in the menu, blocks in the cursor's column */
+  .sec-head, .sec-wide { padding-left: 68px; }
+  .sec-head { position: sticky; top: 20px; align-self: start; }
+  .sec-wide { grid-column: 1 / -1; }
+  .sec-project .sec-name::before {
+    position: absolute;
+    top: 7px;
+    left: 27px;
+    margin: 0;
+  }
+  .sec-head > .face { position: static; margin-top: 16px; }
+  .sec-hero { padding-block: 18px 30px; }
+  .sec-line { padding-block: 16px; }
+  .sec-line .sec-name { font-size: 1.5rem; }
+
+  /* a section with a side note: the note sits under the name, in the list's column */
+  .sec-side-left { grid-template-rows: auto 1fr; }
+  .sec-side-left .sec-head { position: static; grid-area: 1 / 1; }
+  .sec-side-left .sec-body { grid-area: 1 / 2 / span 2; }
+  .sec-side-left .sec-side { grid-area: 2 / 1; padding-left: 68px; }
+  .sec-side .rules { font-size: 1rem; line-height: 1.5rem; }
+
+  /* Rows: a label on the axis of the menu's rows, its text in the pane's column.
+     The record's years and the workshop's parts are set this way, so a section is
+     a list beside a pane, like the menu above it. */
+  .rows { grid-column: 1 / -1; row-gap: 18px; margin-top: 6px; }
+  .rows > div {
+    display: grid;
+    grid-template-columns: var(--col-list) var(--col-pane);
+    column-gap: var(--col-gap);
+    justify-content: center;
+    align-items: baseline;
+  }
+  .rows dt { padding-left: 68px; font-size: 1.25rem; line-height: 1.6875rem; }
+  .sec-record .sec-head, .sec-beyond .sec-head { position: static; }
+  .sec-record .years-after { grid-column: 2; margin-top: 4px; }
+  .sec-beyond .motto { grid-column: 2; margin-top: 10px; }
+}
+
+/* ---------- the inner page: how to play ---------- */
+
+.kicker {
+  margin-bottom: 8px;
+  color: var(--band-dim);
+  font-weight: 600;
+  font-size: clamp(0.875rem, 0.82rem + 0.26vw, 1.0625rem);
+  line-height: 1.3;
+}
+.marquee-inner { padding: 14px 0 calc(var(--band-pad) + 4px); margin-bottom: 0; }
+.marquee-inner h1 {
+  font-size: clamp(2rem, 1.35rem + 2.9vw, 3.75rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+code {
+  padding: 1px 5px;
+  border: 2px solid var(--rule);
+  font: inherit;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.seats { display: grid; row-gap: 18px; }
+.seats dt { color: var(--bright); font-weight: 700; font-size: 1.25rem; line-height: 1.6875rem; }
+.seats dd { position: relative; margin-top: 2px; padding-left: 3.25rem; }
+.tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--dim);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+}
+.tag-now { color: var(--title); }
+
+/* the eight columns: one sentence on a phone, a list in the list's column on a desk */
+.cols { padding: 0; list-style: none; }
+.cols-intro, .cols, .cols li { display: inline; }
+.cols li:not(:last-child)::after { content: ", "; }
+.cols li:last-child::after { content: "."; }
+
+.parts, .score { display: grid; row-gap: 12px; }
+.parts dt { color: var(--bright); font-weight: 700; }
+
+.score dt {
+  color: var(--title);
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1.6875rem;
+  letter-spacing: 0.005em;
+}
+
+/* twelve rules, one count: on a desk they run in two columns, four and eight */
+.ledger { display: grid; row-gap: 10px; padding: 0; list-style: none; counter-reset: rule; }
+.ledger-more { counter-reset: rule 4; }
+.sec-ledger .sec-body { margin-top: -4px; }
+.ledger li { position: relative; padding-left: 2.75rem; counter-increment: rule; }
+.ledger li::before {
+  content: counter(rule);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1.75rem;
+  color: var(--title);
+  font-weight: 800;
+  text-align: right;
+}
+
+/* the board as a level map. It is a screen, so it keeps the night colours in both schemes */
+.board {
+  position: relative;
+  margin-top: 26px;
+  padding: 30px 16px 18px;
+  border: 2px solid var(--frame);
+  background: var(--pane);
+  color: var(--pane-text);
+}
+.board::before {
+  content: "level map";
+  position: absolute;
+  top: -12px;
+  left: 12px;
+  padding: 0 7px;
+  background: var(--ground);
+  color: var(--dim);
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 20px;
+}
+.board-cap {
+  margin-bottom: 20px;
+  color: var(--pane-dim);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+.map, .map-items { padding: 0; list-style: none; }
+.map { display: grid; row-gap: 12px; }
+.map-col { margin-left: calc(var(--s) * 10px); }
+.map-items { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 7px;
+  background: var(--blue);
+  color: var(--night);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+}
+.chip-dev { background: var(--yellow); }
+.chip-held { background: none; color: var(--pane-text); outline: 2px dashed var(--pane-dim); outline-offset: -2px; }
+.map-step { display: block; height: 10px; margin-top: 4px; background: var(--slate); }
+.map-held .map-step { height: 6px; margin-top: 8px; background: none; border-top: 2px dashed var(--pane-dim); }
+.map-name {
+  display: block;
+  margin-top: 5px;
+  color: var(--pane-dim);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.2;
+}
+
+.items { display: grid; row-gap: 14px; margin-top: 24px; padding: 0; list-style: none; }
+.items li { display: grid; grid-template-columns: 5.25rem minmax(0, 1fr); column-gap: 12px; }
+.items b { color: var(--bright); font-weight: 700; }
+.items span, .items i { grid-column: 2; }
+.items i { color: var(--text); font-style: normal; font-weight: 600; font-size: 0.9375rem; line-height: 1.4; }
+.items-note { margin-top: 22px; color: var(--dim); font-weight: 700; font-size: 0.875rem; letter-spacing: 0.01em; }
+.items-done { margin-top: 10px; row-gap: 10px; }
+
+/* the eight levels: one still frame each */
+.level {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  grid-template-areas: "fig name" "text text" "note note";
+  column-gap: 16px;
+  row-gap: 12px;
+  align-items: center;
+  padding-block: 16px;
+}
+.lv-fig { grid-area: fig; padding-top: 12px; }
+.lv-name {
+  grid-area: name;
+  color: var(--bright);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+  text-transform: lowercase;
+}
+.lv-text { grid-area: text; text-wrap: pretty; }
+.lv-note { grid-area: note; color: var(--dim); font-size: 0.875rem; line-height: 1.4; }
+.ol-n { stroke: var(--night); }
+.sec-after { padding-top: 6px; }
+.sec-after .sec-head { display: none; }
+
+/* one real item as a speedrun: the clock starts at the decision */
+.run {
+  position: relative;
+  padding: 26px 16px 18px;
+  border: 2px solid var(--frame);
+  background: var(--pane);
+  color: var(--pane-text);
+}
+.sec-body > .run { margin-top: 30px; }
+.run::before {
+  content: "splits";
+  position: absolute;
+  top: -12px;
+  left: 12px;
+  padding: 0 7px;
+  background: var(--ground);
+  color: var(--dim);
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 20px;
+}
+.run-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: 12px;
+  color: var(--pane-dim);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+.run-head b { color: var(--pane-text); font-weight: 700; }
+.run-pre, .splits { padding: 0; list-style: none; }
+.run-pre { display: grid; row-gap: 8px; margin: 10px 0 22px; counter-reset: event; }
+.run-pre li, .splits li { position: relative; padding-left: 1.75rem; counter-increment: event; }
+.run-pre li::before, .splits li::before {
+  content: counter(event);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--pane-dim);
+  font-weight: 700;
+}
+.run-pre li { font-size: 0.9375rem; line-height: 1.5; }
+.run-pre b { color: var(--white); font-weight: 700; }
+.splits { display: grid; row-gap: 14px; margin-top: 10px; counter-reset: event 3; }
+.splits li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  align-items: baseline;
+}
+.split-name { color: var(--white); font-weight: 700; font-size: 1.25rem; line-height: 1.6875rem; }
+.split-time {
+  min-width: 3.2ch;
+  color: var(--yellow);
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1.6875rem;
+  text-align: right;
+}
+.split-bar {
+  grid-column: 1 / -1;
+  width: var(--t);
+  min-width: 6px;
+  height: 8px;
+  margin: 3px 0 6px;
+  background: var(--yellow);
+}
+.split-note { grid-column: 1 / -1; font-size: 0.875rem; line-height: 1.5; }
+.col { color: var(--pane-dim); font-weight: 600; white-space: nowrap; }
+.stamp {
+  display: inline-block;
+  margin-right: 4px;
+  padding: 0 6px;
+  border: 2px solid var(--green);
+  color: var(--green);
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1.375rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (min-width: 560px) and (max-width: 819.98px) {
+  .parts > div, .score > div { display: grid; grid-template-columns: 10.5rem minmax(0, 1fr); column-gap: 16px; align-items: baseline; }
+  .score > div { grid-template-columns: 9.25rem minmax(0, 1fr); }
+}
+@media (min-width: 560px) {
+  .board { padding-inline: 22px; }
+}
+
+@media (min-width: 820px) {
+  .marquee-inner { padding: 26px 0 calc(var(--band-pad) + 14px); margin-bottom: 0; }
+  .board { padding: 34px 28px 22px; }
+  /* the map turns into a staircase: eight platforms climbing to Done */
+  .map { grid-template-columns: 0.95fr repeat(8, minmax(0, 1fr)); column-gap: 8px; row-gap: 0; align-items: end; }
+  .map-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-left: 0;
+    padding-bottom: calc(var(--s) * 11px);
+  }
+  .map-held { padding-right: 14px; }
+  .map-items { flex-direction: column-reverse; flex-wrap: nowrap; align-items: stretch; gap: 3px; }
+  .chip { padding: 0; }
+  .map-name { min-height: 2.5em; }
+  .level {
+    grid-template-columns: var(--col-list) var(--col-pane);
+    grid-template-areas: "fig name" "fig text" "fig note";
+    grid-template-rows: auto auto 1fr;
+    column-gap: var(--col-gap);
+    row-gap: 10px;
+    justify-content: center;
+    align-items: start;
+    padding-block: 24px;
+  }
+  .lv-fig { padding-left: 68px; }
+  .lv-name { margin-top: 18px; }
+  .sec-after { padding-top: 0; }
+  .sec-after .sec-head { display: block; }
+  .run { padding: 28px 22px 20px; }
+
+  /* the two items on the way: id, title, then mode and state on one line */
+  .items li { grid-template-columns: 5.25rem minmax(0, 1fr) 17.5rem; }
+  .items i { grid-column: 3; padding-top: 2px; }
+  .items-done li { grid-template-columns: 5.25rem minmax(0, 1fr); }
+
+  /* the seats: who sat there then in the list's column, who sits there now in the pane's */
+  .seats { grid-column: 1 / -1; row-gap: 22px; margin-top: 6px; }
+  .seats > div {
+    display: grid;
+    grid-template-columns: var(--col-list) var(--col-pane);
+    column-gap: var(--col-gap);
+    justify-content: center;
+    row-gap: 4px;
+  }
+  .seats dt { grid-column: 1 / -1; padding-left: 68px; }
+  .seats dd { margin-top: 0; }
+  .seats .then { margin-left: 68px; }
+
+  /* the eight columns as a list, each with its step */
+  .cols-intro { display: block; color: var(--dim); font-weight: 700; font-size: 0.875rem; line-height: 1.3; letter-spacing: 0.01em; }
+  .cols { display: grid; row-gap: 2px; }
+  .sec-side > .cols { margin-top: 8px; }
+  .cols li { position: relative; display: block; padding-left: 26px; font-weight: 600; }
+  .cols li:not(:last-child)::after, .cols li:last-child::after { content: none; }
+  .cols li::before {
+    content: "";
+    position: absolute;
+    top: calc(50% - 2px);
+    left: 0;
+    width: 14px;
+    height: 4px;
+    background: var(--slate);
+  }
+
+  .sec-ledger .sec-head { position: static; }
+  .sec-ledger .sec-side { grid-area: 2 / 1; padding-left: 68px; }
+  .sec-ledger .sec-body { grid-area: 2 / 2; margin-top: 0; }
+
+  /* the story beside its splits */
+  .sec-story .sec-side p { font-size: 1rem; line-height: 1.5rem; text-wrap: pretty; }
+  .sec-story .sec-side > * + * { margin-top: 12px; }
+  .sec-story .sec-body > .run { margin-top: 12px; }
+
+  /* the score so far, across both columns */
+  .score {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 32px;
+    row-gap: 30px;
+    margin-top: 10px;
+    padding-left: 68px;
+  }
+  .score > div { display: block; }
+  .score dt { font-size: 2.5rem; line-height: 1.05; letter-spacing: 0; }
+  .score dd { margin-top: 6px; max-width: 16em; }
+}
+
+/* ---------- the 404: the row that is not there ---------- */
+
+.row-missing {
+  position: relative;
+  height: var(--row);
+  border: 2px dashed var(--frame);
+}
+.row-missing-label {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 66px;
+  color: var(--dim);
+  font-weight: 700;
+  font-size: 1.375rem;
+  line-height: 1;
+  letter-spacing: 0.005em;
+}
+/* Bumpy sleeps on it and stays still: this page has no pause control, so nothing moves */
+.lost .bumpy { top: calc(var(--row) - 51px); left: 5px; visibility: visible; cursor: default; }
+.lost .bumpy .b-z { animation: none !important; }
+.lost .bumpy .b-z1 { visibility: visible; }
+/* with Bumpy off (site.bumpy in src/site.json) the placeholder block rests there instead */
+.row-missing-block {
+  position: absolute;
+  left: 20px;
+  top: calc(50% - 7px);
+  width: 24px;
+  height: 14px;
+  background: var(--player);
+  outline: 2px solid var(--cursor-frame);
+}
+.go-two { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (min-width: 820px) {
+  .sec-lost .sec-head { position: static; padding-left: 0; }
+  .row-missing-label { font-size: 1.5rem; }
+}
+
+/* ---------- the footer ---------- */
+
+.foot {
+  padding: 56px 0 calc(40px + env(safe-area-inset-bottom));
+  color: var(--dim);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: center;
+}
+/* two groups that wrap as wholes, so no dot is ever left hanging at the end of a line */
+.foot-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  column-gap: 22px;
+  font-weight: 600;
+}
+.foot-c, .foot-links { white-space: nowrap; }
+.foot a { display: inline-block; padding-block: 12px; color: var(--dim); text-decoration-color: var(--dim); text-decoration-thickness: 1px; }
+.foot a:hover { color: var(--sel-text); text-decoration-color: transparent; }
+.foot-note { max-width: 36rem; margin: 4px auto 0; }
+
+/* ---------- print: the manual on paper ---------- */
+
+@media print {
+  :root {
+    --ground: #fff; --text: #111; --bright: #000; --dim: #444; --title: #000;
+    --sel: #fff; --sel-text: #000; --frame: #000; --rule: #999; --mark: #000;
+    --band: #fff; --band-title: #000; --band-text: #111; --band-dim: #444; --band-pad: 0px;
+  }
+  .top, .marquee { background: none; border-image: none; }
+  .skip, .top nav, .hint, .row-acts, .pane-ctl, .bumpy, .list::after, .go { display: none; }
+  .stage { position: static; }
+  .sec, .level { break-inside: avoid; }
+  .sec-head { position: static; }
+  a { text-decoration: none; }
+}

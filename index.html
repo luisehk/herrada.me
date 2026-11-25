@@ -1,53 +1,636 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+<!-- Written by scripts/build.py from src/site.json. Edit those and run it, not this file. -->
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Luis Herrada | Home</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luis Herrada, software engineer</title>
+<meta name="description" content="Luis Herrada is a software engineer in Monterrey. He builds Rentaventa, Smithy and a few things for the love of it.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#181A2E" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F0C85A" media="(prefers-color-scheme: light)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20shape-rendering='crispEdges'%3E%3Cpath%20fill='%233B4252'%20d='M5%203h6v1h-6zM3%204h2v1h-2zM11%204h2v1h-2zM2%205h1v1h-1zM13%205h1v1h-1zM1%206h1v1h-1zM14%206h1v1h-1zM1%207h1v1h-1zM14%207h1v1h-1zM0%208h1v1h-1zM15%208h1v1h-1zM0%209h1v1h-1zM15%209h1v1h-1zM0%2010h1v1h-1zM15%2010h1v1h-1zM0%2011h1v1h-1zM15%2011h1v1h-1zM1%2012h1v1h-1zM14%2012h1v1h-1zM2%2013h2v1h-2zM12%2013h2v1h-2z'/%3E%3Cpath%20fill='%2381A1C1'%20d='M5%204h6v1h-6zM3%205h1v1h-1zM6%205h7v1h-7zM2%206h1v1h-1zM5%206h9v1h-9zM2%207h1v1h-1zM4%207h9v1h-9zM1%208h4v1h-4zM7%208h3v1h-3zM12%208h2v1h-2zM1%209h4v1h-4zM7%209h3v1h-3zM12%209h2v1h-2zM1%2010h1v1h-1zM4%2010h8v1h-8zM2%2011h12v1h-12zM3%2012h10v1h-10z'/%3E%3Cpath%20fill='%235E81AC'%20d='M13%207h1v1h-1zM14%208h1v1h-1zM14%209h1v1h-1zM14%2010h1v1h-1zM1%2011h1v1h-1zM14%2011h1v1h-1zM2%2012h1v1h-1zM13%2012h1v1h-1zM4%2013h8v1h-8z'/%3E%3Cpath%20fill='%23AEC7E3'%20d='M4%205h2v1h-2zM3%206h2v1h-2zM3%207h1v1h-1z'/%3E%3Cpath%20fill='%232E3440'%20d='M5%208h1v1h-1zM10%208h1v1h-1zM5%209h2v1h-2zM10%209h2v1h-2z'/%3E%3Cpath%20fill='%23ECEFF4'%20d='M6%208h1v1h-1zM11%208h1v1h-1z'/%3E%3Cpath%20fill='%23D08770'%20d='M2%2010h2v1h-2zM12%2010h2v1h-2z'/%3E%3C/svg%3E">
+<link rel="preload" href="/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<script src="/script.js" defer></script>
+<noscript><style>.bumpy{visibility:visible}</style></noscript>
 </head>
-<body>
-  <header>
-    <h1 class="site-title">Luis Herrada</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html" class="active">Home</a></li>
-      </ul>
-    </nav>
+<body class="home">
+
+<a class="skip" href="#read">Skip the menu, go to the page</a>
+
+<header class="top wrap">
+  <a class="top-site" href="/">herrada.me</a>
+  <nav aria-label="Site">
+    <ul>
+      <li><a href="#menu" aria-current="page">Menu</a></li>
+      <li><a href="/how-i-build.html">How I build</a></li>
+      <li><a href="#record">Record</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+<!-- ============ The menu. Everything in it is also in the page below. ============ -->
+<section class="menu wrap" id="menu" aria-labelledby="name" data-menu>
+
+  <header class="marquee">
+    <h1 id="name">Luis Herrada</h1>
+    <p class="sub sub-narrow"><span class="nb">software engineer</span> <span class="sep" aria-hidden="true">&middot;</span> <span class="nb">Monterrey <span aria-hidden="true">&middot;</span> since 2008</span></p>
+    <p class="lede">I build <b>Rentaventa</b>, a real-estate platform, with a partner, and <b>Smithy</b>, the workshop where AI agents build my software.</p>
   </header>
 
-  <main>
-    <section class="intro">
-      <img src="images/avatar.webp" alt="Avatar of Luis Herrada" class="profile-pic" />
+  <div class="select">
 
-      <h2>About Me</h2>
-      <p>
-        I'm a software engineer with 18+ years of experience, focused on delivering
-        simple, maintainable solutions to complex problems. I love tackling
-        product challenges from early ideation to final deployment, and I enjoy
-        collaborating with cross-functional teams to bring ideas to life.
-      </p>
-    </section>
+    <fieldset class="list">
+      <legend class="vh">Choose a row. The pane shows it.</legend>
 
-    <section class="personal-touch">
-      <h2>Beyond Code</h2>
-      <p>
-        Outside of work, you can often find me playing guitar, exploring science
-        articles, or diving into a great book. I also love a good game of chess
-        and spending time with my family.
-      </p>
-    </section>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-smithy" value="smithy" aria-describedby="fact-smithy hook-smithy" checked>
+        <label class="row-label" for="s-smithy">smithy</label>
+        <span class="row-acts"><a class="row-go" href="#smithy">open<span class="vh"> Smithy</span></a></span>
+      </div>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-rentaventa" value="rentaventa" aria-describedby="fact-rentaventa hook-rentaventa">
+        <label class="row-label" for="s-rentaventa">rentaventa</label>
+        <span class="row-acts"><a class="row-go" href="#rentaventa">open<span class="vh"> Rentaventa</span></a></span>
+      </div>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-arbopedia" value="arbopedia" aria-describedby="fact-arbopedia hook-arbopedia">
+        <label class="row-label" for="s-arbopedia">arbopedia</label>
+        <span class="row-acts"><a class="row-go" href="#arbopedia">open<span class="vh"> arbopedia</span></a></span>
+      </div>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-vim-puzzles" value="vim-puzzles" aria-describedby="fact-vim-puzzles hook-vim-puzzles">
+        <label class="row-label" for="s-vim-puzzles">vim-puzzles</label>
+        <span class="row-acts"><a class="row-go" href="#vim-puzzles">open<span class="vh"> vim-puzzles</span></a></span>
+      </div>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-lichess-irl" value="lichess-irl" aria-describedby="fact-lichess-irl hook-lichess-irl">
+        <label class="row-label" for="s-lichess-irl">lichess-irl</label>
+        <span class="row-acts"><a class="row-go" href="#lichess-irl">open<span class="vh"> lichess-irl</span></a></span>
+      </div>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-minigames" value="minigames" aria-describedby="fact-minigames hook-minigames">
+        <label class="row-label row-label-two" for="s-minigames">minigames <span class="row-note">needs JavaScript to play</span></label>
+        <span class="row-acts"><button class="row-go row-play" type="button" data-play hidden><span data-play-word>play</span><span class="vh"> catch</span></button><a class="row-go" href="#minigames">open<span class="vh"> minigames</span></a></span>
+      </div>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-budgeter" value="budgeter" aria-describedby="fact-budgeter hook-budgeter" data-still>
+        <label class="row-label" for="s-budgeter">budgeter</label>
+        <span class="row-acts"><a class="row-go" href="#budgeter">open<span class="vh"> budgeter</span></a></span>
+      </div>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-the-desk" value="the-desk" aria-describedby="fact-the-desk hook-the-desk" data-still>
+        <label class="row-label" for="s-the-desk">the desk</label>
+        <span class="row-acts"><a class="row-go" href="#the-desk">open<span class="vh"> the desk</span></a></span>
+      </div>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-how-i-build" value="how-i-build" aria-describedby="fact-how-i-build hook-how-i-build" data-still>
+        <label class="row-label" for="s-how-i-build">how i build</label>
+        <span class="row-acts"><a class="row-go" href="/how-i-build.html">open<span class="vh"> How I build with agents</span></a></span>
+      </div>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-record" value="record" aria-describedby="fact-record hook-record" data-still>
+        <label class="row-label" for="s-record">record</label>
+        <span class="row-acts"><a class="row-go" href="#record">open<span class="vh"> the record</span></a></span>
+      </div>
+      <div class="row">
+        <input class="row-radio" type="radio" name="row" id="s-about" value="about" aria-describedby="fact-about hook-about" data-still>
+        <label class="row-label" for="s-about">about</label>
+        <span class="row-acts"><a class="row-go" href="#about">open<span class="vh"> about</span></a></span>
+      </div>
 
-  </main>
+      <!-- Bumpy, the cursor. 16 by 11 pixels, drawn three to one. Four poses on one canvas. -->
+      <span class="bumpy" data-bumpy data-pose="base" aria-hidden="true">
+<svg viewBox="0 0 18 14" width="54" height="42" focusable="false">
+<g class="b-base"><path fill="#3B4252" d="M6 3h6v1h-6zM4 4h2v1h-2zM12 4h2v1h-2zM3 5h1v1h-1zM14 5h1v1h-1zM2 6h1v1h-1zM15 6h1v1h-1zM2 7h1v1h-1zM15 7h1v1h-1zM1 8h1v1h-1zM16 8h1v1h-1zM1 9h1v1h-1zM16 9h1v1h-1zM1 10h1v1h-1zM16 10h1v1h-1zM1 11h1v1h-1zM16 11h1v1h-1zM2 12h1v1h-1zM15 12h1v1h-1zM3 13h2v1h-2zM13 13h2v1h-2z"/><path fill="#81A1C1" d="M6 4h6v1h-6zM4 5h1v1h-1zM7 5h7v1h-7zM3 6h1v1h-1zM6 6h9v1h-9zM3 7h1v1h-1zM5 7h9v1h-9zM2 8h4v1h-4zM8 8h3v1h-3zM13 8h2v1h-2zM2 9h4v1h-4zM8 9h3v1h-3zM13 9h2v1h-2zM2 10h1v1h-1zM5 10h8v1h-8zM3 11h12v1h-12zM4 12h10v1h-10z"/><path fill="#5E81AC" d="M14 7h1v1h-1zM15 8h1v1h-1zM15 9h1v1h-1zM15 10h1v1h-1zM2 11h1v1h-1zM15 11h1v1h-1zM3 12h1v1h-1zM14 12h1v1h-1zM5 13h8v1h-8z"/><path fill="#AEC7E3" d="M5 5h2v1h-2zM4 6h2v1h-2zM4 7h1v1h-1z"/><path fill="#2E3440" d="M6 8h1v1h-1zM11 8h1v1h-1zM6 9h2v1h-2zM11 9h2v1h-2z"/><path fill="#ECEFF4" d="M7 8h1v1h-1zM12 8h1v1h-1z"/><path fill="#D08770" d="M3 10h2v1h-2zM13 10h2v1h-2z"/><rect class="b-lid" x="2" y="8" width="13" height="1" fill="#81A1C1"/></g>
+<g class="b-squash"><path fill="#3B4252" d="M4 6h10v1h-10zM2 7h2v1h-2zM14 7h2v1h-2zM1 8h1v1h-1zM16 8h1v1h-1zM0 9h1v1h-1zM17 9h1v1h-1zM0 10h1v1h-1zM17 10h1v1h-1zM0 11h1v1h-1zM17 11h1v1h-1zM0 12h1v1h-1zM17 12h1v1h-1zM1 13h2v1h-2zM15 13h2v1h-2z"/><path fill="#81A1C1" d="M4 7h10v1h-10zM2 8h1v1h-1zM5 8h11v1h-11zM1 9h3v1h-3zM6 9h4v1h-4zM12 9h4v1h-4zM1 10h3v1h-3zM6 10h4v1h-4zM12 10h4v1h-4zM1 11h1v1h-1zM4 11h10v1h-10zM2 12h14v1h-14z"/><path fill="#5E81AC" d="M16 9h1v1h-1zM16 10h1v1h-1zM16 11h1v1h-1zM1 12h1v1h-1zM16 12h1v1h-1zM3 13h12v1h-12z"/><path fill="#AEC7E3" d="M3 8h2v1h-2z"/><path fill="#2E3440" d="M4 9h1v1h-1zM10 9h1v1h-1zM4 10h2v1h-2zM10 10h2v1h-2z"/><path fill="#ECEFF4" d="M5 9h1v1h-1zM11 9h1v1h-1z"/><path fill="#D08770" d="M2 11h2v1h-2zM14 11h2v1h-2z"/></g>
+<g class="b-stretch"><path fill="#3B4252" d="M7 0h4v1h-4zM5 1h2v1h-2zM11 1h2v1h-2zM4 2h1v1h-1zM13 2h1v1h-1zM4 3h1v1h-1zM13 3h1v1h-1zM3 4h1v1h-1zM14 4h1v1h-1zM3 5h1v1h-1zM14 5h1v1h-1zM3 6h1v1h-1zM14 6h1v1h-1zM3 7h1v1h-1zM14 7h1v1h-1zM3 8h1v1h-1zM14 8h1v1h-1zM3 9h1v1h-1zM14 9h1v1h-1zM3 10h1v1h-1zM14 10h1v1h-1zM3 11h1v1h-1zM14 11h1v1h-1zM4 12h1v1h-1zM13 12h1v1h-1zM5 13h2v1h-2zM11 13h2v1h-2z"/><path fill="#81A1C1" d="M7 1h4v1h-4zM5 2h1v1h-1zM7 2h6v1h-6zM5 3h1v1h-1zM7 3h5v1h-5zM4 4h1v1h-1zM6 4h7v1h-7zM4 5h2v1h-2zM8 5h2v1h-2zM12 5h1v1h-1zM4 6h2v1h-2zM8 6h2v1h-2zM12 6h1v1h-1zM4 7h9v1h-9zM4 8h1v1h-1zM6 8h6v1h-6zM4 9h9v1h-9zM4 10h9v1h-9zM5 11h8v1h-8zM6 12h6v1h-6z"/><path fill="#5E81AC" d="M12 3h1v1h-1zM13 4h1v1h-1zM13 5h1v1h-1zM13 6h1v1h-1zM13 7h1v1h-1zM13 8h1v1h-1zM13 9h1v1h-1zM13 10h1v1h-1zM4 11h1v1h-1zM13 11h1v1h-1zM5 12h1v1h-1zM12 12h1v1h-1zM7 13h4v1h-4z"/><path fill="#AEC7E3" d="M6 2h1v1h-1zM6 3h1v1h-1zM5 4h1v1h-1z"/><path fill="#2E3440" d="M6 5h1v1h-1zM10 5h1v1h-1zM6 6h2v1h-2zM10 6h2v1h-2z"/><path fill="#ECEFF4" d="M7 5h1v1h-1zM11 5h1v1h-1z"/><path fill="#D08770" d="M5 8h1v1h-1zM12 8h1v1h-1z"/></g>
+<g class="b-sleep"><path fill="#3B4252" d="M5 8h8v1h-8zM2 9h3v1h-3zM13 9h3v1h-3zM1 10h1v1h-1zM16 10h1v1h-1zM0 11h1v1h-1zM17 11h1v1h-1zM0 12h1v1h-1zM17 12h1v1h-1zM1 13h2v1h-2zM15 13h2v1h-2z"/><path fill="#81A1C1" d="M5 9h8v1h-8zM2 10h14v1h-14zM1 11h3v1h-3zM6 11h4v1h-4zM12 11h4v1h-4zM1 12h1v1h-1zM4 12h10v1h-10z"/><path fill="#5E81AC" d="M16 11h1v1h-1zM16 12h1v1h-1zM3 13h12v1h-12z"/><path fill="#2E3440" d="M4 11h2v1h-2zM10 11h2v1h-2z"/><path fill="#D08770" d="M2 12h2v1h-2zM14 12h2v1h-2z"/><path class="b-z b-z1" d="M11 2h5v1h-5zM14 3h1v1h-1zM13 4h1v1h-1zM12 5h1v1h-1zM11 6h5v1h-5z"/><path class="b-z b-z2" d="M15 -4h4v1h-4zM17 -3h1v1h-1zM16 -2h1v1h-1zM15 -1h4v1h-4z"/></g>
+</svg>
+      </span>
+    </fieldset>
 
-  <footer>
-    <p>&copy; 2025 Luis Herrada. All rights reserved.</p>
-    
-    <div class="social-links">
-      <a href="https://www.linkedin.com/in/luisehk" target="_blank">LinkedIn</a>
-      <a href="https://github.com/luisehk" target="_blank">GitHub</a>
+    <!-- The pane. Each row's figure says what the thing is above its drawing, so the
+         first screen informs before it plays. Each drawing is its still frame, and the
+         stylesheet holds the loops. -->
+    <div class="stage" role="group" aria-label="Preview of the chosen row">
+
+      <figure class="pv pv-smithy">
+        <figcaption class="fact" id="fact-smithy"><span>The workshop where AI agents build my software. In daily use since October 2026.</span></figcaption>
+        <div class="screen">
+          <span class="screen-title" aria-hidden="true">smithy</span>
+          <span class="hud" aria-hidden="true">stamps: <span class="hud-n"><i class="a sm-h0">0</i><i class="a sm-h1 on">1</i></span></span>
+          <svg viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+            <!-- the board as a level: three steps climbing to a flag, as on the inner page's map -->
+            <g class="c-s"><rect x="30" y="212" width="104" height="10"/><rect x="148" y="184" width="104" height="10"/><rect x="262" y="156" width="116" height="10"/></g>
+            <g class="c-i"><rect x="30" y="230" width="42" height="6"/><rect x="148" y="202" width="32" height="6"/><rect x="262" y="174" width="48" height="6"/></g>
+            <rect class="c-t" x="364" y="126" width="3" height="30"/><rect class="c-y" x="367" y="126" width="16" height="10"/>
+            <rect class="ol dash a sm-ghost" x="47" y="165" width="70" height="43"/>
+            <g class="a sm-done1"><rect class="c-b" x="274" y="110" width="72" height="46"/><rect class="c-n bar" x="282" y="120" width="38" height="5"/><rect class="c-n bar2" x="282" y="131" width="24" height="5"/><rect class="c-g" x="332" y="100" width="22" height="22"/></g>
+            <g class="a sm-card"><rect class="c-y a sm-face" x="164" y="138" width="72" height="46"/><rect class="c-n bar" x="172" y="148" width="38" height="5"/><rect class="c-n bar2" x="172" y="159" width="24" height="5"/><rect class="c-g a sm-stamp" x="222" y="128" width="22" height="22"/></g>
+          </svg>
+        </div>
+        <p class="hook" id="hook-smithy">let agents build, keep the decisions</p>
+        <p class="vh" data-alt>The pane: a card hops up three steps and takes a stamp on the way.</p>
+      </figure>
+
+      <figure class="pv pv-rentaventa">
+        <figcaption class="fact" id="fact-rentaventa"><span>Rent and sale listings for brokers in Monterrey, built with a partner. Pre-launch.</span></figcaption>
+        <div class="screen">
+          <span class="screen-title" aria-hidden="true">rentaventa</span>
+          <span class="hud" aria-hidden="true">pins: <span class="hud-n"><i class="a rv-h0">0</i><i class="a rv-h1 on">1</i></span></span>
+          <svg viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+            <rect class="ol" x="28" y="46" width="156" height="220"/>
+            <rect class="c-s" x="38" y="56" width="52" height="6"/>
+            <g class="a rv-b1"><rect class="c-b" x="38" y="78" width="104" height="50"/><rect class="c-o" x="46" y="86" width="30" height="34"/><rect class="c-n bar" x="84" y="92" width="48" height="5"/><rect class="c-n bar2" x="84" y="103" width="34" height="5"/></g>
+            <g class="a rv-typing"><rect class="a rv-t1" x="128" y="154" width="6" height="6"/><rect class="a rv-t2" x="140" y="154" width="6" height="6"/><rect class="a rv-t3" x="152" y="154" width="6" height="6"/></g>
+            <g class="a rv-b2"><rect class="c-g" x="78" y="142" width="96" height="36"/><rect class="c-n bar" x="86" y="153" width="60" height="5"/><rect class="c-n bar2" x="86" y="164" width="40" height="5"/></g>
+            <g class="c-i"><rect x="214" y="62" width="100" height="44"/><rect x="326" y="62" width="44" height="44"/><rect x="214" y="118" width="44" height="44"/><rect x="326" y="118" width="44" height="44"/><rect x="214" y="174" width="44" height="44"/><rect x="270" y="174" width="100" height="44"/></g>
+            <rect class="a rv-lot" x="270" y="118" width="44" height="44"/>
+            <g class="a rv-line"><rect class="c-y" x="214" y="236" width="10" height="10"/><rect class="c-s" x="232" y="238" width="70" height="6"/><rect class="c-s" x="310" y="238" width="36" height="6"/></g>
+            <g class="a rv-pin"><rect class="c-r" x="290" y="128" width="4" height="12"/><rect class="c-r" x="282" y="108" width="20" height="20"/><rect class="c-w" x="289" y="115" width="6" height="6"/></g>
+          </svg>
+        </div>
+        <p class="hook" id="hook-rentaventa">list a house from a chat</p>
+        <p class="vh" data-alt>The pane: two chat bubbles, then a pin drops on a small map.</p>
+      </figure>
+
+      <figure class="pv pv-arbopedia">
+        <figcaption class="fact" id="fact-arbopedia"><span>An open archive of the trees of Mexico. Live, 396 sheets on <time datetime="2026-11-25">2026-11-25</time>.</span></figcaption>
+        <div class="screen">
+          <span class="screen-title" aria-hidden="true">arbopedia</span>
+          <span class="hud" aria-hidden="true">in flower: <span class="hud-n"><i class="a ar-h0">0</i><i class="a ar-h1">1</i><i class="a ar-h2">2</i><i class="a ar-h3 on">3</i></span></span>
+          <svg viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+            <rect class="c-s" x="40" y="214" width="320" height="4"/>
+            <g class="c-t"><rect x="118" y="170" width="10" height="10"/><rect x="116" y="183" width="14" height="31"/></g>
+            <g class="a ar-tree">
+              <rect class="c-o" x="214" y="150" width="12" height="64"/>
+              <rect class="c-g" x="182" y="112" width="76" height="40"/><rect class="c-g" x="170" y="74" width="100" height="42"/><rect class="c-g" x="188" y="48" width="64" height="30"/>
+              <rect class="c-r a ar-f1" x="186" y="90" width="10" height="10"/><rect class="c-r a ar-f2" x="236" y="60" width="10" height="10"/><rect class="c-r a ar-f3" x="232" y="124" width="10" height="10"/>
+            </g>
+            <g class="c-s"><rect x="84" y="240" width="12" height="12"/><rect x="104" y="240" width="12" height="12"/><rect x="184" y="240" width="12" height="12"/><rect x="204" y="240" width="12" height="12"/><rect x="224" y="240" width="12" height="12"/><rect x="244" y="240" width="12" height="12"/><rect x="264" y="240" width="12" height="12"/><rect x="284" y="240" width="12" height="12"/><rect x="304" y="240" width="12" height="12"/></g>
+            <rect class="a ar-m3" x="124" y="240" width="12" height="12"/><rect class="a ar-m4" x="144" y="240" width="12" height="12"/><rect class="a ar-m5" x="164" y="240" width="12" height="12"/>
+            <rect class="c-t ar-cur" x="84" y="258" width="12" height="3"/>
+          </svg>
+        </div>
+        <p class="hook" id="hook-arbopedia">name the tree, cite the page</p>
+        <p class="vh" data-alt>The pane: a tree grows beside a person, and three months come into flower.</p>
+      </figure>
+
+      <figure class="pv pv-vim-puzzles">
+        <figcaption class="fact" id="fact-vim-puzzles"><span>200 vim puzzles, scored against par. Live at vim.herrada.me, never announced.</span></figcaption>
+        <div class="screen">
+          <span class="screen-title" aria-hidden="true">vim-puzzles</span>
+          <span class="hud" aria-hidden="true">keys: <span class="hud-n"><i class="a vp-h0">0</i><i class="a vp-h1">1</i><i class="a vp-h2">2</i><i class="a vp-h3 on">3</i></span> <span class="hud-dim">par 3</span></span>
+          <svg viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+            <g class="c-i"><rect x="40" y="78" width="8" height="6"/><rect x="40" y="106" width="8" height="6"/><rect x="40" y="134" width="8" height="6"/><rect class="a vp-n4" x="40" y="162" width="8" height="6"/></g>
+            <g class="c-s"><rect x="64" y="76" width="44" height="10"/><rect x="116" y="76" width="70" height="10"/><rect x="194" y="76" width="30" height="10"/></g>
+            <g class="a vp-bad"><rect x="64" y="104" width="60" height="10"/><rect x="132" y="104" width="40" height="10"/><rect x="180" y="104" width="64" height="10"/></g>
+            <g class="c-s a vp-rest"><rect x="64" y="104" width="30" height="10"/><rect x="102" y="104" width="84" height="10"/><rect x="194" y="104" width="50" height="10"/><rect x="64" y="132" width="72" height="10"/><rect x="144" y="132" width="36" height="10"/></g>
+            <rect class="c-p a vp-cur" x="62" y="101" width="12" height="16"/>
+            <rect class="c-i" x="40" y="186" width="320" height="14"/><rect class="c-b" x="40" y="186" width="46" height="14"/>
+            <g class="vp-key"><rect class="a vp-k1" x="40" y="222" width="28" height="28"/><text class="a vp-l1" x="54" y="241">j</text></g>
+            <g class="vp-key"><rect class="a vp-k2" x="76" y="222" width="28" height="28"/><text class="a vp-l2" x="90" y="241">d</text></g>
+            <g class="vp-key"><rect class="a vp-k3" x="112" y="222" width="28" height="28"/><text class="a vp-l3" x="126" y="241">d</text></g>
+            <g class="c-y a vp-s1"><rect x="278" y="228" width="16" height="16"/><rect x="278" y="228" width="16" height="16" transform="rotate(45 286 236)"/></g>
+            <g class="c-y a vp-s2"><rect x="312" y="228" width="16" height="16"/><rect x="312" y="228" width="16" height="16" transform="rotate(45 320 236)"/></g>
+            <g class="c-y a vp-s3"><rect x="346" y="228" width="16" height="16"/><rect x="346" y="228" width="16" height="16" transform="rotate(45 354 236)"/></g>
+          </svg>
+        </div>
+        <p class="hook" id="hook-vim-puzzles">fewer keys, more stars</p>
+        <p class="vh" data-alt>The pane: three keys clear a line. Par is three, so three stars.</p>
+      </figure>
+
+      <figure class="pv pv-lichess-irl">
+        <figcaption class="fact" id="fact-lichess-irl"><span>Online chess on a real board. Code complete, the first full game still ahead.</span></figcaption>
+        <div class="screen">
+          <span class="screen-title" aria-hidden="true">lichess-irl</span>
+          <span class="hud" aria-hidden="true">moves: <span class="hud-n"><i class="a li-h0">0</i><i class="a li-h1">1</i><i class="a li-h2 on">2</i></span></span>
+          <svg viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+            <defs><pattern id="li-sq" x="36" y="54" width="48" height="48" patternUnits="userSpaceOnUse"><rect width="48" height="48" fill="#5A648C"/><rect x="24" width="24" height="24" fill="#3C4876"/><rect y="24" width="24" height="24" fill="#3C4876"/></pattern></defs>
+            <rect x="36" y="54" width="192" height="192" fill="url(#li-sq)"/>
+            <!-- the four printed markers, ids 0 to 3, clockwise from the top left -->
+            <g transform="translate(12 30) scale(2.75)"><rect class="c-w" width="8" height="8"/><path class="c-n" d="M1 1h6v1h-6zM1 2h1v1h-1zM3 2h1v1h-1zM6 2h1v1h-1zM1 3h2v1h-2zM4 3h1v1h-1zM6 3h1v1h-1zM1 4h3v1h-3zM6 4h1v1h-1zM1 5h3v1h-3zM5 5h2v1h-2zM1 6h6v1h-6z"/></g>
+            <g transform="translate(230 30) scale(2.75)"><rect class="c-w" width="8" height="8"/><path class="c-n" d="M1 1h6v1h-6zM1 2h6v1h-6zM1 3h1v1h-1zM6 3h1v1h-1zM1 4h1v1h-1zM3 4h2v1h-2zM6 4h1v1h-1zM1 5h1v1h-1zM3 5h1v1h-1zM5 5h2v1h-2zM1 6h6v1h-6z"/></g>
+            <g transform="translate(230 248) scale(2.75)"><rect class="c-w" width="8" height="8"/><path class="c-n" d="M1 1h6v1h-6zM1 2h3v1h-3zM6 2h1v1h-1zM1 3h3v1h-3zM6 3h1v1h-1zM1 4h3v1h-3zM5 4h2v1h-2zM1 5h1v1h-1zM4 5h1v1h-1zM6 5h1v1h-1zM1 6h6v1h-6z"/></g>
+            <g transform="translate(12 248) scale(2.75)"><rect class="c-w" width="8" height="8"/><path class="c-n" d="M1 1h6v1h-6zM1 2h1v1h-1zM3 2h2v1h-2zM6 2h1v1h-1zM1 3h1v1h-1zM3 3h2v1h-2zM6 3h1v1h-1zM1 4h2v1h-2zM4 4h3v1h-3zM1 5h2v1h-2zM5 5h2v1h-2zM1 6h6v1h-6z"/></g>
+            <!-- the pieces from above: mine white, the opponent orange, pawns smaller -->
+            <g class="li-them"><line x1="42" y1="66" x2="228" y2="66" stroke-width="12" stroke-dasharray="12 12"/><line x1="44" y1="90" x2="132" y2="90" stroke-width="8" stroke-dasharray="8 16"/><line x1="164" y1="90" x2="228" y2="90" stroke-width="8" stroke-dasharray="8 16"/></g>
+            <g class="li-me"><line x1="44" y1="210" x2="132" y2="210" stroke-width="8" stroke-dasharray="8 16"/><line x1="164" y1="210" x2="228" y2="210" stroke-width="8" stroke-dasharray="8 16"/><line x1="42" y1="234" x2="228" y2="234" stroke-width="12" stroke-dasharray="12 12"/></g>
+            <rect class="c-o a li-b" x="140" y="134" width="8" height="8"/>
+            <rect class="c-w a li-w" x="140" y="158" width="8" height="8"/>
+            <g class="a li-say"><rect class="c-t" x="254" y="64" width="70" height="40"/><rect class="c-t" x="246" y="92" width="10" height="12"/><text class="li-e5" x="289" y="92">e5</text></g>
+            <g class="c-s a li-wave"><rect x="336" y="79" width="5" height="10"/><rect x="346" y="74" width="5" height="20"/><rect x="356" y="79" width="5" height="10"/></g>
+            <g class="a li-key"><rect class="a li-cap" x="254" y="204" width="122" height="32"/><text class="a li-word" x="315" y="225">SPACE</text></g>
+          </svg>
+        </div>
+        <p class="hook" id="hook-lichess-irl">move the piece, press space</p>
+        <p class="vh" data-alt>The pane: a board from above with a printed marker at each corner. A move, the space bar, the reply.</p>
+      </figure>
+
+      <figure class="pv pv-minigames">
+        <figcaption class="fact" id="fact-minigames"><span data-game-desc>A real game of catch, the first of thirteen tiny games. Built in one week, August 2026.</span></figcaption>
+        <div class="screen" data-game>
+          <span class="screen-title" aria-hidden="true">minigames</span>
+          <span class="hud" aria-hidden="true">Score: <span class="hud-score" data-score>0</span></span>
+          <span class="hud hud-right" aria-hidden="true" data-lives-box>Lives: <span data-lives>3</span></span>
+          <svg viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+            <rect class="c-o" data-block x="270" y="96" width="20" height="20"/>
+            <rect class="c-p" data-paddle x="180" y="280" width="40" height="10"/>
+          </svg>
+          <p class="screen-note" data-note><span class="nojs-only">needs JavaScript to play</span></p>
+        </div>
+        <p class="hook" id="hook-minigames">catch what falls</p>
+        <p class="vh" data-alt>The pane: a paddle at the foot and one block falling.</p>
+      </figure>
+
+      <figure class="pv pv-budgeter">
+        <figcaption class="fact" id="fact-budgeter"><span>A budget that stays in your browser. Live, in Spanish.</span></figcaption>
+        <div class="screen">
+          <span class="screen-title" aria-hidden="true">budgeter</span>
+          <span class="hud" aria-hidden="true">uploaded: 0</span>
+          <svg viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+            <rect class="c-t" x="44" y="58" width="112" height="184"/>
+            <rect class="c-n bar" x="54" y="70" width="48" height="6"/>
+            <g class="c-n bar2"><rect x="54" y="92" width="52" height="5"/><rect x="54" y="112" width="40" height="5"/><rect x="54" y="132" width="58" height="5"/><rect x="54" y="152" width="34" height="5"/><rect x="54" y="172" width="50" height="5"/><rect x="54" y="192" width="44" height="5"/><rect x="54" y="212" width="56" height="5"/></g>
+            <g class="c-n bar"><rect x="126" y="92" width="20" height="5"/><rect x="130" y="112" width="16" height="5"/><rect x="122" y="132" width="24" height="5"/><rect x="132" y="152" width="14" height="5"/><rect x="126" y="172" width="20" height="5"/><rect x="128" y="192" width="18" height="5"/><rect x="124" y="212" width="22" height="5"/></g>
+            <rect class="c-s" x="172" y="147" width="36" height="6"/>
+            <g class="c-y"><rect x="208" y="138" width="6" height="24"/><rect x="214" y="142" width="6" height="16"/><rect x="220" y="146" width="6" height="8"/></g>
+            <rect class="c-s" x="244" y="238" width="118" height="4"/>
+            <rect class="c-r" x="250" y="114" width="20" height="124"/><rect class="c-g" x="280" y="168" width="20" height="70"/><rect class="c-b" x="310" y="142" width="20" height="96"/><rect class="c-o" x="340" y="192" width="20" height="46"/>
+            <line class="ln-t dash" x1="240" y1="134" x2="366" y2="134"/>
+          </svg>
+        </div>
+        <p class="hook" id="hook-budgeter">statements in, budget out</p>
+        <p class="vh" data-alt>The pane: a bank statement on the left, a budget in four bars on the right.</p>
+      </figure>
+
+      <figure class="pv pv-the-desk">
+        <figcaption class="fact" id="fact-the-desk"><span>i3, tmux and vim. Distractions blocked.</span></figcaption>
+        <div class="screen">
+          <span class="screen-title" aria-hidden="true">the desk</span>
+          <span class="hud" aria-hidden="true">tiles: 3</span>
+          <svg viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+            <rect class="c-i" x="40" y="48" width="320" height="16"/>
+            <rect class="c-y" x="47" y="53" width="6" height="6"/><g class="c-s"><rect x="59" y="53" width="6" height="6"/><rect x="71" y="53" width="6" height="6"/></g>
+            <g class="c-g"><rect x="262" y="53" width="4" height="6"/><rect x="268" y="53" width="4" height="6"/><rect x="274" y="53" width="4" height="6"/><rect x="280" y="53" width="4" height="6"/></g>
+            <g class="c-s"><rect x="286" y="53" width="4" height="6"/><rect x="292" y="53" width="4" height="6"/><rect x="298" y="53" width="4" height="6"/><rect x="304" y="53" width="4" height="6"/><rect x="310" y="53" width="4" height="6"/><rect x="316" y="53" width="4" height="6"/></g>
+            <rect class="c-t" x="332" y="53" width="22" height="6"/>
+            <rect class="ol ol-focus" x="41" y="75" width="194" height="174"/>
+            <g class="c-s"><rect x="54" y="90" width="92" height="6"/><rect x="54" y="104" width="140" height="6"/><rect x="54" y="118" width="64" height="6"/><rect x="54" y="132" width="120" height="6"/><rect x="54" y="146" width="100" height="6"/><rect x="70" y="170" width="60" height="6"/></g>
+            <rect class="c-p" x="54" y="170" width="10" height="6"/><rect class="c-t" x="136" y="167" width="8" height="12"/>
+            <rect class="ol" x="246" y="74" width="114" height="82"/>
+            <g class="c-s"><rect x="258" y="88" width="70" height="6"/><rect x="258" y="102" width="50" height="6"/><rect x="258" y="116" width="78" height="6"/></g>
+            <rect class="c-i" x="248" y="140" width="110" height="14"/><rect class="c-b" x="248" y="140" width="30" height="14"/>
+            <rect class="ol" x="246" y="168" width="114" height="82"/>
+            <g class="c-s"><rect x="258" y="182" width="60" height="6"/><rect x="258" y="196" width="84" height="6"/><rect x="258" y="210" width="40" height="6"/></g>
+          </svg>
+        </div>
+        <p class="hook" id="hook-the-desk">keyboard first</p>
+        <p class="vh" data-alt>The pane: three tiles with thin frames under one status bar.</p>
+      </figure>
+
+      <figure class="pv pv-how-i-build">
+        <figcaption class="fact" id="fact-how-i-build"><span>How a work item gets from an idea to production, in eight levels.</span></figcaption>
+        <div class="screen">
+          <span class="screen-title" aria-hidden="true">how i build</span>
+          <span class="hud" aria-hidden="true">levels: 8</span>
+          <svg viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+            <g class="c-s"><rect x="65" y="118" width="240" height="4"/><rect x="303" y="118" width="4" height="84"/><rect x="65" y="198" width="240" height="4"/></g>
+            <g class="c-y"><rect x="50" y="105" width="30" height="30"/><rect x="130" y="105" width="30" height="30"/><rect x="210" y="105" width="30" height="30"/><rect x="290" y="105" width="30" height="30"/><rect x="290" y="185" width="30" height="30"/><rect x="210" y="185" width="30" height="30"/><rect x="130" y="185" width="30" height="30"/><rect x="50" y="185" width="30" height="30"/></g>
+            <g class="lv-num"><text x="65" y="126">1</text><text x="145" y="126">2</text><text x="225" y="126">3</text><text x="305" y="126">4</text><text x="305" y="206">5</text><text x="225" y="206">6</text><text x="145" y="206">7</text><text x="65" y="206">8</text></g>
+            <rect class="c-p" x="59" y="87" width="12" height="18"/>
+            <rect class="c-t" x="76" y="160" width="3" height="25"/><rect class="c-g" x="79" y="160" width="16" height="10"/>
+          </svg>
+        </div>
+        <p class="hook" id="hook-how-i-build">agents build, gates check, I decide</p>
+        <p class="vh" data-alt>The pane: eight numbered levels on one path, with a flag at the end.</p>
+      </figure>
+
+      <figure class="pv pv-record">
+        <figcaption class="fact" id="fact-record"><span>2008 to 2019: four companies, BanregioLABS, Vordem. Then the projects.</span></figcaption>
+        <div class="screen">
+          <span class="screen-title" aria-hidden="true">record</span>
+          <span class="hud" aria-hidden="true">since: 2008</span>
+          <svg viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+            <rect class="c-s" x="40" y="186" width="320" height="4"/>
+            <rect class="c-b" x="40" y="158" width="100" height="24"/><rect class="c-o" x="143" y="158" width="31" height="24"/><rect class="c-g" x="177" y="158" width="48" height="24"/>
+            <!-- after 2019 no job is drawn: one square per project, where it began. Seven of them in 2026 -->
+            <g class="c-y"><rect x="301" y="174" width="8" height="8"/><rect x="319" y="174" width="8" height="8"/><rect x="348" y="174" width="8" height="8"/><rect x="348" y="163" width="8" height="8"/><rect x="348" y="152" width="8" height="8"/><rect x="348" y="141" width="8" height="8"/><rect x="348" y="130" width="8" height="8"/><rect x="348" y="119" width="8" height="8"/><rect x="348" y="108" width="8" height="8"/></g>
+            <g class="c-s"><rect x="40" y="190" width="2" height="8"/><rect x="141" y="190" width="2" height="8"/><rect x="175" y="190" width="2" height="8"/><rect x="225" y="190" width="2" height="8"/><rect x="358" y="190" width="2" height="8"/></g>
+            <g class="yr"><text x="40" y="216" text-anchor="start">2008</text><text x="142" y="216">2014</text><text x="176" y="216">2016</text><text x="226" y="216">2019</text><text x="360" y="216" text-anchor="end">now</text></g>
+          </svg>
+        </div>
+        <p class="hook" id="hook-record">since 2008</p>
+        <p class="vh" data-alt>The pane: three blocks on a line from 2008 to 2019, then one square per project where it began, seven of them in 2026.</p>
+      </figure>
+
+      <figure class="pv pv-about">
+        <figcaption class="fact" id="fact-about"><span>Software engineer in Monterrey, Mexico. The one picture of me on this site.</span></figcaption>
+        <div class="screen">
+          <span class="screen-title" aria-hidden="true">about</span>
+          <span class="hud" aria-hidden="true">player: 1</span>
+          <img class="screen-face" src="/assets/avatar-128.webp" srcset="/assets/avatar-128.webp 2x, /assets/avatar-192.webp 3x" width="64" height="64" alt="Illustrated portrait of Luis Herrada" loading="lazy" decoding="async">
+        </div>
+        <p class="hook" id="hook-about">just start and keep practicing</p>
+      </figure>
+
+      <div class="pane-ctl">
+        <button class="pane-btn" type="button" data-bumpy-toggle hidden>Hide Bumpy</button>
+        <button class="pane-btn pane-pause" type="button" data-pause hidden><span data-pause-word>pause</span><span class="vh"> the pane</span></button>
+      </div>
     </div>
-  </footer>
+  </div>
+
+  <div class="hint">
+    <p class="hint-line">
+      <span class="hint-plain">choose a row, open to go</span>
+      <span class="hint-touch">tap to choose, open to go</span>
+      <span class="hint-keys">Up/Down choose <span aria-hidden="true">&middot;</span> Enter open <span aria-hidden="true">&middot;</span> Esc back</span>
+      <span class="hint-game-keys">Left/Right move <span aria-hidden="true">&middot;</span> Esc leave</span>
+      <span class="hint-game-touch">drag to move <span aria-hidden="true">&middot;</span> stop to leave</span>
+    </p>
+    <p class="hint-more"><a href="#read">Or scroll. It is all below, as a plain page.</a></p>
+  </div>
+
+  <p class="vh" role="status" data-status></p>
+</section>
+
+<!-- ============ The page. Nothing below depends on the menu. ============ -->
+<div class="doc wrap" id="read">
+
+  <section class="sec sec-hero">
+    <div class="sec-wide">
+      <p class="hero-line">I build software, and the workshop that builds it with me.</p>
+      <p class="creed">Simple, maintainable solutions to complex problems.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="about" tabindex="-1">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-about">about</h2>
+      <p class="sec-kind">software engineer, Monterrey, Mexico</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+      <img class="face" src="/assets/avatar-128.webp" srcset="/assets/avatar-128.webp 2x, /assets/avatar-192.webp 3x" width="64" height="64" alt="Illustrated portrait of Luis Herrada" loading="lazy" decoding="async">
+    </div>
+    <div class="sec-body">
+      <p>I'm Luis, a software engineer in Monterrey, Mexico. I have spent 18+ years taking products from the first idea to production, and I still like the simple solution best. Today I build Rentaventa, a real-estate platform for the city's brokers, with a partner. I also build Smithy, the workshop where AI agents do most of my building and I keep the decisions. The rest is for the love of it: an archive of Mexico's trees, a vim trainer, chess on a real board, a box of tiny games.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="now">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-now">now</h2>
+      <p class="sec-kind">November 2026</p>
+    </div>
+    <div class="sec-body">
+      <p class="lead">Getting Rentaventa ready for launch, and handing Smithy more of the work.</p>
+    </div>
+  </section>
+
+  <h2 class="vh" id="h-projects">Projects</h2>
+
+  <section class="sec sec-project" id="smithy" tabindex="-1" style="--block:#E65A5A">
+    <div class="sec-head">
+      <h3 class="sec-name" id="h-smithy">Smithy</h3>
+      <p class="sec-kind">a personal tool, for one user</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+      <dl class="stat">
+        <div><dt>state</dt><dd>In daily use since October 2026. Private.</dd></div>
+        <div><dt>score</dt><dd>9 projects on one board. 676 work items, 248 done. Read <time datetime="2026-11-25">2026-11-25</time>.</dd></div>
+      </dl>
+    </div>
+    <div class="sec-body">
+      <p class="lead">The workshop where AI agents build my software and I keep the decisions.</p>
+      <dl class="pair">
+        <div><dt>the complex challenge</dt><dd>AI agents can write code faster than one person can follow.</dd></div>
+        <div><dt>the simple answer</dt><dd>A board that moves only on facts, a ledger of decisions, and one short list of what needs me.</dd></div>
+      </dl>
+      <p>Smithy is the tool I built to build everything else. Agents do the work and stamp each gate.</p>
+      <p class="go"><a class="btn" href="/how-i-build.html">How I build with agents</a></p>
+    </div>
+  </section>
+
+  <section class="sec sec-project" id="rentaventa" tabindex="-1" style="--block:#F0963C">
+    <div class="sec-head">
+      <h3 class="sec-name" id="h-rentaventa">Rentaventa</h3>
+      <p class="sec-kind">a product, built with a partner</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+      <dl class="stat">
+        <div><dt>state</dt><dd>Pre-launch. Since August 2024.</dd></div>
+        <div><dt>score</dt><dd>86 decision records in 27 months with work. Read <time datetime="2026-11-25">2026-11-25</time>.</dd></div>
+      </dl>
+    </div>
+    <div class="sec-body">
+      <p class="lead">Rent and sale listings for Monterrey, built for brokers who work from WhatsApp.</p>
+      <dl class="pair">
+        <div><dt>the complex challenge</dt><dd>Brokers in Monterrey live in WhatsApp.</dd></div>
+        <div><dt>the simple answer</dt><dd>Meet them there. A broker publishes a listing, sends photos or works a lead in a chat with an agent.</dd></div>
+      </dl>
+      <p>Listings for rent and sale on a map, a CRM for leads, and two ways to work without opening a dashboard: a WhatsApp agent for brokers and a Claude connector for the team.</p>
+      <p class="go"><a class="btn" href="https://rentaventa.mx">rentaventa.mx <span class="btn-note">(in Spanish)</span></a></p>
+    </div>
+  </section>
+
+  <section class="sec sec-project" id="arbopedia" tabindex="-1" style="--block:#F0C85A">
+    <div class="sec-head">
+      <h3 class="sec-name" id="h-arbopedia">arbopedia</h3>
+      <p class="sec-kind">an open archive</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+      <dl class="stat">
+        <div><dt>state</dt><dd>Live. 396 sheets on <time datetime="2026-11-25">2026-11-25</time>. In progress, and it says so.</dd></div>
+        <div><dt>score</dt><dd>1,421 pages read across 10 printed works, as of <time datetime="2026-11-25">2026-11-25</time>. One Instagram post a day.</dd></div>
+      </dl>
+    </div>
+    <div class="sec-body">
+      <p class="lead">An open archive of the trees of Mexico.</p>
+      <dl class="pair">
+        <div><dt>the complex challenge</dt><dd>Every tree of Mexico, with a source behind every fact.</dd></div>
+        <div><dt>the simple answer</dt><dd>One sheet per species, read from printed field guides page by page. What is not verified prints <span lang="es">[pendiente]</span>, the archive's word for pending.</dd></div>
+      </dl>
+      <p>Every species gets a sheet: its scientific name, the names people use where it grows, its height drawn next to a person, where it has been found and the months it flowers. Every fact cites the page it came from.</p>
+      <p class="go"><a class="btn" href="https://arbopedia.mx">arbopedia.mx <span class="btn-note">(in Spanish)</span></a></p>
+    </div>
+  </section>
+
+  <section class="sec sec-project" id="vim-puzzles" tabindex="-1" style="--block:#96D264">
+    <div class="sec-head">
+      <h3 class="sec-name" id="h-vim-puzzles">vim-puzzles</h3>
+      <p class="sec-kind">a trainer</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+      <dl class="stat">
+        <div><dt>state</dt><dd>Live at vim.herrada.me. Never announced.</dd></div>
+        <div><dt>score</dt><dd>200 puzzles in 11 categories, 16 lessons.</dd></div>
+      </dl>
+    </div>
+    <div class="sec-body">
+      <p class="lead">Vim puzzles, scored against par.</p>
+      <dl class="pair">
+        <div><dt>the complex challenge</dt><dd>I use vim all day, and this is the trainer I wanted.</dd></div>
+        <div><dt>the simple answer</dt><dd>200 short puzzles in a real vim emulation, each scored against par. No accounts and no backend.</dd></div>
+      </dl>
+      <p>Every solution is replayed by the real engine before it ships, so no puzzle goes out unless it is provably solvable at its par. It looks like tmux panes in Solarized Dark, because that is what my terminal looks like.</p>
+      <p class="go"><a class="btn" href="https://vim.herrada.me">vim.herrada.me</a></p>
+    </div>
+  </section>
+
+  <section class="sec sec-project" id="lichess-irl" tabindex="-1" style="--block:#64B4DC">
+    <div class="sec-head">
+      <h3 class="sec-name" id="h-lichess-irl">lichess-irl</h3>
+      <p class="sec-kind">a tool for one desk</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+      <dl class="stat">
+        <div><dt>state</dt><dd>Code complete.</dd></div>
+        <div><dt>score</dt><dd>First full game on the board: not yet.</dd></div>
+      </dl>
+    </div>
+    <div class="sec-body">
+      <p class="lead">Online chess on a real board.</p>
+      <dl class="pair">
+        <div><dt>the complex challenge</dt><dd>Chess is better on a real board.</dd></div>
+        <div><dt>the simple answer</dt><dd>A webcam above the board, four printed markers at its corners, a voice for the opponent's move, and the space bar as the clock.</dd></div>
+      </dl>
+      <p>Earlier chess work, December 2025: a 3D piece set for the board package behind the Lichess mobile app. A branch on my public fork, not merged upstream.</p>
+      <p class="go"><a class="btn" href="https://github.com/luisehk/flutter-chessground/tree/add-cubesandpi-3d-piece-set">the piece set <span class="btn-note">(a branch on GitHub)</span></a></p>
+    </div>
+  </section>
+
+  <section class="sec sec-project" id="minigames" tabindex="-1" style="--block:#50C878">
+    <div class="sec-head">
+      <h3 class="sec-name" id="h-minigames">minigames</h3>
+      <p class="sec-kind">games</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+      <dl class="stat">
+        <div><dt>state</dt><dd>Done. Built in one week, August 2026. Private.</dd></div>
+        <div><dt>score</dt><dd>13 games, more than 570 tests, 10 decision records.</dd></div>
+      </dl>
+    </div>
+    <div class="sec-body">
+      <p class="lead">Thirteen tiny games, one architecture.</p>
+      <dl class="pair">
+        <div><dt>the complex challenge</dt><dd>Thirteen games without thirteen architectures.</dd></div>
+        <div><dt>the simple answer</dt><dd>One pure function steps every world. The same seed and the same inputs give the same game, so every game is tested without a screen.</dd></div>
+      </dl>
+      <p>Every shape is a placeholder you can swap for your own drawing in two lines. Music and sound effects are generated in code. I built it in a week, and yes, the tiny games have decision records too.</p>
+      <ul class="frames">
+        <li><img src="/assets/game-breakout.png" width="360" height="270" alt="breakout: five rows of bricks, a ball and a paddle" loading="lazy" decoding="async"></li>
+        <li><img src="/assets/game-snake.png" width="360" height="270" alt="snake: a short green snake and one red square" loading="lazy" decoding="async"></li>
+        <li><img src="/assets/game-platformer.png" width="360" height="270" alt="platformer: a green block among platforms and yellow coins" loading="lazy" decoding="async"></li>
+        <li><img src="/assets/game-invaders.png" width="360" height="270" alt="invaders: six rows of small blocks above a green ship" loading="lazy" decoding="async"></li>
+        <li><img src="/assets/game-hockey.png" width="360" height="270" alt="hockey: two round mallets, a puck and two goals" loading="lazy" decoding="async"></li>
+        <li><img src="/assets/game-racer.png" width="360" height="270" alt="racer: small cars on a grey track seen from above" loading="lazy" decoding="async"></li>
+      </ul>
+      <p class="cap">Six of the thirteen: breakout, snake, platformer, invaders, hockey and racer.</p>
+      <p class="go"><a class="btn" href="#menu" data-select="minigames">play catch in the menu</a></p>
+    </div>
+  </section>
+
+  <h2 class="vh" id="h-more">One line each</h2>
+
+  <section class="sec sec-line" id="budgeter" tabindex="-1">
+    <div class="sec-head">
+      <h3 class="sec-name" id="h-budgeter">budgeter</h3>
+      <p class="sec-kind">live, in Spanish</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+    </div>
+    <div class="sec-body">
+      <p>A budget that stays in your browser. Bank statements in, a budget out, nothing uploaded. It is at least my third try at this since 2015. Try it at <a href="https://budgeter.herrada.me">budgeter.herrada.me</a>.</p>
+    </div>
+  </section>
+
+  <section class="sec sec-line" id="rentaventa-meet">
+    <div class="sec-head">
+      <h3 class="sec-name" id="h-rentaventa-meet">rentaventa-meet</h3>
+      <p class="sec-kind">used by the Rentaventa team, private</p>
+    </div>
+    <div class="sec-body">
+      <p>Video calls that file their own action items.</p>
+    </div>
+  </section>
+
+  <section class="sec sec-line" id="the-desk" tabindex="-1">
+    <div class="sec-head">
+      <h3 class="sec-name" id="h-the-desk">the desk</h3>
+      <p class="sec-kind">private dotfiles</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+    </div>
+    <div class="sec-body">
+      <p>i3, tmux and vim. Keyboard first, distractions blocked.</p>
+    </div>
+  </section>
+
+  <section class="sec sec-line" id="crispy-wookie">
+    <div class="sec-head">
+      <h3 class="sec-name" id="h-crispy-wookie">crispy-wookie</h3>
+      <p class="sec-kind">earlier, 2015, public</p>
+    </div>
+    <div class="sec-body">
+      <p>My first try at one place for everything. It is still <a href="https://github.com/luisehk/crispy-wookie">on GitHub</a>.</p>
+    </div>
+  </section>
+
+  <section class="sec sec-side-left" id="how-i-work">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-work">how I work</h2>
+      <p class="sec-kind">a balanced approach</p>
+    </div>
+    <div class="sec-body">
+      <p>From 2016 to 2019 I ran Vordem, a digital product agency. Its home page had a heading I still work by: “A balanced approach.” Strategists, developers, designers and product managers on one problem, looking for the simple answer. Today agents hold some of those seats. One shapes the work with me. One argues with the design before any code exists. One builds. A panel of reviewers reads the result and never sees the plan. The decisions stay with me.</p>
+      <p>I work in a terminal: i3, tmux, vim. Every project I own has one command that has to pass before anything ships, and a written record of why things are the way they are. That holds for the real-estate platform and for the tiny games.</p>
+    </div>
+    <div class="sec-side">
+      <ul class="rules">
+        <li>One command gates every repo. Nothing ships that does not pass.</li>
+        <li>I write down why. More than 250 decision records across seven projects, ten of them for thirteen tiny games.</li>
+        <li>Status is stated as it is. Pre-launch means pre-launch.</li>
+        <li>Machines check the work. Every vim puzzle is replayed in CI. Every game is replayed from a seed.</li>
+      </ul>
+      <p class="go"><a class="btn" href="/how-i-build.html">How I build with agents</a></p>
+    </div>
+  </section>
+
+  <section class="sec sec-beyond" id="beyond">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-beyond">beyond code</h2>
+      <p class="sec-kind">away from the keyboard</p>
+    </div>
+    <div class="sec-body">
+      <p>Away from the keyboard: guitar, chess, science articles and a good book.</p>
+    </div>
+    <dl class="years rows">
+      <div><dt>guitar</dt><dd>Self-taught as a teenager. Mostly leads where a few notes carry the line.</dd></div>
+      <div><dt>chess</dt><dd>Rapid, 15+10. Soon on a real board.</dd></div>
+    </dl>
+    <p class="motto">My advice has been the same since 2019: just start and keep practicing.</p>
+  </section>
+
+  <section class="sec sec-record" id="record" tabindex="-1">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-record">record</h2>
+      <p class="sec-kind">2008 to 2019</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+    </div>
+    <dl class="years rows">
+      <div><dt>2008</dt><dd>First software job. Mobile, web and games at four companies until 2014.</dd></div>
+      <div><dt>2013</dt><dd>B.S. in Software Development, Universidad Tec Milenio, Monterrey.</dd></div>
+      <div><dt>2014 <span class="to">to</span> 2016</dt><dd>Tech lead at BanregioLABS, Monterrey. Banking APIs and mobile banking. Led the move to service-oriented architecture and brought in continuous integration.</dd></div>
+      <div><dt>2016 <span class="to">to</span> 2019</dt><dd>Founder and head of tech at Vordem, a remote-first digital product agency in Monterrey. A team of ten, 10+ products shipped, for startups and big companies in finance, retail, transportation and education.</dd></div>
+      <div><dt>2019</dt><dd>Talks at local meetups and three posts on my site. “Just start and keep practicing.”</dd></div>
+    </dl>
+    <p class="years-after">The rest of the record is <a href="https://www.linkedin.com/in/luisehk">on LinkedIn</a>.</p>
+  </section>
+
+</div>
+</main>
+
+<footer class="foot wrap">
+  <p class="foot-line"><span class="foot-c">&copy; 2026 Luis Herrada</span> <span class="foot-links"><a href="https://www.linkedin.com/in/luisehk">LinkedIn</a> <span aria-hidden="true">&middot;</span> <a href="https://github.com/luisehk">GitHub</a> <span aria-hidden="true">&middot;</span> <a href="#menu">back to the menu</a></span></p>
+  <p class="foot-note">Preview. One of five directions for this site, drawn by AI agents as a work item on my own board.</p>
+</footer>
+
 </body>
 </html>
-

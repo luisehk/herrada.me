@@ -1,7 +1,9 @@
-# The site is plain HTML with no build step, so there is no build stage: copy
-# the three site files into nginx and serve them (RK-0029, thepocketschool.mx's
-# shape). Only index.html, style.css and images/ reach the web root. The
-# Dockerfile, the manifest, the make files and CNAME never ship.
+# The site is plain HTML with no build step at run time, so there is no build
+# stage: scripts/build.py writes the three pages from src/site.json and they are
+# committed (HM-0002). Copy the site files into nginx and serve them (RK-0029,
+# thepocketschool.mx's shape). Only the three pages, style.css, script.js,
+# images/, fonts/ and assets/ reach the web root. The data file, the templates,
+# the tests, the Dockerfile, the manifest, the make files and CNAME never ship.
 FROM nginx:stable-alpine
 
 LABEL org.opencontainers.image.source="https://github.com/luisehk/herrada.me"
@@ -12,8 +14,10 @@ LABEL org.opencontainers.image.description="herrada.me static site"
 RUN rm -rf /etc/nginx/conf.d/* /usr/share/nginx/html/*
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY index.html style.css /usr/share/nginx/html/
+COPY index.html how-i-build.html 404.html style.css script.js /usr/share/nginx/html/
 COPY images/ /usr/share/nginx/html/images/
+COPY fonts/ /usr/share/nginx/html/fonts/
+COPY assets/ /usr/share/nginx/html/assets/
 
 # 127.0.0.1 rather than `localhost`: nginx listens on IPv4 only and Alpine's
 # busybox wget resolves `localhost` to ::1 first.

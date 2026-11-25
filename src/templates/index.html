@@ -1,0 +1,133 @@
+{{head}}
+
+<a class="skip" href="#read">Skip the menu, go to the page</a>
+
+{{top}}
+
+<main id="main">
+
+<!-- ============ The menu. Everything in it is also in the page below. ============ -->
+<section class="menu wrap" id="menu" aria-labelledby="name" data-menu>
+
+  <header class="marquee">
+    <h1 id="name">{{name}}</h1>
+    <p class="sub sub-narrow"><span class="nb">{{label}}</span> <span class="sep" aria-hidden="true">&middot;</span> <span class="nb">{{city}} <span aria-hidden="true">&middot;</span> since {{since}}</span></p>
+    <p class="lede">{{lede}}</p>
+  </header>
+
+  <div class="select">
+
+    <fieldset class="list">
+      <legend class="vh">Choose a row. The pane shows it.</legend>
+
+{{rows}}
+    </fieldset>
+
+    <!-- The pane. Each row's figure says what the thing is above its drawing, so the
+         first screen informs before it plays. Each drawing is its still frame, and the
+         stylesheet holds the loops. -->
+    <div class="stage" role="group" aria-label="Preview of the chosen row">
+
+{{panes}}
+    </div>
+  </div>
+
+  <div class="hint">
+    <p class="hint-line">
+      <span class="hint-plain">choose a row, open to go</span>
+      <span class="hint-touch">tap to choose, open to go</span>
+      <span class="hint-keys">Up/Down choose <span aria-hidden="true">&middot;</span> Enter open <span aria-hidden="true">&middot;</span> Esc back</span>
+      <span class="hint-game-keys">Left/Right move <span aria-hidden="true">&middot;</span> Esc leave</span>
+      <span class="hint-game-touch">drag to move <span aria-hidden="true">&middot;</span> stop to leave</span>
+    </p>
+    <p class="hint-more"><a href="#read">Or scroll. It is all below, as a plain page.</a></p>
+  </div>
+
+  <p class="vh" role="status" data-status></p>
+</section>
+
+<!-- ============ The page. Nothing below depends on the menu. ============ -->
+<div class="doc wrap" id="read">
+
+  <section class="sec sec-hero">
+    <div class="sec-wide">
+      <p class="hero-line">{{hero}}</p>
+      <p class="creed">{{creed}}</p>
+    </div>
+  </section>
+
+  <section class="sec" id="about" tabindex="-1">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-about">about</h2>
+      <p class="sec-kind">{{about_kind}}</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+{{about_face}}
+    </div>
+    <div class="sec-body">
+      <p>{{about}}</p>
+    </div>
+  </section>
+
+  <section class="sec" id="now">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-now">now</h2>
+      <p class="sec-kind">{{now_kind}}</p>
+    </div>
+    <div class="sec-body">
+      <p class="lead">{{now}}</p>
+    </div>
+  </section>
+
+  <h2 class="vh" id="h-projects">Projects</h2>
+
+{{projects}}
+
+  <h2 class="vh" id="h-more">One line each</h2>
+
+{{lines}}
+
+  <section class="sec sec-side-left" id="how-i-work">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-work">how I work</h2>
+      <p class="sec-kind">{{work_kind}}</p>
+    </div>
+    <div class="sec-body">
+{{work_body}}
+    </div>
+    <div class="sec-side">
+      <ul class="rules">
+{{work_rules}}
+      </ul>
+      <p class="go"><a class="btn" href="/how-i-build.html">How I build with agents</a></p>
+    </div>
+  </section>
+
+  <section class="sec sec-beyond" id="beyond">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-beyond">beyond code</h2>
+      <p class="sec-kind">{{beyond_kind}}</p>
+    </div>
+    <div class="sec-body">
+      <p>{{beyond_body}}</p>
+    </div>
+{{beyond_rows}}
+    <p class="motto">{{motto}}</p>
+  </section>
+
+  <section class="sec sec-record" id="record" tabindex="-1">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-record">record</h2>
+      <p class="sec-kind">{{record_kind}}</p>
+      <p class="sec-esc">Esc goes back to the menu</p>
+    </div>
+{{record_years}}
+    <p class="years-after">{{record_after}}</p>
+  </section>
+
+</div>
+</main>
+
+{{foot}}
+
+</body>
+</html>
