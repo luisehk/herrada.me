@@ -618,7 +618,8 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 }
 .js .nojs-only { display: none; }
 .screen.is-ready { cursor: pointer; }
-.screen.is-live { touch-action: none; cursor: default; }
+/* a double tap in play must not select the score or the note */
+.screen.is-live { touch-action: none; cursor: default; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .screen.is-live:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
 
 .screen-face {
@@ -752,12 +753,13 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
     justify-content: center;
   }
   .row-label { font-size: 1.5rem; }
-  .menu { --fact-h: 4.5rem; }
+  .menu { --fact-h: 6.125rem; } /* below 960px the pane is still narrow for the larger type: three 26px lines and the padding */
   .fact { padding-bottom: 20px; font-size: 1.125rem; line-height: 1.625rem; }
   .hook { padding-top: 16px; font-size: 1.25rem; }
   .hint { padding: 20px 0 0; }
   .hint-line { font-size: 1rem; }
 }
+@media (min-width: 960px) { .menu { --fact-h: 4.5rem; } } /* two lines from here up; every fact fits from 890px, and a count can grow */
 
 /* On a desk the menu is one screen, with its hint line at the foot, as in the game.
    The page starts under the fold. A very tall window stops stretching it at 61rem,
@@ -1079,6 +1081,20 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
   line-height: 1.35;
 }
 .js .sec.is-open:focus-visible .sec-esc { display: block; }
+/* a touch screen has no Esc: it gets a link back to the menu instead, while the section is open */
+.sec-back {
+  display: none;
+  padding-block: 10px;
+  color: var(--dim);
+  text-decoration-color: var(--dim);
+  text-decoration-thickness: 1px;
+}
+.sec-back:hover { color: var(--sel-text); text-decoration-color: transparent; }
+@media (pointer: coarse) {
+  .js .sec.is-open .sec-esc { display: block; }
+  .js .sec.is-open .sec-esc-key { display: none; }
+  .js .sec.is-open .sec-back { display: inline-block; }
+}
 
 /* state and score sit beside the name, like the score line in a game */
 .stat {
@@ -1371,6 +1387,11 @@ code {
   font-weight: 600;
   font-size: 0.875rem;
   line-height: 1.2;
+}
+/* on a phone each column reads top down, its name first: "In dev", then HM-0001 */
+@media (max-width: 819.98px) {
+  .map-col { display: flex; flex-direction: column; }
+  .map-name { order: -1; margin-top: 0; margin-bottom: 5px; }
 }
 
 .items { display: grid; row-gap: 14px; margin-top: 24px; padding: 0; list-style: none; }

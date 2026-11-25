@@ -3,7 +3,7 @@
    The page is complete before this file runs. Every row, pane and link is in the HTML,
    and the stylesheet already shows the chosen row. This file adds four things:
 
-     1. Enter opens a row, and Esc comes back from what it opened.
+     1. Enter opens a row, and Esc (or, on a touch screen, a link) comes back from what it opened.
      2. The loop controls: pause, and a stop while the pane is off screen.
      3. Bumpy: he hops to the chosen row, naps when the menu is left alone, and can be hidden.
      4. Catch: the one row you can play.
@@ -144,7 +144,11 @@
     if (i < 0 || event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.key === 'Enter') {
       event.preventDefault();
-      (rows[i].querySelector('[data-play]') || rows[i].querySelector('a.row-go')).click();
+      const play = rows[i].querySelector('[data-play]');
+      // In a round, Enter on the row goes back to the game, whose focus resumes it, as
+      // its note says. It never presses stop: that takes a click on the button itself.
+      if (play && game.on) game.focus();
+      else (play || rows[i].querySelector('a.row-go')).click();
     } else if (event.key === 'j' || event.key === 'k') {
       // Up and Down are the browser's own. j and k are for the hands that expect them.
       event.preventDefault();
@@ -170,11 +174,22 @@
   });
   const page = document.querySelector('.doc');
   if (page) {
-    page.addEventListener('keydown', (event) => {
-      if (event.key !== 'Escape' || !opened || !opened.contains(event.target)) return;
+    // Esc, or the "back to the menu" link a touch screen shows in its place, closes what
+    // was opened and puts focus back on the chosen row. Without this file the link's
+    // href still goes to the menu.
+    const back = () => {
       close();
       radios[chosen].focus({ preventScroll: true });
       window.scrollTo({ top: 0 });
+    };
+    page.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || !opened || !opened.contains(event.target)) return;
+      back();
+    });
+    page.addEventListener('click', (event) => {
+      if (!event.target.closest('a.sec-back')) return;
+      event.preventDefault();
+      back();
     });
     page.addEventListener('focusout', (event) => {
       if (opened && !opened.contains(event.relatedTarget)) close();
@@ -299,7 +314,13 @@
     calm.addEventListener('change', rest);
 
     const hidden = () => root.classList.contains('no-bumpy');
-    const label = () => { toggle.textContent = hidden() ? 'Show Bumpy' : 'Hide Bumpy'; };
+    // the button says "hide bumpy", and its name says who Bumpy is
+    const label = () => {
+      const word = hidden() ? 'Show Bumpy' : 'Hide Bumpy';
+      toggle.textContent = word;
+      toggle.title = word + ', the cursor';
+      toggle.setAttribute('aria-label', word + ', the cursor');
+    };
     toggle.hidden = false;
     label();
     toggle.addEventListener('click', () => {
@@ -328,7 +349,9 @@
     const note = screen.querySelector('[data-note]');
     const desc = menu.querySelector('[data-game-desc]');
     const IDLE_DESC = desc.textContent;
-    const IDLE_NOTE = 'Enter or tap to play';
+    // a touch screen has no Enter to press, so its notes name only the tap
+    const touch = () => matchMedia('(pointer: coarse)').matches;
+    const idleNote = () => (touch() ? 'Tap to play' : 'Enter or tap to play');
     const POSTER = { paddle: 180, bx: 270, by: 96, falling: true, score: 0, lives: 3 };
     const intent = { dir: 0, to: null };
     const keys = { left: false, right: false };
@@ -381,7 +404,7 @@
       screen.setAttribute('role', 'application');
       screen.setAttribute('aria-label', 'Catch. Left and Right move the paddle. Escape leaves the game.');
       playWord.textContent = 'stop';
-      desc.textContent = (matchMedia('(pointer: coarse)').matches ? 'Drag or tap.' : 'Left and Right, or drag.') + ' Three misses end the round.';
+      desc.textContent = (touch() ? 'Drag or tap.' : 'Left and Right, or drag.') + ' Three misses end the round.';
       say('Catch. Left and Right move the paddle. Three misses end the round. Escape leaves the game.');
       screen.focus({ preventScroll: true });
       newRound();
@@ -391,7 +414,10 @@
       if (!api.on || held) return;
       held = true;
       cancelAnimationFrame(frameId);
-      note.textContent = 'Paused. Tap or press Enter to go on.';
+      // Enter reaches the game only while it has focus: after a blur, name the tap
+      if (touch()) note.textContent = 'Paused. Tap to go on.';
+      else if (document.activeElement === screen) note.textContent = 'Paused. Tap or press Enter to go on.';
+      else note.textContent = 'Paused. Tap the game to go on.';
     }
 
     function resume() {
@@ -403,7 +429,7 @@
 
     function over() {
       held = true;
-      note.textContent = `Round over. Caught ${world.score}. Tap or press Enter for another.`;
+      note.textContent = `Round over. Caught ${world.score}. ${touch() ? 'Tap' : 'Tap or press Enter'} for another.`;
       say(`Round over. Caught ${world.score}.`);
     }
 
@@ -423,7 +449,7 @@
       screen.removeAttribute('aria-label');
       playWord.textContent = 'play';
       desc.textContent = IDLE_DESC;
-      note.textContent = IDLE_NOTE;
+      note.textContent = idleNote();
       world = POSTER;
       draw(world);
       if (refocus) radios[mine].focus({ preventScroll: true });
@@ -470,7 +496,7 @@
     screen.addEventListener('focus', () => { if (api.on && held && !paused && world.lives > 0) resume(); });
 
     screen.classList.add('is-ready');
-    note.textContent = IDLE_NOTE;
+    note.textContent = idleNote();
     return api;
   })();
 })();

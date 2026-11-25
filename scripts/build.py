@@ -26,8 +26,17 @@ PAGES = ("index.html", "how-i-build.html", "404.html")
 # Text values are HTML fragments. These are the only tags and attributes they may use.
 ALLOWED_TAGS = {"a", "b", "code", "span", "time"}
 ALLOWED_ATTRS = {"href", "lang", "class", "datetime", "aria-hidden"}
+# A link goes to this site ("/", "#") or to another site over https, never to a script.
+ALLOWED_HREF = ("/", "#", "https://")
 WORDS = {7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve", 13: "thirteen"}
 PLACEHOLDER = re.compile(r"\{(n|over|read|date):([A-Za-z0-9_-]+)\}")
+# Under a section opened from the menu: the Esc key for a keyboard, a link for a touch
+# screen. style.css shows one of them, and script.js gives the link the same path as Esc.
+SEC_ESC = ('      <p class="sec-esc"><span class="sec-esc-key">Esc goes back to the menu</span>'
+           ' <a class="sec-back" href="#menu">back to the menu</a></p>')
+# Ids land in id="...", class names and file names, and a block colour in a style attribute.
+ID = re.compile(r"^[A-Za-z0-9-]+$")
+BLOCK = re.compile(r"^#[0-9A-Fa-f]{6}$")
 
 
 class FragmentError(ValueError):
@@ -35,24 +44,51 @@ class FragmentError(ValueError):
 
 
 class _Fragment(HTMLParser):
-    """Checks one text value: allowed tags only, allowed attributes only, every tag closed."""
+    """Checks one text value: allowed tags only, allowed attributes only, every tag closed.
+
+    Comments, declarations, CDATA and processing instructions are refused, since they can
+    hide a tag from this parser and not from a browser. `tags` counts what was parsed, so
+    Site.text can refuse a '<' this parser read as plain text (an unfinished tag)."""
 
     def __init__(self, where):
         super().__init__(convert_charrefs=True)
         self.where = where
         self.stack = []
+        self.tags = 0
 
     def handle_starttag(self, tag, attrs):
         if tag not in ALLOWED_TAGS:
             raise FragmentError(f"{self.where}: tag <{tag}> is not allowed in a text value")
-        for name, _ in attrs:
+        for name, value in attrs:
             if name not in ALLOWED_ATTRS:
                 raise FragmentError(f"{self.where}: attribute {name} on <{tag}> is not allowed in a text value")
+            if name == "href":
+                check_href(value, self.where)
         self.stack.append(tag)
+        self.tags += 1
+
+    def handle_startendtag(self, tag, attrs):
+        raise FragmentError(f"{self.where}: <{tag}/> is not allowed in a text value; close the tag instead")
 
     def handle_endtag(self, tag):
         if not self.stack or self.stack.pop() != tag:
             raise FragmentError(f"{self.where}: </{tag}> does not close the open tag")
+        self.tags += 1
+
+    def _refuse(self, what):
+        raise FragmentError(f"{self.where}: {what} is not allowed in a text value")
+
+    def handle_comment(self, data):
+        self._refuse("a comment")
+
+    def handle_decl(self, decl):
+        self._refuse("a declaration")
+
+    def unknown_decl(self, data):
+        self._refuse("a CDATA section or declaration")
+
+    def handle_pi(self, data):
+        self._refuse("a processing instruction")
 
     def close(self):
         super().close()
@@ -62,6 +98,14 @@ class _Fragment(HTMLParser):
 
 def esc(value):
     return html.escape(str(value), quote=True)
+
+
+def check_href(value, where):
+    """A link may leave only for this site or an https address (no javascript:, data: or //host)."""
+    value = value or ""
+    if not value.startswith(ALLOWED_HREF) or value.startswith("//"):
+        raise FragmentError(f"{where}: href {value[:40]!r} must start with /, # or https://")
+    return value
 
 
 def time_tag(day):
@@ -82,6 +126,29 @@ class Site:
             time_tag(count.get("read", ""))
             if not count.get("from"):
                 raise ValueError(f"counts.{key}: say where the number was read from")
+        self.check_ids()
+
+    def check_ids(self):
+        """Ids and colours go into attributes and file names unchanged, so each must be plain."""
+        home, board = self.data["home"], self.data["how_i_build"]["board"]
+        ids = [(f"rows.{r['id']}", r["id"]) for r in self.data["rows"]]
+        ids += [(f"home.projects.{p['id']}", p["id"]) for p in home["projects"]]
+        ids += [(f"home.lines.{line['id']}", line["id"]) for line in home["lines"]]
+        ids += [("how_i_build.board.held", i) for i in board["held"]]
+        ids += [(f"how_i_build.board.placed.{col}", i) for col, items in board["placed"].items() for i in items]
+        ids += [("how_i_build.board.on_the_way", i["id"]) for i in board["on_the_way"]]
+        ids += [("how_i_build.board.done", i["id"]) for i in board["done"]]
+        for where, value in ids:
+            if not isinstance(value, str) or not ID.match(value):
+                raise ValueError(f"{where}: id {str(value)[:40]!r} may use only letters, digits and '-'")
+        for p in home["projects"]:
+            if not isinstance(p.get("block"), str) or not BLOCK.match(p["block"]):
+                raise ValueError(f"home.projects.{p['id']}.block: {str(p.get('block'))[:40]!r} is not a colour like #E65A5A")
+        hrefs = [(f"rows.{r['id']}.open", r["open"]) for r in self.data["rows"]]
+        hrefs += [(f"home.projects.{p['id']}.link", p["link"]["href"]) for p in home["projects"]]
+        hrefs += [("site.links", link["href"]) for link in self.site["links"]]
+        for where, value in hrefs:
+            check_href(value, where)
 
     # ---------- text ----------
 
@@ -99,15 +166,22 @@ class Site:
             if kind == "read":
                 return time_tag(count["read"])
             if kind == "over":
-                return f"{count['value'] // 50 * 50:,}"
+                # the largest multiple of 50 below the count, so "more than" stays true
+                if count["value"] <= 50:
+                    raise ValueError(f"{where}: {{over:{key}}} needs a count above 50, not {count['value']}")
+                return f"{(count['value'] - 1) // 50 * 50:,}"
             return f"{count['value']:,}"
 
         out = PLACEHOLDER.sub(expand, value)
         if re.search(r"\{[a-z]+:", out):
             raise ValueError(f"{where}: unknown placeholder in {value!r}")
+        if "<!" in out or "<?" in out:
+            raise FragmentError(f"{where}: a comment, declaration or processing instruction is not allowed in a text value")
         checker = _Fragment(where)
         checker.feed(out)
         checker.close()
+        if out.count("<") != checker.tags:
+            raise FragmentError(f"{where}: a '<' that opens no allowed tag; write &lt; for a literal one")
         return out
 
     def art(self, name):
@@ -266,7 +340,7 @@ class Site:
         if kind:
             lines.append(f'      <p class="sec-kind">{kind}</p>')
         if esc_line:
-            lines.append('      <p class="sec-esc">Esc goes back to the menu</p>')
+            lines.append(SEC_ESC)
         if extra:
             lines.append(extra)
         lines.append("    </div>")
@@ -283,7 +357,7 @@ class Site:
                 f'        <div><dt>score</dt><dd>{self.text(p["score"], w + ".score")}</dd></div>',
                 "      </dl>",
             ])
-            out.append(f'  <section class="sec sec-project" id="{pid}" tabindex="-1" style="--block:{esc(p["block"])}">')
+            out.append(f'  <section class="sec sec-project" id="{esc(pid)}" tabindex="-1" style="--block:{esc(p["block"])}">')
             out += self.section_head("h3", pid, esc(p["name"]), self.text(p["kind"], w + ".kind"), True, stat)
             body = [
                 '    <div class="sec-body">',
@@ -319,7 +393,7 @@ class Site:
             lid = line["id"]
             opened = line.get("open", False)
             tab = ' tabindex="-1"' if opened else ""
-            out.append(f'  <section class="sec sec-line" id="{lid}"{tab}>')
+            out.append(f'  <section class="sec sec-line" id="{esc(lid)}"{tab}>')
             out += self.section_head("h3", lid, esc(line["name"]), self.text(line["kind"], f"home.lines.{lid}.kind"), opened)
             out += [
                 '    <div class="sec-body">',

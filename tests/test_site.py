@@ -120,8 +120,28 @@ class TestBuild(unittest.TestCase):
     def test_a_count_shown_on_a_page_carries_its_value_from_the_data(self):
         site = build.Site()
         self.assertEqual(site.text("{n:smithy_verdicts}"), f"{site.counts['smithy_verdicts']['value']:,}")
-        self.assertEqual(site.text("{over:adrs_all}"), "250")
+        adrs = site.counts["adrs_all"]["value"]
+        self.assertEqual(site.text("{over:adrs_all}"), f"{(adrs - 1) // 50 * 50:,}")
         self.assertIn('datetime="2026-11-25"', site.text("{read:smithy_items}"))
+
+    def test_over_is_the_largest_multiple_of_50_below_the_count(self):
+        # the copy says "more than {over:key}", so an exact multiple of 50 must not print itself
+        site = build.Site()
+        for value, shown in ((51, "50"), (99, "50"), (100, "50"), (101, "100"), (300, "250"), (570, "550"), (1201, "1,200")):
+            site.counts["probe"] = {"value": value, "read": "2026-11-25", "from": "a test"}
+            with self.subTest(value=value):
+                self.assertEqual(site.text("{over:probe}"), shown)
+                self.assertLess(int(shown.replace(",", "")), value)
+        for value in (0, 49, 50):
+            site.counts["probe"] = {"value": value, "read": "2026-11-25", "from": "a test"}
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                site.text("{over:probe}")
+
+    def test_every_more_than_uses_over(self):
+        # a read value printed after "more than" would be false: it is the count itself
+        source = read("src/site.json")
+        self.assertNotRegex(source, r"more than \{n:")
+        self.assertIn("more than {over:minigames_tests} tests", source)
 
     def test_an_unknown_count_or_placeholder_fails_the_build(self):
         site = build.Site()
@@ -132,9 +152,56 @@ class TestBuild(unittest.TestCase):
 
     def test_a_text_value_may_not_carry_markup_outside_the_allowlist(self):
         site = build.Site()
-        for bad in ('<script>x</script>', '<img src="/x.png">', '<a onclick="x">y</a>', "<b>open"):
+        bad_values = (
+            '<script>x</script>', '<img src="/x.png">', '<a onclick="x">y</a>', "<b>open",
+            # wrappers that hide a tag from the parser and not from a browser
+            "<!--><script>x</script>", "<![CDATA[><script>x</script>", "<?x><script>y</script>",
+            "<b>x</b><!x>", "<!-- a comment -->",
+            # an unfinished tag the parser reads as text, which a browser finishes with the page
+            "hello <script src=/x.js", "a <img src=x onerror=y",
+            # a link may not run a script or leave for another host without https
+            '<a href="javascript:alert(1)">x</a>', '<a href="&#106;avascript:x">x</a>',
+            '<a href="//example.com">x</a>', '<a href="http://example.com">x</a>', '<a href="data:text/html,x">x</a>',
+            "<b/>",
+        )
+        for bad in bad_values:
             with self.subTest(value=bad), self.assertRaises(build.FragmentError):
                 site.text(bad)
+
+    def test_the_allowlist_still_takes_what_the_pages_use(self):
+        site = build.Site()
+        for good in ('<a href="https://arbopedia.mx">a</a>', '<a href="/how-i-build.html">b</a>', '<a href="#menu">c</a>',
+                     '<span lang="es">[pendiente]</span>', "<b>x</b> &lt; y", "<code>make ci</code>"):
+            with self.subTest(value=good):
+                self.assertEqual(site.text(good), good)
+
+    def with_data(self, change):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            shutil.copytree(ROOT / "src", root / "src")
+            data = json.loads((root / "src" / "site.json").read_text(encoding="utf-8"))
+            change(data)
+            (root / "src" / "site.json").write_text(json.dumps(data), encoding="utf-8")
+            return build.Site(root).pages()
+
+    def test_an_id_or_a_colour_may_not_carry_markup(self):
+        # ids go into id="...", class names and file names; a block colour goes into style="..."
+        hostile = '"><script>x</script>'
+        changes = {
+            "rows id": lambda d: d["rows"][0].update(id=hostile),
+            "project id": lambda d: d["home"]["projects"][0].update(id=hostile),
+            "line id": lambda d: d["home"]["lines"][0].update(id=hostile),
+            "map item": lambda d: d["how_i_build"]["board"]["held"].append(hostile),
+            "placed item": lambda d: d["how_i_build"]["board"]["placed"]["Done"].append("../x"),
+            "done id": lambda d: d["how_i_build"]["board"]["done"][0].update(id=hostile),
+            "block": lambda d: d["home"]["projects"][0].update(block='red;}</style><script>x</script>'),
+            "row link": lambda d: d["rows"][0].update(open="javascript:alert(1)"),
+            "project link": lambda d: d["home"]["projects"][0]["link"].update(href="javascript:alert(1)"),
+            "site link": lambda d: d["site"]["links"][0].update(href="javascript:alert(1)"),
+        }
+        for name, change in changes.items():
+            with self.subTest(change=name), self.assertRaises(ValueError):
+                self.with_data(change)
 
     def test_a_count_never_shown_fails_the_build(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -298,6 +365,25 @@ class TestFirstScreen(unittest.TestCase):
                 self.assertGreater(len(fact_text), 20)
                 self.assertLess(rest.index("</figcaption>"), rest.index('<div class="screen"'))
 
+    def test_a_section_opened_from_the_menu_has_a_way_back_for_touch(self):
+        # Esc is for a keyboard. A touch screen shows the link instead (style.css), and
+        # script.js gives it the same path back to the chosen row.
+        source = read("index.html")
+        notes = re.findall(r'<p class="sec-esc">(.*?)</p>', source, re.S)
+        self.assertTrue(notes)
+        opened = re.findall(r'<section class="sec[^"]*" id="([a-z-]+)" tabindex="-1"', source)
+        self.assertEqual(len(notes), len(opened))
+        for note in notes:
+            with self.subTest(note=note[:40]):
+                self.assertIn('<span class="sec-esc-key">Esc goes back to the menu</span>', note)
+                self.assertIn('<a class="sec-back" href="#menu">back to the menu</a>', note)
+        css = read("style.css")
+        self.assertIn(".js .sec.is-open .sec-back { display: inline-block; }", css)
+        self.assertIn("closest('a.sec-back')", read("script.js"))
+
+    def test_the_touch_hint_says_tap_stop(self):
+        self.assertIn("tap stop to leave", read("index.html"))
+
     def test_each_row_is_described_by_its_fact_first(self):
         source = read("index.html")
         for row in json.loads(read("src/site.json"))["rows"]:
@@ -322,6 +408,7 @@ class TestBumpySwitch(unittest.TestCase):
         self.assertIn("data-bumpy", pages["index.html"])
         self.assertIn("data-bumpy-toggle", pages["index.html"])
         self.assertIn('class="bumpy" data-pose="sleep"', pages["404.html"])
+        self.assertIn("Bumpy, the menu's cursor,", Page(pages["404.html"]).words)
         self.assertNotIn('class="no-bumpy"', pages["index.html"])
 
     def test_bumpy_off(self):

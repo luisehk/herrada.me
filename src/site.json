@@ -1,5 +1,5 @@
 {
-  "_about": "Every word and number on herrada.me. scripts/build.py writes index.html, how-i-build.html and 404.html from this file and the templates in src/. Text values are HTML fragments. {n:key} prints a count, {over:key} prints a count rounded down to 50, {read:key} prints a count's read date and {date:YYYY-MM-DD} prints a date. Every count carries the date it was read and where it was read from. After an edit, run `python3 scripts/build.py` and commit the pages with this file. `make ci` fails when they differ.",
+  "_about": "Every word and number on herrada.me. scripts/build.py writes index.html, how-i-build.html and 404.html from this file and the templates in src/. Text values are HTML fragments. {n:key} prints a count, {over:key} prints the largest multiple of 50 below a count, for copy that says more than, {read:key} prints a count's read date and {date:YYYY-MM-DD} prints a date. Every count carries the date it was read and where it was read from. After an edit, run `python3 scripts/build.py` and commit the pages with this file. `make ci` fails when they differ.",
 
   "site": {
     "preview": true,
@@ -45,7 +45,7 @@
   "rows": [
     {
       "id": "smithy", "label": "smithy", "open": "#smithy", "open_name": "Smithy", "motion": "loop",
-      "fact": "The workshop where AI agents build my software. In daily use since October 2026.",
+      "fact": "{n:smithy_projects} projects and {n:smithy_items} work items on one board. In daily use since October 2026.",
       "hook": "let agents build, keep the decisions",
       "alt": "The pane: a card hops up three steps and takes a stamp on the way."
     },
@@ -57,7 +57,7 @@
     },
     {
       "id": "arbopedia", "label": "arbopedia", "open": "#arbopedia", "open_name": "arbopedia", "motion": "loop",
-      "fact": "An open archive of the trees of Mexico. Live, {n:arbopedia_sheets} sheets on {read:arbopedia_sheets}.",
+      "fact": "An open archive of the trees of Mexico. Live, {n:arbopedia_sheets} sheets as of {read:arbopedia_sheets}.",
       "hook": "name the tree, cite the page",
       "alt": "The pane: a tree grows beside a person, and three months come into flower."
     },
@@ -100,7 +100,7 @@
     },
     {
       "id": "record", "label": "record", "open": "#record", "open_name": "the record", "motion": "still",
-      "fact": "2008 to 2019: four companies, BanregioLABS, Vordem. Then the projects.",
+      "fact": "Four companies, then BanregioLABS, then Vordem: 2008 to 2019. Then my projects.",
       "hook": "since 2008",
       "alt": "The pane: three blocks on a line from 2008 to 2019, then one square per project where it began, seven of them in 2026."
     },
@@ -127,7 +127,7 @@
         "id": "smithy", "name": "Smithy", "block": "#E65A5A",
         "kind": "a personal tool, for one user",
         "state": "In daily use since October 2026. Private.",
-        "score": "{n:smithy_projects} projects on one board. {n:smithy_items} work items, {n:smithy_done} done. Read {read:smithy_items}.",
+        "score": "{n:smithy_projects} projects on one board. {n:smithy_items} work items, {n:smithy_done} done. As of {read:smithy_items}.",
         "lead": "The workshop where AI agents build my software and I keep the decisions.",
         "challenge": "AI agents can write code faster than one person can follow.",
         "answer": "A board that moves only on facts, a ledger of decisions, and one short list of what needs me.",
@@ -138,7 +138,7 @@
         "id": "rentaventa", "name": "Rentaventa", "block": "#F0963C",
         "kind": "a product, built with a partner",
         "state": "Pre-launch. Since August 2024.",
-        "score": "{n:rentaventa_adrs} decision records in {n:rentaventa_months} months with work. Read {read:rentaventa_adrs}.",
+        "score": "{n:rentaventa_adrs} decision records over {n:rentaventa_months} active months. As of {read:rentaventa_adrs}.",
         "lead": "Rent and sale listings for Monterrey, built for brokers who work from WhatsApp.",
         "challenge": "Brokers in Monterrey live in WhatsApp.",
         "answer": "Meet them there. A broker publishes a listing, sends photos or works a lead in a chat with an agent.",
@@ -148,7 +148,7 @@
       {
         "id": "arbopedia", "name": "arbopedia", "block": "#F0C85A",
         "kind": "an open archive",
-        "state": "Live. {n:arbopedia_sheets} sheets on {read:arbopedia_sheets}. In progress, and it says so.",
+        "state": "Live. {n:arbopedia_sheets} sheets as of {read:arbopedia_sheets}. In progress, and it says so.",
         "score": "{n:arbopedia_pages} pages read across {n:arbopedia_works} printed works, as of {read:arbopedia_pages}. One Instagram post a day.",
         "lead": "An open archive of the trees of Mexico.",
         "challenge": "Every tree of Mexico, with a source behind every fact.",
@@ -182,7 +182,7 @@
         "id": "minigames", "name": "minigames", "block": "#50C878",
         "kind": "games",
         "state": "Done. Built in one week, August 2026. Private.",
-        "score": "{n:minigames_games} games, more than {n:minigames_tests} tests, {n:minigames_adrs} decision records.",
+        "score": "{n:minigames_games} games, more than {over:minigames_tests} tests, {n:minigames_adrs} decision records.",
         "lead": "Thirteen tiny games, one architecture.",
         "challenge": "Thirteen games without thirteen architectures.",
         "answer": "One pure function steps every world. The same seed and the same inputs give the same game, so every game is tested without a screen.",
@@ -212,7 +212,7 @@
     "how_i_work": {
       "kind": "a balanced approach",
       "body": [
-        "From 2016 to 2019 I ran Vordem, a digital product agency. Its home page had a heading I still work by: “A balanced approach.” Strategists, developers, designers and product managers on one problem, looking for the simple answer. Today agents hold some of those seats. One shapes the work with me. One argues with the design before any code exists. One builds. A panel of reviewers reads the result and never sees the plan. The decisions stay with me.",
+        "From 2016 to 2019 I ran Vordem, a digital product agency. Its home page had a heading I still work by: “A balanced approach.” Strategists, developers, designers and product managers on one problem, looking for the simple answer. Today agents hold most of those seats, and the decisions stay with me.",
         "I work in a terminal: i3, tmux, vim. Every project I own has one command that has to pass before anything ships, and a written record of why things are the way they are. That holds for the real-estate platform and for the tiny games."
       ],
       "rules": [
@@ -248,7 +248,7 @@
     "title": "How I build with agents",
     "description": "How Luis Herrada builds software with AI agents: Smithy, a personal system where agents do the building and he keeps the decisions.",
     "kicker": "how to play",
-    "sub": ["Smithy <span aria-hidden=\"true\">·</span> in daily use since October 2026", "numbers read {read:smithy_items}"],
+    "sub": ["Smithy <span aria-hidden=\"true\">·</span> in daily use since October 2026", "numbers as of {read:smithy_items}"],
     "idea": {
       "kind": "one person, many agents, one record",
       "lead": "AI agents can write code faster than one person can follow. Smithy is my answer: a personal system where agents do the building and I can still see the design, the decisions and the state of everything."
@@ -287,7 +287,7 @@
         "Needs input is a flag over any column. It is raised only for a blocker, a design decision, a destructive action or a question of intent.",
         "An item leaves grooming only when its definition is complete for its size: a problem, context and acceptance criteria, then a design, a test plan and risks for bigger items, plus a diagram and a design review for the biggest."
       ],
-      "caption": "The level map: eight columns and nine real work items, where they stood on {date:2026-11-25}.",
+      "caption": "The level map: eight columns, a held lane for my pick, and nine real work items, where they stood on {date:2026-11-25}.",
       "held": ["HM-0002"],
       "placed": {"In dev": ["HM-0001"], "Done": ["VP-0002", "VP-0003", "VP-0006", "VP-0007", "VP-0008", "VP-0010", "AR-0001"]},
       "on_the_way": [
@@ -368,7 +368,7 @@
       ]
     },
     "score": {
-      "kind": "read {read:smithy_items}, {n:smithy_days} days in",
+      "kind": "as of {read:smithy_items}, {n:smithy_days} days in",
       "began": "2026-10-16",
       "rows": [
         {"n": "{n:smithy_projects}", "text": "projects on one board"},
@@ -389,7 +389,7 @@
     "sub": "there is no page at this address",
     "label": "no such row",
     "lead": "The menu has {rows} rows. This is not one of them.",
-    "bumpy_line": "Bumpy naps where it would be. No abilities, no weapon, no ambitions.",
+    "bumpy_line": "Bumpy, the menu's cursor, naps where this row would be. No abilities, no weapon, no ambitions.",
     "plain_line": "The cursor rests where it would be."
   }
 }
