@@ -190,6 +190,16 @@ class TestPages(unittest.TestCase):
                 self.assertNotIn("open", t[1], "a fold is closed in the page; a desk opens it in CSS")
         self.assertTrue("@supports selector(::details-content)" in read("style.css"))
 
+    def test_the_stand_holds_its_sentinel(self):
+        """script.js looks for .stand__sentinel inside .stand to hold the stand's growth
+        until it is seen. Without it the stand grows unseen on a deep link."""
+        tags = PARSED["index.html"].tags
+        stands = [t for t in tags if "stand" in t[1].get("class", "").split()]
+        self.assertEqual(len(stands), 1)
+        marks = [t for t in tags if "stand__sentinel" in t[1].get("class", "").split()]
+        self.assertEqual(len(marks), 1)
+        self.assertTrue(any("stand" in s[1].split() for s in marks[0][2]), "the sentinel sits inside .stand")
+
     def test_preview_answers_to_the_open_questions(self):
         index = read("index.html")
         for want in ('href="https://budgeter.herrada.me"', "software engineer in Monterrey",
@@ -217,6 +227,13 @@ class TestBuildRules(unittest.TestCase):
         self.assertEqual(build.months_words([1, 2, 3, 4, 6, 10]), "January to April, June and October")
         self.assertEqual(build.months_words([8]), "August")
         self.assertEqual(build.months_words(list(range(1, 12))), "January to November")
+
+    def test_no_months_is_a_sentence(self):
+        """The dots are aria-hidden, so the words are the field. With no month worked yet
+        (every sheet after a January count refresh) they are a sentence, not a lone period."""
+        field = build.months_field([])
+        self.assertIn("No months with work yet.", field)
+        self.assertNotIn("</span>.", field)
 
     def test_durations(self):
         self.assertEqual(build.duration(13), "13 minutes")

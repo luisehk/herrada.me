@@ -1040,6 +1040,14 @@ a:hover {
 @media (max-width: 959px) {
   /* Stacked, the first column's last fold meets the second's first: one hairline between them. */
   .author__col:first-child > .fold:last-of-type { border-bottom: 0; }
+
+  /* The key and the legend stack flush, and the legend closes with a hairline like every
+     other stack of folds. Screen only: paper takes the desk form (10b), and these would beat
+     its margin above the legend. */
+  @media screen {
+    .keywrap.fold + .howto.fold { margin-top: 0; }
+    .howto.fold { border-bottom: 1px solid var(--hair); }
+  }
 }
 
 .author__col > .fold + .motto { margin: 20px 0 18px; }
@@ -1978,6 +1986,7 @@ a:hover {
 
   .sheet__body { padding-bottom: 60px; }
   .sheets--author .sheet__body { padding-bottom: 0; }
+  #sheets .sheets__grid > .sheet:nth-last-child(-n+2) .sheet__body { padding-bottom: 0; }
   .rule { margin-top: 84px; margin-bottom: 30px; }
 
   .toc ol { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 28px; }
@@ -2271,10 +2280,11 @@ a:hover {
    ==========================================================================
    Where the browser can show a closed part through ::details-content, a desk shows each
    fold open with no summary, as the page was drawn. Elsewhere it stays a fold, closed until
-   tapped, and nothing is lost. */
+   tapped, and nothing is lost. Paper takes the desk form too, so a page printed without
+   script.js keeps every fold and the field notes. */
 
 @supports selector(::details-content) {
-  @media (min-width: 960px) {
+  @media (min-width: 960px), print {
     .fold { border-top: 0; }
     .fold > summary { display: none; }
     .fold::details-content { content-visibility: visible; display: block; }
@@ -2295,6 +2305,10 @@ a:hover {
     .fold--prose > .prose { border-top: 1px solid var(--hair); padding-top: 12px; }
     .author__col > .fold:last-of-type { border-bottom: 0; }
     .sheet--short .fold--sheet > summary { border-bottom: 0; }
+  }
+
+  @media print {
+    .notes::details-content { content-visibility: visible; display: block; }
   }
 }
 
@@ -2459,8 +2473,10 @@ a:hover {
 
 @media print {
   :root { --paper: #fff; --ink: #000; --muted: #444; --hair: #999; --hair-faint: #ccc; }
-  .skip, .masthead nav, .notes summary::after { display: none; }
+  .skip, .masthead nav, .notes summary::after, .fold > summary::after { display: none; }
   .sheet, .card, .steps li, .seat { break-inside: avoid; }
+  .rule { break-after: avoid-page; }
+  .foot__cols > div { break-inside: avoid; }
   .front { display: block; }
   .cover, .cover__more, .howto, .front .plate, .keywrap { float: none; width: auto; }
   .stand * { animation: none !important; }   /* the plate prints finished */

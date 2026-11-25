@@ -217,7 +217,7 @@ def months_field(worked, note="", words=None, read=COUNTED):
         cls = ' class="on"' if i + 1 in worked else (' class="soon"' if i + 1 > READ_MONTH else "")
         dots.append(f"<i{cls}>{letter}</i>")
     if words is None:
-        words = months_words(worked) + "."
+        words = (months_words(worked) + ".") if worked else "No months with work yet."
     text = words + (" " + note if note else "")
     return f"""<div class="field">
   <dt>Worked on in {READ_YEAR} <span class="field__note">Counted {read}</span></dt>
@@ -379,7 +379,7 @@ SHEETS = [
         line="An open archive of the trees of Mexico.",
         state_idx=3, state_word="Live", state=f"{num(AR['sheets'])} sheets on {AR['read']}. In progress, and it says so.",
         challenge="Every tree of Mexico, with a source behind every fact.",
-        answer=f"One sheet per species, read from printed field guides page by page. What is not verified prints {pend_then(".")}",
+        answer=f"One sheet per species, read from printed field guides page by page. What is not verified prints {pend_then('.')}",
         read=AR["read"], months=AR["worked"],
         months_note=f"{word(TREE['arbopedia']['months'], True)} months with work in all: "
                     + ", ".join(f"{word(n)} in {y}" for y, n in AR["months_by_year"].items()) + ".",
