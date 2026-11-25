@@ -3,8 +3,9 @@
 #
 # Runs the image on 127.0.0.1, on the first free port from 8650 to 8659, and
 # checks what it serves: every site file byte for byte with its type, noindex
-# on every page, /health, the missing sheet (404.html) with a 404 for a missing
-# path at any depth and for every repo file that must not ship, a 404 and not a
+# on every page, a page without its .html, /health, the missing sheet
+# (404.html) with a 404 for a missing path at any depth and for every repo
+# file that must not ship, a 404 and not a
 # 403 for a directory with no index (/images/, /fonts/, /assets/: HM-0002
 # criterion 4), dot paths denied with a 404,
 # the security headers, the cache policy (the page no-cache, assets ten minutes
@@ -121,6 +122,12 @@ for p in / /how-i-build.html /404.html; do
 	req "$p"
 	if grep -qF '<meta name="robots" content="noindex">' "$tmp/body"; then ok "GET $p carries noindex"; else bad "GET $p has no robots noindex meta"; fi
 done
+
+# A page answers without its .html, as GitHub Pages serves it: a shared
+# extensionless link keeps working after the cutover.
+req /how-i-build
+if [ "$code" = 200 ] && cmp -s "$tmp/body" how-i-build.html; then ok "GET /how-i-build -> 200 with how-i-build.html"; else bad "GET /how-i-build -> $code, expected 200 with how-i-build.html"; fi
+no_redirect "GET /how-i-build"
 
 req /health
 if [ "$code" = 200 ] && [ "$(tr -d '\n' < "$tmp/body")" = healthy ]; then ok "GET /health -> 200 healthy"; else bad "GET /health -> $code '$(head -c 40 "$tmp/body")', expected 200 healthy"; fi

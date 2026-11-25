@@ -12,7 +12,7 @@
     {"n": 6, "name": "vim-puzzles", "months": 3, "planted": "2026-08-20", "board": "yes", "colour": "vim", "sheet": "vim-puzzles"},
     {"n": 7, "name": "lichess-irl", "months": 1, "planted": "2026-08-27", "board": "no", "colour": "lichess", "sheet": "lichess-irl"},
     {"n": 8, "name": "Smithy", "months": 2, "planted": "2026-10-16", "board": "own", "colour": "smithy", "sheet": "smithy"},
-    {"n": 9, "name": "rentaventa-meet", "months": 1, "planted": "2026-10-20", "board": "yes", "colour": "slate", "sheet": "rentaventa-meet"},
+    {"n": 9, "name": "rentaventa-meet", "months": 2, "planted": "2026-10-20", "board": "yes", "colour": "slate", "sheet": "rentaventa-meet"},
     {"n": 10, "name": "This site", "months": 1, "planted": "2026-11-25", "board": "yes", "colour": "site", "sheet": "colophon"}
   ],
   "projects": {
@@ -74,7 +74,7 @@
     },
     "rentaventa-meet": {
       "read": "2026-11-25",
-      "worked": [10],
+      "worked": [10, 11],
       "decisions": 18
     }
   },

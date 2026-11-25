@@ -1029,13 +1029,18 @@ a:hover {
 
 .keywrap.fold,
 .howto.fold { margin-top: 20px; }
-.howto.fold { border-top: 2px solid var(--ink); }
+.howto.fold { padding-top: 0; }
 .keywrap > .key { margin-top: 4px; }
 .howto.fold > summary { font-size: .78125rem; }
 .howto.fold section { padding-bottom: 14px; }
 
 .fold--prose > .prose { border-top: 0; padding-top: 0; }
 .author__col > .fold:last-of-type { border-bottom: 1px solid var(--hair); }
+
+@media (max-width: 959px) {
+  /* Stacked, the first column's last fold meets the second's first: one hairline between them. */
+  .author__col:first-child > .fold:last-of-type { border-bottom: 0; }
+}
 
 .author__col > .fold + .motto { margin: 20px 0 18px; }
 
@@ -1945,7 +1950,8 @@ a:hover {
 
   .sheets__grid { padding: 0 var(--gutter); }
   .sheet { width: 100%; max-width: 600px; margin-inline: auto; }
-  .stand { max-width: 700px; }
+  .stand,
+  .front .plate { max-width: 700px; }   /* the head rule and the count date stop with the drawing */
   .howto__list { max-width: 40em; }
   .foot__cols { grid-template-columns: minmax(0, 1fr) auto; gap: 48px; }
   .board { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 28px; }
@@ -2021,6 +2027,9 @@ a:hover {
   }
 
   .masthead { padding-top: 12px; }
+  /* The masthead's content sits 4 px lower here, so the chapter band steps down with it
+     and the current page's underline keeps its phone distance from the band. */
+  .chapter-head { margin-top: 4px; }
 
   /* The front stands in two columns: the cover, the paragraph and the legend on the left,
      the plate and its key on the right. Floats keep each column packed, and the page is
@@ -2042,11 +2051,12 @@ a:hover {
     width: calc(50% - var(--colgap) / 2);
   }
 
-  .front .plate { margin-top: 12px; }
+  .front .plate { margin-top: 12px; max-width: none; }
   .cover h1 { margin: 26px 0 30px -.035em; }
   .cover__by { font-size: 1.375rem; line-height: 1.3; }
   .cover__more { margin-top: 14px; padding-top: 0; border-top: 0; }
-  .cover__small { margin-top: 26px; max-width: var(--measure); }
+  .cover__small { margin-top: 26px; }
+  .cover__small dd { max-width: var(--measure); }
   .keywrap { margin-top: 26px; }
   .howto { margin-top: 44px; }
 
@@ -2280,7 +2290,7 @@ a:hover {
     }
 
     .keywrap.fold { margin-top: 26px; }
-    .howto.fold { margin-top: 44px; border-top: 2px solid var(--ink); }
+    .howto.fold { margin-top: 44px; padding-top: 10px; border-top: 2px solid var(--ink); }
     .sheet__body > .fields + .fold { border-top: 1px solid var(--hair); }
     .fold--prose > .prose { border-top: 1px solid var(--hair); padding-top: 12px; }
     .author__col > .fold:last-of-type { border-bottom: 0; }
@@ -2320,19 +2330,22 @@ a:hover {
 
   .stand .roots__label { animation: appear .45s ease-out calc(1300ms + var(--t)) both; }
 
-  /* Held by the script until the stand is on screen. */
-  .stand.is-waiting .grow,
-  .stand.is-waiting .node { animation: none; transform: scale(0); }
+  /* Held by the script until the stand is on screen. On screen only: paper always gets
+     the finished plate, even when it is printed while the stand is held. */
+  @media screen {
+    .stand.is-waiting .grow,
+    .stand.is-waiting .node { animation: none; transform: scale(0); }
 
-  .stand.is-waiting .num,
-  .stand.is-waiting .tag,
-  .stand.is-waiting .bracket,
-  .stand.is-waiting .roots__label { animation: none; opacity: 0; }
+    .stand.is-waiting .num,
+    .stand.is-waiting .tag,
+    .stand.is-waiting .bracket,
+    .stand.is-waiting .roots__label { animation: none; opacity: 0; }
 
-  .stand.is-waiting .ring,
-  .stand.is-waiting .readout { opacity: 0 !important; }
+    .stand.is-waiting .ring,
+    .stand.is-waiting .readout { opacity: 0 !important; }
 
-  .stand.is-waiting .rv { animation: none; stroke-dashoffset: 1; }
+    .stand.is-waiting .rv { animation: none; stroke-dashoffset: 1; }
+  }
 
   /* Under a test driver the stand is drawn finished, so screenshots and CI runs hold still. */
   .is-still .stand * { animation: none !important; }
@@ -2450,5 +2463,6 @@ a:hover {
   .sheet, .card, .steps li, .seat { break-inside: avoid; }
   .front { display: block; }
   .cover, .cover__more, .howto, .front .plate, .keywrap { float: none; width: auto; }
+  .stand * { animation: none !important; }   /* the plate prints finished */
   a { text-decoration-color: currentColor; }
 }

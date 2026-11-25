@@ -326,6 +326,8 @@ LI, MG, BU, MT = P["lichess-irl"], P["minigames"], P["budgeter"], P["rentaventa-
 TREE_N = {t["n"]: t for t in DATA["plate"]}
 RV_MONTHS = TREE["rentaventa"]["months"]
 _rv_gap = months_between(RV["began"], COUNTED[:7]) - RV_MONTHS
+if _rv_gap < 0:
+    raise SystemExit(f"build.py: Rentaventa has {RV_MONTHS} months with work but only {RV_MONTHS + _rv_gap} calendar months since {RV['began']}")
 RV_GAP = f" but {word(_rv_gap)}" if _rv_gap else ""
 
 SHEETS = [
@@ -538,7 +540,8 @@ def front():
     together_sentence = f" {word(len(together), True)} of them were planted in {month}." if together else ""
     free = [t for t in together if t["board"] == "no"]
     fed = [t for t in together if t["board"] == "yes"]
-    key_note = "Trees stand from left to right in the order of their first commit."
+    key_note = ("Trees stand from left to right in the order of their first commit."
+                f" Tree {TREE['colophon']['n']} counts from this edition&rsquo;s first commit, not from the repo&rsquo;s 2025 start.")
     if together:
         key_note += (f" {word(len(together), True)} were planted in {month}, before the workshop existed."
                      f" {word(len(free), True)} of them stand free.")
@@ -548,11 +551,11 @@ def front():
 <p class="key__note">{key_note}</p>"""
     howto_html = f"""<section aria-labelledby="howto-title">
   <h2 class="label fold__title" id="howto-title">How to read a sheet</h2>
-  <p>Every project gets one sheet, in the form my tree archive gives a species.</p>
+  <p>Every project gets one sheet, laid out like a species sheet in arbopedia, my archive of Mexico&rsquo;s trees.</p>
   <dl class="howto__list">
     <div><dt>{mini_status()}Status</dt><dd>Six states, in order: sketch, in dev, pre-launch, live, done, relic. One is filled. A private tool in daily use reads &ldquo;in use&rdquo; where a public one reads &ldquo;live&rdquo;.</dd></div>
     <div><dt>{mini_months()}Worked on in {READ_YEAR}</dt><dd>Twelve dots, one per month. A filled dot is a month with at least one commit. {dashed_sentence()}</dd></div>
-    <div><dt>{PEND}</dt><dd>Not verified yet. The word is the archive&rsquo;s.</dd></div>
+    <div><dt>{PEND}</dt><dd>Spanish for pending: not known or not checked yet. The word comes from arbopedia, which is in Spanish.</dd></div>
   </dl>
 </section>"""
     return f"""<div class="front">
@@ -575,7 +578,7 @@ def front():
       </div>
       <figcaption>
         <p class="plate__say">The tall one is Rentaventa. The sprout {word(TREE["smithy"]["months"])} month{"s" if TREE["smithy"]["months"] != 1 else ""} tall is Smithy, and its roots already reach {word(len(on_board))} of the others.</p>
-        <p>Height: months with work, counted {COUNTED}. One figure is one month. Below the line: Smithy&rsquo;s roots, drawn only to the projects on its board.</p>
+        <p>Height: months with work, counted {COUNTED}. The little figure at the left of the ground line is one month tall. Below the line: Smithy&rsquo;s roots, drawn only to the projects on its board.</p>
       </figcaption>
     </figure>
   </section>
@@ -585,7 +588,7 @@ def front():
     <p class="cover__next">Read <a href="how-i-build.html">how I build with agents</a>, or <a href="#key">pick a tree</a>.</p>
     <dl class="cover__small">
       <div><dt>Creed</dt><dd>Simple, maintainable solutions to complex problems.</dd></div>
-      <div><dt>Note</dt><dd>What I have not verified prints {pend_then(":")} pending.</dd></div>
+      <div><dt>Note</dt><dd>Anything I have not checked yet is marked {pend_then(",")} Spanish for pending.</dd></div>
       <div><dt>Edition</dt><dd>{DATA["edition"]}.</dd></div>
     </dl>
   </div>
@@ -732,7 +735,7 @@ VP10 = DATA["vp0010"]
 VP10_MIN = VP10["minutes_after_decision"]
 EVENTS = [
     ("Filed", f", {VP10['filed']}.", None),
-    ("Groomed", " the same day. Its definition is complete: a small item, copy only, gates ci and review, one question open.", None),
+    ("Groomed", " the same day. Its definition is complete: a small item, copy only, gated by CI and review, one question open.", None),
     ("Decided", f", {VP10['decided']}: the recommended answer, drop the promise. The item is ranked.", None),
     ("Claimed and built", f", {duration(VP10_MIN['built'])} later. A branch and a pull request.", "ci: pass"),
     None,
@@ -761,7 +764,7 @@ RULES = [
     "Reports are a first-class record.",
     "Every working session turns its lessons into skills.",
     "Gated pull requests land by default.",
-    "Nothing waits for me unless it is destructive.",
+    "Nothing waits for me unless it is set to review or is destructive.",
     "Everything that waits on me lives in one list.",
     "Pace the agents with a governor.",
     "Calls feed the record: each transcript becomes a summary and work items.",
@@ -769,7 +772,7 @@ RULES = [
 
 ITEMS = [
     ("HM-0001", "site", "This site", "Five design directions for herrada.me, each a working prototype, critiqued, refined and curated.", "Autonomous", "In dev", "Filed 2026-11-25."),
-    ("HM-0002", "site", "This site", "Build the herrada.me direction Luis picks.", "Review", "Held", ""),
+    ("HM-0002", "site", "This site", "Build the herrada.me direction Luis picks.", "Review", "In dev", ""),
     ("VP-0002", "vim", "vim-puzzles", "Readability pass on the Solarized palette: every text pair at WCAG AA, a visible visual-mode selection.", "Autonomous", "Done", ""),
     ("VP-0003", "vim", "vim-puzzles", "About page as window 3, a vim-style 404 and error boundary, per-route document titles.", "Autonomous", "Done", ""),
     ("VP-0006", "vim", "vim-puzzles", "Twelve puzzles for the unused tags and six one-key motion warm-ups (corpus to 200).", "Autonomous", "Done", ""),
@@ -792,7 +795,7 @@ PARTS = [
     ("The tools on the wall", "Reusable skills and harnesses the agents pick up: a design review, the gauntlet, end-to-end runs, reports."),
     ("The smiths", "Claude Code sessions on my own machines."),
     ("Needs you", "The one list of what waits on me: questions, steps for my hands, reviews."),
-    ("The window", "The web view of the record. It reads. I steer through a session."),
+    ("The window", "The web view of the record. It only reads, and I steer through a session."),
 ]
 
 
@@ -982,7 +985,7 @@ def method():
       <h1>How I build with agents</h1>
       <dl class="chapter-head__pair">
         <div><dt>The complex challenge</dt><dd>AI agents can write code faster than one person can follow.</dd></div>
-        <div><dt>The simple answer</dt><dd>Smithy is my answer: a personal system where agents do the building and I can still see the design, the decisions and the state of everything.</dd></div>
+        <div><dt>The simple answer</dt><dd>Smithy, a personal system where agents do the building and I can still see the design, the decisions and the state of everything.</dd></div>
       </dl>
     </div>
   </header>

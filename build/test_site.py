@@ -259,12 +259,22 @@ def rebuild_with(change):
 class TestKeepingItTrue(unittest.TestCase):
     def test_a_new_month_redraws_the_stand(self):
         def grow(data):
+            # Four more months of Rentaventa, read four months later.
+            data["read"] = "2027-03-25"
             data["plate"][1]["months"] = 31
             data["projects"]["smithy"]["work_items"] = 700
         run, index = rebuild_with(grow)
         self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
-        for want in ('<td class="num">31</td>', "31 months with work in all", "<b>700</b>"):
+        for want in ('<td class="num">31</td>', "31 months with work in all: every month since August 2024 but one.",
+                     "<b>700</b>"):
             self.assertTrue(want in index, want)
+
+    def test_more_months_than_the_calendar_holds_stops_the_build(self):
+        def grow(data):
+            data["plate"][1]["months"] = 31
+        run, _ = rebuild_with(grow)
+        self.assertNotEqual(run.returncode, 0)
+        self.assertIn("Rentaventa has 31 months with work but only 28 calendar months since 2024-08", run.stdout + run.stderr)
 
     def test_a_root_the_drawing_does_not_hold_stops_the_build(self):
         def flip(data):
