@@ -1,0 +1,1 @@
+%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20shape-rendering='crispEdges'%3E%3Crect%20x='1'%20y='4'%20width='14'%20height='8'%20fill='%23181A2E'/%3E%3Crect%20x='2'%20y='5'%20width='12'%20height='6'%20fill='%2350C878'/%3E%3C/svg%3E

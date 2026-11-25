@@ -1,0 +1,8 @@
+<rect class="c-y" x="44" y="58" width="72" height="46"/><rect class="c-n bar" x="52" y="68" width="38" height="5"/><rect class="c-n bar2" x="52" y="79" width="24" height="5"/><rect class="c-p" x="102" y="48" width="22" height="22"/>
+<rect class="c-s" x="40" y="222" width="320" height="4"/>
+<g class="c-s"><rect x="70" y="216" width="14" height="14"/><rect x="128" y="216" width="14" height="14"/></g>
+<g class="c-s"><rect x="133" y="148" width="4" height="70"/><rect x="133" y="146" width="150" height="4"/></g>
+<g class="c-y"><rect x="160" y="141" width="14" height="14"/><rect x="198" y="141" width="14" height="14"/><rect x="236" y="141" width="14" height="14"/></g>
+<rect class="c-p" x="270" y="118" width="22" height="28"/>
+<line class="ol dash" x1="316" y1="150" x2="316" y2="214"/><line class="ol dash" x1="292" y1="148" x2="316" y2="148"/>
+<rect class="ol dash" x="309" y="217" width="14" height="14"/>

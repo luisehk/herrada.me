@@ -1,11 +1,14 @@
 # GitHub Pages builds this repo with Jekyll until RK-0029's step D4 turns Pages
-# off. Pages publishes the site alone: index.html, style.css, images/ and CNAME.
-# The image, the manifest and the make files stay out of the build. Jekyll skips
-# dotfiles and this file by itself. scripts/check-repo.sh (in `make ci`) fails
-# when a tracked file would publish and is not one of the site's.
+# off. Pages publishes the site alone: the three pages, style.css, script.js,
+# images/, fonts/, assets/ and CNAME. The image, the manifest, the make files,
+# the data file and templates (src/) and the tests stay out of the build. Jekyll
+# skips dotfiles and this file by itself. scripts/check-repo.sh (in `make ci`)
+# fails when a tracked file would publish and is not one of the site's.
 exclude:
   - Makefile
   - app.mk
   - docker
   - k8s
   - scripts
+  - src
+  - tests

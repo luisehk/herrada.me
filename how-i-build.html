@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<!-- Written by scripts/build.py from src/site.json. Edit those and run it, not this file. -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How I build with agents · Luis Herrada</title>
+<meta name="description" content="How Luis Herrada builds software with AI agents: Smithy, a personal system where agents do the building and he keeps the decisions.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#181A2E" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F0C85A" media="(prefers-color-scheme: light)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20shape-rendering='crispEdges'%3E%3Cpath%20fill='%233B4252'%20d='M5%203h6v1h-6zM3%204h2v1h-2zM11%204h2v1h-2zM2%205h1v1h-1zM13%205h1v1h-1zM1%206h1v1h-1zM14%206h1v1h-1zM1%207h1v1h-1zM14%207h1v1h-1zM0%208h1v1h-1zM15%208h1v1h-1zM0%209h1v1h-1zM15%209h1v1h-1zM0%2010h1v1h-1zM15%2010h1v1h-1zM0%2011h1v1h-1zM15%2011h1v1h-1zM1%2012h1v1h-1zM14%2012h1v1h-1zM2%2013h2v1h-2zM12%2013h2v1h-2z'/%3E%3Cpath%20fill='%2381A1C1'%20d='M5%204h6v1h-6zM3%205h1v1h-1zM6%205h7v1h-7zM2%206h1v1h-1zM5%206h9v1h-9zM2%207h1v1h-1zM4%207h9v1h-9zM1%208h4v1h-4zM7%208h3v1h-3zM12%208h2v1h-2zM1%209h4v1h-4zM7%209h3v1h-3zM12%209h2v1h-2zM1%2010h1v1h-1zM4%2010h8v1h-8zM2%2011h12v1h-12zM3%2012h10v1h-10z'/%3E%3Cpath%20fill='%235E81AC'%20d='M13%207h1v1h-1zM14%208h1v1h-1zM14%209h1v1h-1zM14%2010h1v1h-1zM1%2011h1v1h-1zM14%2011h1v1h-1zM2%2012h1v1h-1zM13%2012h1v1h-1zM4%2013h8v1h-8z'/%3E%3Cpath%20fill='%23AEC7E3'%20d='M4%205h2v1h-2zM3%206h2v1h-2zM3%207h1v1h-1z'/%3E%3Cpath%20fill='%232E3440'%20d='M5%208h1v1h-1zM10%208h1v1h-1zM5%209h2v1h-2zM10%209h2v1h-2z'/%3E%3Cpath%20fill='%23ECEFF4'%20d='M6%208h1v1h-1zM11%208h1v1h-1z'/%3E%3Cpath%20fill='%23D08770'%20d='M2%2010h2v1h-2zM12%2010h2v1h-2z'/%3E%3C/svg%3E">
+<link rel="preload" href="/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<script src="/script.js" defer></script>
+</head>
+<body class="inner">
+
+<a class="skip" href="#read">Skip to the text</a>
+
+<header class="top wrap">
+  <a class="top-site" href="/">herrada.me</a>
+  <nav aria-label="Site">
+    <ul>
+      <li><a href="/">Menu</a></li>
+      <li><a href="/how-i-build.html" aria-current="page">How I build</a></li>
+      <li><a href="/#record">Record</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+<header class="marquee marquee-inner wrap">
+  <p class="kicker">how to play</p>
+  <h1>How I build with agents</h1>
+  <p class="sub sub-stack"><span class="nb">Smithy <span aria-hidden="true">·</span> in daily use since October 2026</span> <span class="sep" aria-hidden="true">&middot;</span> <span class="nb">numbers as of <time datetime="2026-11-25">2026-11-25</time></span></p>
+</header>
+
+<div class="doc wrap" id="read">
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-idea">the idea</h2>
+      <p class="sec-kind">one person, many agents, one record</p>
+    </div>
+    <div class="sec-body">
+      <p class="lead">AI agents can write code faster than one person can follow. Smithy is my answer: a personal system where agents do the building and I can still see the design, the decisions and the state of everything.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-balanced">a balanced approach</h2>
+      <p class="sec-kind">ten years on</p>
+    </div>
+    <div class="sec-body">
+      <p>In 2016 I started an agency called Vordem. Its home page put our way of working under one heading, “A balanced approach”: strategists, developers, designers and product managers on the same problem, looking for a simple and elegant answer. We were ten people and shipped 10+ products.</p>
+      <p>The workshop I run today works the same way, with agents in most of the seats. One shapes an idea into a work item with me. One argues with the design before any code exists. One builds. A panel of reviewers checks correctness, security, QA and UX from the diff and the evidence, and never sees the plan. The decisions stay with me.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-seats">the seats</h2>
+      <p class="sec-kind">then and now</p>
+    </div>
+    <dl class="seats">
+      <div>
+        <dt>Strategy</dt>
+        <dd class="then"><span class="tag">then</span> A strategist.</dd>
+        <dd class="now"><span class="tag tag-now">now</span> An agent and I shape an idea into a work item with a problem, context, acceptance criteria and a test plan.</dd>
+      </div>
+      <div>
+        <dt>Design</dt>
+        <dd class="then"><span class="tag">then</span> Designers.</dd>
+        <dd class="now"><span class="tag tag-now">now</span> Bigger items get a written design, and an agent argues with it before any code exists.</dd>
+      </div>
+      <div>
+        <dt>Development</dt>
+        <dd class="then"><span class="tag">then</span> Developers.</dd>
+        <dd class="now"><span class="tag tag-now">now</span> The smiths. Each claims an item, works in its own copy of the repo and opens a pull request.</dd>
+      </div>
+      <div>
+        <dt>Product</dt>
+        <dd class="then"><span class="tag">then</span> Product managers.</dd>
+        <dd class="now"><span class="tag tag-now">now</span> A board that moves only on facts, and one list of what needs me.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-parts">the parts</h2>
+      <p class="sec-kind">four named after a forge, and two more</p>
+    </div>
+    <div class="sec-body">
+      <p>Smithy has four parts named after a forge, and two more I use every day.</p>
+    </div>
+    <dl class="parts rows">
+      <div><dt>The shop floor</dt><dd>A board of work items. Columns change only through events.</dd></div>
+      <div><dt>The ledger</dt><dd>Decision records. Short, numbered, never rewritten, only superseded.</dd></div>
+      <div><dt>The tools on the wall</dt><dd>Reusable skills and harnesses the agents pick up: a design review, the gauntlet, end-to-end runs, reports.</dd></div>
+      <div><dt>The smiths</dt><dd>Claude Code sessions on my own machines.</dd></div>
+      <div><dt>Needs you</dt><dd>The one list of what waits on me: questions, steps for my hands, reviews.</dd></div>
+      <div><dt>The window</dt><dd>The web view of the record. It reads. I steer through a session.</dd></div>
+    </dl>
+  </section>
+
+  <section class="sec sec-side-left">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-board">the board</h2>
+      <p class="sec-kind">the life of a work item</p>
+    </div>
+    <div class="sec-side">
+      <p class="cols-intro" id="cols-intro">The columns:</p>
+      <ol class="cols" aria-labelledby="cols-intro">
+        <li>Grooming</li><li>Backlog</li><li>Next up</li><li>In dev</li><li>In QA</li><li>In code review</li><li>To be deployed</li><li>Done</li>
+      </ol>
+    </div>
+    <div class="sec-body">
+      <p>A card moves only when something real happens: a claim, a gate verdict, a pull request marked ready, a merge, a deploy, an answer. There is no command to move a card.</p>
+      <p>Needs input is a flag over any column. It is raised only for a blocker, a design decision, a destructive action or a question of intent.</p>
+      <p>An item leaves grooming only when its definition is complete for its size: a problem, context and acceptance criteria, then a design, a test plan and risks for bigger items, plus a diagram and a design review for the biggest.</p>
+    </div>
+
+    <div class="sec-wide">
+      <figure class="board">
+        <figcaption class="board-cap" id="board-cap">The level map: eight columns, a held lane for my pick, and nine real work items, where they stood on <time datetime="2026-11-25">2026-11-25</time>.</figcaption>
+        <ol class="map" aria-labelledby="board-cap">
+          <li class="map-col map-held" style="--s:0">
+            <ul class="map-items"><li class="chip chip-held">HM-0002</li></ul>
+            <span class="map-step" aria-hidden="true"></span>
+            <span class="map-name">Held</span>
+          </li>
+          <li class="map-col" style="--s:0">
+            <span class="vh">No item shown.</span>
+            <span class="map-step" aria-hidden="true"></span>
+            <span class="map-name">Grooming</span>
+          </li>
+          <li class="map-col" style="--s:1">
+            <span class="vh">No item shown.</span>
+            <span class="map-step" aria-hidden="true"></span>
+            <span class="map-name">Backlog</span>
+          </li>
+          <li class="map-col" style="--s:2">
+            <span class="vh">No item shown.</span>
+            <span class="map-step" aria-hidden="true"></span>
+            <span class="map-name">Next up</span>
+          </li>
+          <li class="map-col" style="--s:3">
+            <ul class="map-items"><li class="chip chip-dev">HM-0001</li></ul>
+            <span class="map-step" aria-hidden="true"></span>
+            <span class="map-name">In dev</span>
+          </li>
+          <li class="map-col" style="--s:4">
+            <span class="vh">No item shown.</span>
+            <span class="map-step" aria-hidden="true"></span>
+            <span class="map-name">In QA</span>
+          </li>
+          <li class="map-col" style="--s:5">
+            <span class="vh">No item shown.</span>
+            <span class="map-step" aria-hidden="true"></span>
+            <span class="map-name">In code review</span>
+          </li>
+          <li class="map-col" style="--s:6">
+            <span class="vh">No item shown.</span>
+            <span class="map-step" aria-hidden="true"></span>
+            <span class="map-name">To be deployed</span>
+          </li>
+          <li class="map-col" style="--s:7">
+            <ul class="map-items">
+              <li class="chip">VP-0002</li><li class="chip">VP-0003</li><li class="chip">VP-0006</li><li class="chip">VP-0007</li><li class="chip">VP-0008</li><li class="chip">VP-0010</li><li class="chip">AR-0001</li>
+            </ul>
+            <span class="map-step" aria-hidden="true"></span>
+            <span class="map-name">Done</span>
+          </li>
+        </ol>
+      </figure>
+
+      <ul class="items" aria-label="The two work items still on the way">
+        <li><b>HM-0001</b><span>Five design directions for herrada.me, each a working prototype, critiqued, refined and curated.</span><i>Autonomous. In dev. Filed <time datetime="2026-11-25">2026-11-25</time>.</i></li>
+        <li><b>HM-0002</b><span>Build the herrada.me direction Luis picks.</span><i>Review. Held.</i></li>
+      </ul>
+      <p class="items-note" id="items-done">The other seven: autonomous, done.</p>
+      <ul class="items items-done" aria-labelledby="items-done">
+        <li><b>VP-0002</b><span>Readability pass on the Solarized palette: every text pair at WCAG AA, a visible visual-mode selection.</span></li>
+        <li><b>VP-0003</b><span>About page as window 3, a vim-style 404 and error boundary, per-route document titles.</span></li>
+        <li><b>VP-0006</b><span>Twelve puzzles for the unused tags and six one-key motion warm-ups (corpus to 200).</span></li>
+        <li><b>VP-0007</b><span>Phones and touch: a desktop-keyboard notice in the player, a status bar that never clips.</span></li>
+        <li><b>VP-0008</b><span>Keyboard flow: Enter and r after a solve, ex commands for reset, skip, give up and quit.</span></li>
+        <li><b>VP-0010</b><span>Copy fix: stop promising a daily set until one exists.</span></li>
+        <li><b>AR-0001</b><span>Stop posting Instagram stories, keep the daily feature posts.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-loop">the loop</h2>
+      <p class="sec-kind">eight levels</p>
+    </div>
+    <div class="sec-body">
+      <p>Every work item plays the same eight levels, in this order. Each picture below is one still frame.</p>
+    </div>
+  </section>
+
+  <div class="level">
+    <figure class="lv-fig">
+      <div class="screen">
+        <span class="screen-title" aria-hidden="true">level 1</span>
+        <svg viewBox="0 0 400 300" role="img" aria-label="An idea in a dashed box, an arrow, and a work item with four filled lines and a mode chip.">
+          <rect class="c-s" x="40" y="246" width="320" height="4"/>
+          <rect class="ol dash" x="56" y="112" width="60" height="60"/><rect class="c-y" x="80" y="136" width="12" height="12"/>
+          <g class="c-t"><rect x="62" y="202" width="10" height="10"/><rect x="60" y="215" width="14" height="31"/></g>
+          <rect class="c-p" x="88" y="218" width="22" height="28"/>
+          <rect class="c-s" x="136" y="139" width="50" height="6"/><g class="c-y"><rect x="186" y="130" width="6" height="24"/><rect x="192" y="134" width="6" height="16"/><rect x="198" y="138" width="6" height="8"/></g>
+          <rect class="c-t" x="228" y="62" width="120" height="172"/>
+          <rect class="c-n bar" x="238" y="74" width="60" height="7"/>
+          <rect class="c-r" x="238" y="98" width="8" height="8"/><rect class="c-o" x="238" y="122" width="8" height="8"/><rect class="c-b" x="238" y="146" width="8" height="8"/><rect class="c-p" x="238" y="170" width="8" height="8"/>
+          <g class="c-n bar2"><rect x="254" y="99" width="78" height="6"/><rect x="254" y="123" width="60" height="6"/><rect x="254" y="147" width="84" height="6"/><rect x="254" y="171" width="52" height="6"/></g>
+          <rect class="c-p" x="238" y="202" width="36" height="16"/><rect class="ol ol-n" x="283" y="203" width="34" height="14"/>
+        </svg>
+      </div>
+    </figure>
+    <h3 class="lv-name" id="lv-1">Shape</h3>
+    <p class="lv-text">An idea becomes a work item with a problem, context, acceptance criteria and a test plan. Its mode is set here: autonomous or review.</p>
+  </div>
+
+  <div class="level">
+    <figure class="lv-fig">
+      <div class="screen">
+        <span class="screen-title" aria-hidden="true">level 2</span>
+        <svg viewBox="0 0 400 300" role="img" aria-label="A written design stands between two agents. The one on the right has left three red marks on it.">
+          <rect class="c-s" x="40" y="246" width="320" height="4"/>
+          <rect class="c-t" x="140" y="70" width="120" height="176"/>
+          <rect class="c-n bar" x="152" y="84" width="56" height="7"/>
+          <rect class="ol ol-n" x="153" y="105" width="28" height="18"/><rect class="ol ol-n" x="199" y="105" width="28" height="18"/><rect class="c-n" x="182" y="112" width="16" height="4"/>
+          <g class="c-n bar2"><rect x="152" y="140" width="90" height="6"/><rect x="152" y="156" width="66" height="6"/><rect x="152" y="172" width="84" height="6"/><rect x="152" y="188" width="56" height="6"/><rect x="152" y="204" width="76" height="6"/></g>
+          <g class="c-r"><rect x="238" y="110" width="8" height="8"/><rect x="224" y="155" width="8" height="8"/><rect x="214" y="187" width="8" height="8"/><rect x="278" y="196" width="6" height="6"/><rect x="268" y="184" width="6" height="6"/></g>
+          <rect class="c-p" x="84" y="218" width="22" height="28"/>
+          <rect class="c-r" x="294" y="218" width="22" height="28"/>
+        </svg>
+      </div>
+    </figure>
+    <h3 class="lv-name" id="lv-2">Review the design</h3>
+    <p class="lv-text">Bigger items get a written design and an adversarial review before any code exists.</p>
+  </div>
+
+  <div class="level">
+    <figure class="lv-fig">
+      <div class="screen">
+        <span class="screen-title" aria-hidden="true">level 3</span>
+        <svg viewBox="0 0 400 300" role="img" aria-label="A branch leaves the main line. An agent stands at its tip after three commits, and a dashed line points back to the main line.">
+          <rect class="c-y" x="44" y="58" width="72" height="46"/><rect class="c-n bar" x="52" y="68" width="38" height="5"/><rect class="c-n bar2" x="52" y="79" width="24" height="5"/><rect class="c-p" x="102" y="48" width="22" height="22"/>
+          <rect class="c-s" x="40" y="222" width="320" height="4"/>
+          <g class="c-s"><rect x="70" y="216" width="14" height="14"/><rect x="128" y="216" width="14" height="14"/></g>
+          <g class="c-s"><rect x="133" y="148" width="4" height="70"/><rect x="133" y="146" width="150" height="4"/></g>
+          <g class="c-y"><rect x="160" y="141" width="14" height="14"/><rect x="198" y="141" width="14" height="14"/><rect x="236" y="141" width="14" height="14"/></g>
+          <rect class="c-p" x="270" y="118" width="22" height="28"/>
+          <line class="ol dash" x1="316" y1="150" x2="316" y2="214"/><line class="ol dash" x1="292" y1="148" x2="316" y2="148"/>
+          <rect class="ol dash" x="309" y="217" width="14" height="14"/>
+        </svg>
+      </div>
+    </figure>
+    <h3 class="lv-name" id="lv-3">Build</h3>
+    <p class="lv-text">An agent claims the item, works in its own copy of the repo and opens a pull request.</p>
+  </div>
+
+  <div class="level">
+    <figure class="lv-fig">
+      <div class="screen">
+        <span class="screen-title" aria-hidden="true">level 4</span>
+        <svg viewBox="0 0 400 300" role="img" aria-label="A card under the third of three gates. It carries two stamps and a third is coming down.">
+          <rect class="c-s" x="40" y="246" width="320" height="4"/>
+          <g class="c-s"><rect x="56" y="136" width="6" height="110"/><rect x="118" y="136" width="6" height="110"/><rect x="56" y="128" width="68" height="8"/><rect x="166" y="136" width="6" height="110"/><rect x="228" y="136" width="6" height="110"/><rect x="166" y="128" width="68" height="8"/><rect x="276" y="136" width="6" height="110"/><rect x="338" y="136" width="6" height="110"/><rect x="276" y="128" width="68" height="8"/></g>
+          <g class="c-g"><rect x="83" y="106" width="14" height="14"/><rect x="193" y="106" width="14" height="14"/></g>
+          <rect class="ol dash" x="304" y="107" width="12" height="12"/>
+          <rect class="c-y" x="286" y="208" width="48" height="38"/><rect class="c-n bar" x="292" y="226" width="28" height="5"/><rect class="c-n bar2" x="292" y="236" width="18" height="5"/>
+          <g class="c-g"><rect x="290" y="200" width="12" height="12"/><rect x="305" y="200" width="12" height="12"/><rect x="320" y="166" width="12" height="12"/></g>
+          <g class="c-s"><rect x="325" y="184" width="2" height="4"/><rect x="325" y="192" width="2" height="4"/></g>
+        </svg>
+      </div>
+    </figure>
+    <h3 class="lv-name" id="lv-4">Pass the gates</h3>
+    <p class="lv-text"><code>make ci</code> on the exact commit. A gauntlet of reviewers for correctness, security, QA and UX, who see the diff and the evidence and never the plan. An end-to-end run against a real local stack. Each gate leaves a stamp: a verdict tied to a commit.</p>
+    <p class="lv-note">Gates: ci, review, qa, design-review, deploy. Verdicts: pass, pass with notes, blocked, needs human, skipped, error.</p>
+  </div>
+
+  <div class="level">
+    <figure class="lv-fig">
+      <div class="screen">
+        <span class="screen-title" aria-hidden="true">level 5</span>
+        <svg viewBox="0 0 400 300" role="img" aria-label="A stamped card at a fork. One path climbs to a platform with a flag. The other stops at a red bar in front of a person.">
+          <rect class="c-y" x="44" y="130" width="60" height="40"/><rect class="c-n bar" x="52" y="148" width="34" height="5"/><rect class="c-n bar2" x="52" y="158" width="22" height="5"/>
+          <g class="c-g"><rect x="50" y="122" width="12" height="12"/><rect x="65" y="122" width="12" height="12"/><rect x="80" y="122" width="12" height="12"/></g>
+          <g class="c-s"><rect x="104" y="148" width="50" height="4"/><rect x="152" y="92" width="4" height="118"/><rect x="152" y="92" width="96" height="4"/><rect x="152" y="206" width="76" height="4"/></g>
+          <rect class="c-g" x="248" y="100" width="96" height="12"/>
+          <rect class="c-b" x="258" y="60" width="60" height="40"/><rect class="c-n bar" x="266" y="78" width="34" height="5"/><rect class="c-n bar2" x="266" y="88" width="22" height="5"/>
+          <rect class="c-t" x="328" y="64" width="3" height="36"/><rect class="c-y" x="331" y="64" width="16" height="10"/>
+          <rect class="c-r" x="232" y="184" width="8" height="48"/>
+          <g class="c-t"><rect x="258" y="188" width="10" height="10"/><rect x="256" y="201" width="14" height="31"/></g>
+          <rect class="c-s" x="244" y="232" width="100" height="4"/>
+        </svg>
+      </div>
+    </figure>
+    <h3 class="lv-name" id="lv-5">Land</h3>
+    <p class="lv-text">An autonomous item merges and deploys when every stamp is green, and leaves a summary to read later. A review item stops at a ready pull request and waits for me.</p>
+  </div>
+
+  <div class="level">
+    <figure class="lv-fig">
+      <div class="screen">
+        <span class="screen-title" aria-hidden="true">level 6</span>
+        <svg viewBox="0 0 400 300" role="img" aria-label="One question in a short list, with two options and one of them marked. The agent has already moved on to another card.">
+          <rect class="ol" x="30" y="60" width="144" height="186"/><rect class="c-s" x="40" y="70" width="50" height="6"/>
+          <rect class="c-y" x="40" y="88" width="124" height="72"/><rect class="c-n bar" x="48" y="98" width="84" height="5"/><rect class="c-n bar2" x="48" y="110" width="60" height="5"/>
+          <rect class="c-n" x="48" y="128" width="50" height="22"/><rect class="c-y" x="54" y="135" width="8" height="8"/><rect class="c-y bar" x="67" y="137" width="24" height="4"/>
+          <rect class="ol ol-n" x="107" y="129" width="48" height="20"/><rect class="c-n bar2" x="114" y="137" width="24" height="4"/>
+          <g class="c-t"><rect x="96" y="188" width="10" height="10"/><rect x="94" y="201" width="14" height="31"/></g>
+          <g class="c-s"><rect x="196" y="112" width="6" height="6"/><rect x="208" y="112" width="6" height="6"/><rect x="220" y="112" width="6" height="6"/></g>
+          <rect class="c-p" x="238" y="100" width="22" height="28"/>
+          <rect class="c-y" x="292" y="90" width="72" height="46"/><rect class="c-n bar" x="300" y="100" width="38" height="5"/><rect class="c-n bar2" x="300" y="111" width="24" height="5"/>
+          <g class="c-s"><rect x="198" y="188" width="8" height="8"/><rect x="214" y="189" width="110" height="6"/><rect x="198" y="206" width="8" height="8"/><rect x="214" y="207" width="84" height="6"/><rect x="214" y="225" width="124" height="6"/></g>
+          <rect class="c-y" x="198" y="224" width="8" height="8"/>
+        </svg>
+      </div>
+    </figure>
+    <h3 class="lv-name" id="lv-6">Ask only what matters</h3>
+    <p class="lv-text">Critical questions arrive with options, a recommended answer, the cost to reverse and what happens if I do nothing. The agent then moves to other work. Every other judgment call is made, logged with its reason and reviewed later.</p>
+  </div>
+
+  <div class="level">
+    <figure class="lv-fig">
+      <div class="screen">
+        <span class="screen-title" aria-hidden="true">level 7</span>
+        <svg viewBox="0 0 400 300" role="img" aria-label="Five tools hang on a wall. The newest is yellow, and the agent that made it stands under it.">
+          <rect class="c-s" x="40" y="246" width="320" height="4"/>
+          <rect class="c-s" x="40" y="76" width="320" height="6"/>
+          <g class="c-s"><rect x="79" y="82" width="3" height="16"/><rect x="139" y="82" width="3" height="16"/><rect x="199" y="82" width="3" height="16"/><rect x="259" y="82" width="3" height="16"/><rect x="319" y="82" width="3" height="16"/></g>
+          <rect class="c-b" x="66" y="98" width="30" height="42"/><rect class="c-o" x="124" y="98" width="34" height="28"/><rect class="c-g" x="186" y="98" width="30" height="50"/><rect class="c-r" x="246" y="98" width="30" height="34"/><rect class="c-y" x="306" y="98" width="30" height="42"/>
+          <g class="c-y"><rect x="318" y="156" width="6" height="6"/><rect x="318" y="172" width="6" height="6"/><rect x="318" y="188" width="6" height="6"/></g>
+          <rect class="c-p" x="310" y="218" width="22" height="28"/>
+          <rect class="c-t" x="252" y="218" width="22" height="28"/><rect class="c-n bar2" x="256" y="225" width="14" height="4"/><rect class="c-n bar2" x="256" y="233" width="10" height="4"/>
+          <rect class="c-y" x="188" y="218" width="44" height="28"/><rect class="c-n bar" x="194" y="225" width="24" height="4"/><rect class="c-n bar2" x="194" y="233" width="16" height="4"/>
+        </svg>
+      </div>
+    </figure>
+    <h3 class="lv-name" id="lv-7">Learn</h3>
+    <p class="lv-text">On a fixed rhythm each session turns what it learned into a skill, a note or a new work item.</p>
+  </div>
+
+  <div class="level">
+    <figure class="lv-fig">
+      <div class="screen">
+        <span class="screen-title" aria-hidden="true">level 8</span>
+        <svg viewBox="0 0 400 300" role="img" aria-label="A meter with six of ten slots filled. Three agents run in their lanes and a fourth waits behind a yellow bar.">
+          <g class="c-t"><rect x="50" y="60" width="4" height="30"/><rect x="50" y="60" width="10" height="4"/><rect x="50" y="86" width="10" height="4"/><rect x="346" y="60" width="4" height="30"/><rect x="340" y="60" width="10" height="4"/><rect x="340" y="86" width="10" height="4"/></g>
+          <g class="c-g"><rect x="64" y="67" width="22" height="16"/><rect x="92" y="67" width="22" height="16"/><rect x="120" y="67" width="22" height="16"/><rect x="148" y="67" width="22" height="16"/><rect x="176" y="67" width="22" height="16"/><rect x="204" y="67" width="22" height="16"/></g>
+          <g class="c-i"><rect x="232" y="67" width="22" height="16"/><rect x="260" y="67" width="22" height="16"/><rect x="288" y="67" width="22" height="16"/><rect x="316" y="67" width="22" height="16"/></g>
+          <g class="c-s"><rect x="50" y="146" width="300" height="2"/><rect x="50" y="180" width="300" height="2"/><rect x="50" y="214" width="300" height="2"/><rect x="50" y="248" width="300" height="2"/></g>
+          <rect class="c-p" x="210" y="122" width="20" height="24"/><g class="c-s"><rect x="196" y="131" width="6" height="6"/><rect x="184" y="131" width="6" height="6"/><rect x="172" y="131" width="6" height="6"/></g>
+          <rect class="c-p" x="290" y="156" width="20" height="24"/><g class="c-s"><rect x="276" y="165" width="6" height="6"/><rect x="264" y="165" width="6" height="6"/><rect x="252" y="165" width="6" height="6"/></g>
+          <rect class="c-p" x="140" y="190" width="20" height="24"/><g class="c-s"><rect x="126" y="199" width="6" height="6"/><rect x="114" y="199" width="6" height="6"/><rect x="102" y="199" width="6" height="6"/></g>
+          <rect class="ol dash" x="61" y="225" width="18" height="22"/><rect class="c-y" x="90" y="218" width="4" height="30"/>
+        </svg>
+      </div>
+    </figure>
+    <h3 class="lv-name" id="lv-8">Pace</h3>
+    <p class="lv-text">A governor starts new runs only when there is headroom, so a long night of work never hits a wall.</p>
+  </div>
+
+  <section class="sec sec-after">
+    <div class="sec-head"></div>
+    <div class="sec-body">
+      <p>Calls feed the record. After a call with my partner an agent writes the notes and files the action items.</p>
+    </div>
+  </section>
+
+  <section class="sec sec-side-left sec-story">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-run">one real item</h2>
+      <p class="sec-kind">a speedrun in four splits</p>
+    </div>
+    <div class="sec-side">
+      <p><b>VP-0010</b>, “Copy fix: stop promising a daily set until one exists”. The vim-puzzles dashboard still said “Daily vim puzzles” after the daily set was gone. An agent found the gap while grooming the app's backlog: the new About page would have repeated a promise the product no longer kept.</p>
+      <p>It raised one question for me, with two options and a recommended answer. I had told the agents not to get blocked, so the recommended answer was taken and logged for me to read.</p>
+      <p>Thirteen minutes later the fix was built and had passed CI. Fourteen minutes after that it had passed review. It was deployed four and a half hours after the decision. The line it left on the dashboard is the app's line today: “Vim puzzles, scored against par.”</p>
+    </div>
+    <div class="sec-body">
+      <div class="run">
+        <p class="run-head"><b>VP-0010</b> <span>before the clock</span></p>
+        <ol class="run-pre">
+          <li><b>Filed</b>, <time datetime="2026-10-19">2026-10-19</time>. <span class="col">Column: Grooming</span></li>
+          <li><b>Groomed</b> the same day. Its definition is complete: a small item, copy only, gates ci and review, one question open. <span class="col">Column: Backlog</span></li>
+          <li><b>Decided</b>, <time datetime="2026-10-20">2026-10-20</time>: the recommended answer, drop the promise. The item is ranked. <span class="col">Column: Next up</span></li>
+        </ol>
+        <p class="run-head"><b>The run</b> <span>hours and minutes from the decision</span></p>
+        <ol class="splits" start="4">
+          <li style="--t:4.8%">
+            <span class="split-name">built</span>
+            <span class="split-time"><span aria-hidden="true">0:13</span><span class="vh">13 minutes</span></span>
+            <span class="split-bar" aria-hidden="true"></span>
+            <span class="split-note">Claimed and built. A branch and a pull request. <span class="stamp">ci: pass</span> <span class="col">Column: In dev</span></span>
+          </li>
+          <li style="--t:10%">
+            <span class="split-name">reviewed</span>
+            <span class="split-time"><span aria-hidden="true">0:27</span><span class="vh">27 minutes</span></span>
+            <span class="split-bar" aria-hidden="true"></span>
+            <span class="split-note"><span class="stamp">review: pass</span> <span class="col">Column: In code review</span></span>
+          </li>
+          <li style="--t:58.9%">
+            <span class="split-name">merged</span>
+            <span class="split-time"><span aria-hidden="true">2:39</span><span class="vh">2 hours 39 minutes</span></span>
+            <span class="split-bar" aria-hidden="true"></span>
+            <span class="split-note"><span class="col">Column: To be deployed</span></span>
+          </li>
+          <li style="--t:100%">
+            <span class="split-name">deployed</span>
+            <span class="split-time"><span aria-hidden="true">4:30</span><span class="vh">4 hours 30 minutes</span></span>
+            <span class="split-bar" aria-hidden="true"></span>
+            <span class="split-note"><span class="stamp">deploy: pass</span> <span class="col">Column: Done</span></span>
+          </li>
+        </ol>
+      </div>
+
+      <p>The card visits seven of the eight columns. It never stops in In&nbsp;QA: a copy fix has no QA gate. Dates are UTC.</p>
+    </div>
+  </section>
+
+  <section class="sec sec-ledger">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-rules">rules</h2>
+      <p class="sec-kind">twelve decisions from the ledger, shortened</p>
+    </div>
+    <div class="sec-side">
+      <ol class="ledger" role="list">
+        <li>Record decisions as short records. Bodies never change. A new record supersedes an old one.</li>
+        <li>Columns are derived from facts.</li>
+        <li>Convention over configuration: the standard make targets are the contract with every project.</li>
+        <li>An item's mode is set at grooming: autonomous items land and deploy when green, review items wait for me.</li>
+      </ol>
+    </div>
+    <div class="sec-body">
+      <ol class="ledger ledger-more" role="list" start="5">
+        <li>The window is a viewer. Every change goes through a session and the API.</li>
+        <li>Reports are a first-class record.</li>
+        <li>Every working session turns its lessons into skills.</li>
+        <li>Gated pull requests land by default.</li>
+        <li>Nothing waits for me unless it is destructive.</li>
+        <li>Everything that waits on me lives in one list.</li>
+        <li>Pace the agents with a governor.</li>
+        <li>Calls feed the record: each transcript becomes a summary and work items.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-score">the record so far</h2>
+      <p class="sec-kind">as of <time datetime="2026-11-25">2026-11-25</time>, 40 days in</p>
+    </div>
+    <dl class="score">
+      <div><dt><time datetime="2026-10-16">2026-10-16</time></dt><dd>Smithy began.</dd></div>
+      <div><dt>9</dt><dd>projects on one board</dd></div>
+      <div><dt>676</dt><dd>work items, 248 of them done</dd></div>
+      <div><dt>1,154</dt><dd>gate verdicts</dd></div>
+      <div><dt>63</dt><dd>decision records in Smithy's own ledger, more than 250 across seven of my projects</dd></div>
+      <div><dt>184</dt><dd>reports</dd></div>
+    </dl>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-close">the close</h2>
+      <p class="sec-kind">since <time datetime="2026-10-16">2026-10-16</time></p>
+    </div>
+    <div class="sec-body">
+      <p class="lead">Smithy is its own first project: it was built with itself from the first day. This site is on the board too.</p>
+      <p class="go"><a class="btn" href="/">back to the menu</a></p>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<footer class="foot wrap">
+  <p class="foot-line"><span class="foot-c">&copy; 2026 Luis Herrada</span> <span class="foot-links"><a href="https://www.linkedin.com/in/luisehk">LinkedIn</a> <span aria-hidden="true">&middot;</span> <a href="https://github.com/luisehk">GitHub</a> <span aria-hidden="true">&middot;</span> <a href="/">back to the menu</a></span></p>
+  <p class="foot-note">Preview. One of five directions for this site, drawn by AI agents as a work item on my own board.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+{{head}}
+
+<a class="skip" href="#read">Skip to the text</a>
+
+{{top}}
+
+<main id="main">
+
+<header class="marquee marquee-inner wrap">
+  <p class="kicker">{{kicker}}</p>
+  <h1>{{title}}</h1>
+  <p class="sub sub-stack">{{sub}}</p>
+</header>
+
+<div class="doc wrap" id="read">
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-idea">the idea</h2>
+      <p class="sec-kind">{{idea_kind}}</p>
+    </div>
+    <div class="sec-body">
+      <p class="lead">{{idea}}</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-balanced">a balanced approach</h2>
+      <p class="sec-kind">{{balanced_kind}}</p>
+    </div>
+    <div class="sec-body">
+{{balanced}}
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-seats">the seats</h2>
+      <p class="sec-kind">then and now</p>
+    </div>
+    <dl class="seats">
+{{seats}}
+    </dl>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-parts">the parts</h2>
+      <p class="sec-kind">{{parts_kind}}</p>
+    </div>
+    <div class="sec-body">
+      <p>{{parts_intro}}</p>
+    </div>
+{{parts}}
+  </section>
+
+  <section class="sec sec-side-left">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-board">the board</h2>
+      <p class="sec-kind">{{board_kind}}</p>
+    </div>
+    <div class="sec-side">
+      <p class="cols-intro" id="cols-intro">The columns:</p>
+      <ol class="cols" aria-labelledby="cols-intro">
+        {{columns}}
+      </ol>
+    </div>
+    <div class="sec-body">
+{{board_body}}
+    </div>
+
+    <div class="sec-wide">
+      <figure class="board">
+        <figcaption class="board-cap" id="board-cap">{{board_caption}}</figcaption>
+        <ol class="map" aria-labelledby="board-cap">
+{{board}}
+        </ol>
+      </figure>
+
+      <ul class="items" aria-label="The two work items still on the way">
+{{on_the_way}}
+      </ul>
+      <p class="items-note" id="items-done">{{done_note}}</p>
+      <ul class="items items-done" aria-labelledby="items-done">
+{{done}}
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-loop">the loop</h2>
+      <p class="sec-kind">{{loop_kind}}</p>
+    </div>
+    <div class="sec-body">
+      <p>{{loop_intro}}</p>
+    </div>
+  </section>
+
+{{levels}}
+
+  <section class="sec sec-after">
+    <div class="sec-head"></div>
+    <div class="sec-body">
+      <p>{{after}}</p>
+    </div>
+  </section>
+
+  <section class="sec sec-side-left sec-story">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-run">one real item</h2>
+      <p class="sec-kind">{{story_kind}}</p>
+    </div>
+    <div class="sec-side">
+{{story}}
+    </div>
+    <div class="sec-body">
+      <div class="run">
+        <p class="run-head"><b>{{story_item}}</b> <span>before the clock</span></p>
+        <ol class="run-pre">
+{{story_before}}
+        </ol>
+        <p class="run-head"><b>The run</b> <span>hours and minutes from the decision</span></p>
+        <ol class="splits" start="{{splits_start}}">
+{{splits}}
+        </ol>
+      </div>
+
+      <p>{{story_close}}</p>
+    </div>
+  </section>
+
+  <section class="sec sec-ledger">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-rules">rules</h2>
+      <p class="sec-kind">{{rules_kind}}</p>
+    </div>
+    <div class="sec-side">
+      <ol class="ledger" role="list">
+{{rules_first}}
+      </ol>
+    </div>
+    <div class="sec-body">
+      <ol class="ledger ledger-more" role="list" start="{{rules_more_start}}">
+{{rules_more}}
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-score">the record so far</h2>
+      <p class="sec-kind">{{score_kind}}</p>
+    </div>
+    <dl class="score">
+{{score}}
+    </dl>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-close">the close</h2>
+      <p class="sec-kind">since {{began}}</p>
+    </div>
+    <div class="sec-body">
+      <p class="lead">{{close}}</p>
+      <p class="go"><a class="btn" href="/">back to the menu</a></p>
+    </div>
+  </section>
+
+</div>
+</main>
+
+{{foot}}
+
+</body>
+</html>
