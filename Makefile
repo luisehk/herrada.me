@@ -1,20 +1,25 @@
-# herrada.me Makefile (RK-0029)
-# The site is index.html, style.css and images/, with no build step. GitHub
-# Pages serves them until RK-0029's step D4, and the k3s node serves the same
-# files from the nginx image in docker/. The local gate and any future remote
-# gate must not drift: CI == `make ci`.
+# herrada.me Makefile (RK-0029, HM-0002)
+# The site is three pages, style.css, script.js, fonts/ and assets/. The pages
+# are written by build/build.py from build/counts.json and committed, so
+# nothing builds at run time. GitHub Pages serves them until it goes off on
+# 2026-12-02, and the k3s node serves the same files from the nginx image in
+# docker/. The local gate and any future remote gate must not drift:
+# CI == `make ci`.
 
-.PHONY: help ci ci-check ci-image ci-nginx ci-smoke
+.PHONY: help ci ci-check ci-site pages ci-image ci-nginx ci-smoke
 
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-# The image `make ci` builds and tests. Local only, never pushed.
-CI_IMAGE ?= herrada-me:ci
+# The image `make ci` builds and tests. Local only, never pushed. The tag names
+# the checkout, so two worktrees running `make ci` at once never test each
+# other's image.
+CI_IMAGE ?= herrada-me:ci-$(shell basename "$(CURDIR)" | tr -c 'A-Za-z0-9_.\n-' '-')
 
 help:
 	@echo "Available targets:"
-	@echo "  make ci               - Repo checks, image build, nginx -t, container smoke on 127.0.0.1"
+	@echo "  make ci               - Repo checks, pages vs a rebuild, site tests, image build, nginx -t, container smoke on 127.0.0.1"
+	@echo "  make pages            - Rewrite the three pages from build/counts.json (commit the result)"
 	@echo ""
 	@echo "Deploy (app.mk):"
 	@echo "  make cd               - Deploy HEAD from the forge: build + push :<sha>, roll out, check /health"
@@ -33,6 +38,17 @@ help:
 ci-check:
 	@bash scripts/check-repo.sh
 
+# The committed pages must equal a rebuild of build/counts.json, and the site
+# tests (build/test_site.py) must pass: content rules, no outside requests,
+# noindex, links, folds, fonts and their licences. Python's standard library
+# only; -B keeps __pycache__ out of the tree.
+ci-site:
+	python3 -B build/build.py --check
+	python3 -B -m unittest discover -s build -p 'test_*.py'
+
+pages:
+	python3 -B build/build.py
+
 ci-image:
 	docker build -f docker/Dockerfile -t $(CI_IMAGE) .
 
@@ -43,7 +59,7 @@ ci-nginx: ci-image
 ci-smoke: ci-image
 	@bash scripts/smoke.sh $(CI_IMAGE)
 
-ci: ci-check ci-image ci-nginx ci-smoke
+ci: ci-check ci-site ci-image ci-nginx ci-smoke
 	@echo "CI checks completed successfully"
 
 # Docker build + k3s deploy targets (build, push, deploy, cd, rollback, status, logs).

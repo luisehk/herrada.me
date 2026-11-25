@@ -1,53 +1,940 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Luis Herrada | Home</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Luis Herrada, software engineer</title>
+  <meta name="description" content="Luis Herrada is a software engineer in Monterrey. He builds Rentaventa, Smithy and a few things for the love of it.">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#EEF0E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1C150F" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23EEF0E6'/%3E%3Cpath d='M15 26V15h2v11z' fill='%2317211C'/%3E%3Cpath d='M16 17c0-6-4-10-10-10 0 6 4 10 10 10zM16 15c0-6 4-10 10-10 0 6-4 10-10 10z' fill='%23A6481F'/%3E%3Crect x='5' y='25' width='22' height='2' fill='%2317211C'/%3E%3C/svg%3E">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/fraunces-v38-latin.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/instrument-sans-v4-latin.woff2">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
-<body>
-  <header>
-    <h1 class="site-title">Luis Herrada</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html" class="active">Home</a></li>
-      </ul>
-    </nav>
-  </header>
+<!--
+  A field guide to what I build.
 
-  <main>
-    <section class="intro">
-      <img src="images/avatar.webp" alt="Avatar of Luis Herrada" class="profile-pic" />
-
-      <h2>About Me</h2>
-      <p>
-        I'm a software engineer with 18+ years of experience, focused on delivering
-        simple, maintainable solutions to complex problems. I love tackling
-        product challenges from early ideation to final deployment, and I enjoy
-        collaborating with cross-functional teams to bring ideas to life.
-      </p>
+  Sheet          this site
+  Kind           personal site
+  Status         preview
+  Where it runs  static files: no framework, no tracking, complete without JavaScript
+  Sources        written by build/build.py from build/counts.json (a rebuild overwrites this file)
+  Last revised   2026-11-25
+-->
+<body class="page-guide">
+<a class="skip" href="#main">Skip to the content</a>
+<header class="masthead">
+  <a class="masthead__name" href="index.html">Luis Herrada</a>
+  <nav aria-label="Site">
+    <ul>
+      <li><a href="index.html" aria-current="page">Guide</a></li>
+      <li><a href="how-i-build.html">How I build</a></li>
+      <li><a href="#record">Record</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main">
+  <div class="front">
+    <section class="cover" aria-labelledby="cover-title">
+      <h1 id="cover-title">A field guide to what I build.</h1>
+      <p class="cover__by">Luis Herrada, software engineer in Monterrey, shipping since 2008.</p>
     </section>
 
-    <section class="personal-touch">
-      <h2>Beyond Code</h2>
-      <p>
-        Outside of work, you can often find me playing guitar, exploring science
-        articles, or diving into a great book. I also love a good game of chess
-        and spending time with my family.
-      </p>
+    <section class="plate" id="plate" aria-labelledby="plate-title">
+      <span class="plate__at at1" id="tree-1"></span><span class="plate__at at2" id="tree-2"></span><span class="plate__at at3" id="tree-3"></span><span class="plate__at at4" id="tree-4"></span><span class="plate__at at5" id="tree-5"></span><span class="plate__at at6" id="tree-6"></span><span class="plate__at at7" id="tree-7"></span><span class="plate__at at8" id="tree-8"></span><span class="plate__at at9" id="tree-9"></span><span class="plate__at at10" id="tree-10"></span>
+      <div class="plate__head">
+        <h2 class="label" id="plate-title">Plate 1&thinsp;&middot;&thinsp;The stand</h2>
+        <p class="label">Counted <span class="nb">2026-11-25</span></p>
+      </div>
+      <figure>
+        <p class="vh">Ten projects drawn as trees on one ground line, planted from left to right in the order of their first commit. Each tree is as tall as the months with work in it. Four of them were planted in August 2026. Under the ground line Smithy&rsquo;s roots run to the six projects on its board. The key below lists all ten.</p>
+        <div class="stand">
+          <svg class="stand__svg" viewBox="0 0 350 360" width="350" height="360" aria-hidden="true" focusable="false">
+            <defs>
+              <mask id="roots-reveal" maskUnits="userSpaceOnUse" x="0" y="298" width="350" height="62">
+                <path class="rv" pathLength="1" d="M268 301.5C267.9 303.1 268.3 307.7 267.5 311C266.7 314.3 265.8 318.6 263.4 321.5C261 324.4 257.4 326.6 253 328.5C248.6 330.4 242.1 332.6 236.8 333C231.5 333.4 225.9 332.1 221.2 331C216.5 329.9 213.5 327 208.6 326.6C203.7 326.2 197.3 327.3 191.6 328.4C185.9 329.5 179.9 332 174.4 333C168.9 334 164 334.4 158.8 334.4C153.6 334.4 148.4 333.9 143.2 333C138 332.1 132.5 330.1 127.6 329C122.7 327.9 119.1 326.4 114 326.2C108.9 326 102.2 327.7 97 327.6C91.8 327.5 87.8 326 82.8 325.6C77.8 325.2 71.6 325.8 67.3 325C63 324.2 59.8 322.8 57.1 320.6C54.4 318.4 52.6 314.6 51.3 311.8C50.1 309 49.9 305 49.6 303.6" style="--t:0ms;--d:817ms;--e:linear"/>
+                <path class="rv" pathLength="1" d="M268 301.5C268.1 303.1 267.8 307.8 268.6 311C269.4 314.2 270.6 318.4 273 321C275.4 323.6 278.8 325.3 283 326.4C287.2 327.5 293.5 327.4 298.2 327.4C302.9 327.4 307.3 327.2 311.2 326.4C315.1 325.6 318.6 324.6 321.4 322.6C324.2 320.6 326.3 317 327.8 314.6C329.3 312.2 329.8 309.8 330.2 308C330.6 306.2 330.4 304.3 330.4 303.6" style="--t:0ms;--d:301ms;--e:linear"/>
+                <path class="rv" pathLength="1" d="M220.1 330.5C219 330.1 215.7 329.4 213.8 327.9C211.9 326.4 209.9 323.9 208.6 321.5C207.3 319.1 206.6 316.5 206.1 313.5C205.6 310.5 205.7 305.1 205.6 303.4" style="--t:219ms;--d:109ms;--e:ease-out"/>
+                <path class="rv" pathLength="1" d="M126.5 328.6C125.5 328.2 122.1 327.5 120.2 326C118.3 324.5 116.3 322 115 319.6C113.7 317.2 113 314.3 112.5 311.6C112 308.9 112.1 304.8 112 303.4" style="--t:528ms;--d:103ms;--e:ease-out"/>
+                <path class="rv" pathLength="1" d="M95.3 327.5C94.2 327.1 90.9 326.4 89 324.9C87.1 323.4 85.1 320.9 83.8 318.5C82.5 316.1 81.8 313 81.3 310.5C80.8 308 80.9 304.6 80.8 303.4" style="--t:628ms;--d:99ms;--e:ease-out"/>
+                <path class="rv" pathLength="1" d="M284.7 326.7C285.8 326.3 289.1 325.6 291 324.1C292.9 322.6 294.9 320.1 296.2 317.7C297.5 315.3 298.2 312.1 298.7 309.7C299.2 307.3 299.1 304.5 299.2 303.4" style="--t:108ms;--d:96ms;--e:ease-out"/>
+              </mask>
+            </defs>
+            <g class="scale">
+              <line x1="22" y1="240" x2="350" y2="240"/><text x="0" y="240" dominant-baseline="central">6</text>
+              <line x1="22" y1="180" x2="350" y2="180"/><text x="0" y="180" dominant-baseline="central">12</text>
+              <line x1="22" y1="120" x2="350" y2="120"/><text x="0" y="120" dominant-baseline="central">18</text>
+              <line x1="22" y1="60" x2="350" y2="60"/><text x="0" y="60" dominant-baseline="central">24</text>
+              <text class="scale__unit" x="0" y="44" dominant-baseline="central">MONTHS</text>
+            </g>
+            <g class="bracket">
+              <path d="M132.2 234V228H247.8V234"/>
+              <text x="190" y="219.5" dominant-baseline="central">PLANTED AUGUST 2026</text>
+            </g>
+            <a class="roots" href="#smithy" tabindex="-1">
+              <title>Smithy’s roots, drawn to the six projects on its board. Go to Smithy’s sheet.</title>
+              <g class="roots__art" mask="url(#roots-reveal)">
+                <path d="M265.9 301.4L265.9 302.5L265.9 303.9L265.9 305.6L265.9 307.3L265.8 309L265.5 310.5L265.2 312L264.8 313.5L264.4 315L263.9 316.5L263.4 317.9L262.7 319.1L261.9 320.3L261.1 321.2L260.1 322.1L259.1 322.9L257.9 323.8L256.6 324.6L255.3 325.3L253.8 326.1L252.3 326.8L250.9 327.3L249.5 327.9L247.9 328.5L246.3 329L244.7 329.6L243.1 330L241.4 330.4L239.8 330.8L238.2 331L236.7 331.2L235.2 331.3L233.7 331.3L232.1 331.2L230.6 331L229 330.8L227.5 330.6L226 330.3L224.5 330L223 329.7L221.6 329.3L220.1 328.9L218.6 328.4L217.2 327.7L215.7 327.1L214.2 326.4L212.5 325.8L210.7 325.3L208.7 325L207.3 324.9L205.8 324.9L204.2 325L202.6 325.1L201 325.3L199.4 325.5L197.7 325.7L196.1 326L194.5 326.3L192.9 326.6L191.3 326.9L189.7 327.2L188.1 327.6L186.5 328.1L184.9 328.6L183.3 329.1L181.7 329.6L180.1 330L178.6 330.5L177.1 330.9L175.6 331.3L174.1 331.6L172.5 331.9L171 332.1L169.4 332.3L167.9 332.5L166.4 332.7L164.9 332.8L163.4 332.9L161.8 333L160.3 333L158.8 333L157.3 333L155.7 333L154.2 332.9L152.7 332.8L151.1 332.7L149.6 332.6L148 332.4L146.5 332.2L145 332L143.4 331.7L141.9 331.5L140.3 331.1L138.8 330.7L137.2 330.3L135.6 329.9L134 329.5L132.5 329L130.9 328.6L129.4 328.2L127.9 327.8L126.3 327.5L124.8 327.1L123.3 326.7L121.9 326.3L120.4 326L118.9 325.6L117.4 325.4L115.8 325.2L114.1 325.1L112.6 325.1L111 325.1L109.4 325.3L107.8 325.5L106.2 325.7L104.6 325.9L103 326.1L101.4 326.3L99.9 326.4L98.4 326.5L97 326.6L95.4 326.5L93.8 326.3L92.3 326.1L90.8 325.9L89.2 325.6L87.7 325.3L86.2 325L84.5 324.8L82.9 324.6L81.3 324.5L79.7 324.5L78.1 324.5L76.4 324.5L74.8 324.5L73.2 324.5L71.6 324.5L70.1 324.4L68.7 324.3L67.5 324.1L65.7 323.7L64.1 323.3L62.6 322.8L61.3 322.2L60 321.5L58.8 320.8L57.6 320L56.6 319L55.7 317.9L54.8 316.7L54 315.4L53.2 314L52.6 312.7L52 311.5L51.4 309.8L51 307.9L50.7 306.2L50.5 304.6L50.3 303.4L48.9 303.8L49 304.8L49.2 306.4L49.5 308.2L49.9 310.2L50.6 312.1L51.2 313.4L51.8 314.8L52.6 316.2L53.4 317.6L54.3 318.9L55.4 320.1L56.6 321.2L57.8 322.2L59.1 323L60.5 323.8L62 324.4L63.6 325L65.3 325.5L67.1 325.9L68.5 326.1L70 326.2L71.6 326.3L73.2 326.4L74.8 326.4L76.4 326.4L78.1 326.4L79.7 326.4L81.2 326.5L82.7 326.6L84.3 326.8L85.8 327L87.3 327.3L88.9 327.6L90.4 327.9L91.9 328.1L93.6 328.4L95.2 328.6L97 328.6L98.5 328.6L100 328.5L101.6 328.4L103.3 328.2L104.9 328L106.5 327.8L108.1 327.6L109.6 327.5L111.1 327.4L112.6 327.3L113.9 327.3L115.5 327.4L117 327.6L118.5 327.9L119.9 328.2L121.3 328.6L122.7 329L124.2 329.4L125.7 329.8L127.3 330.2L128.8 330.5L130.3 330.9L131.8 331.4L133.4 331.8L134.9 332.3L136.5 332.7L138.1 333.2L139.8 333.6L141.4 333.9L143 334.3L144.6 334.5L146.1 334.8L147.7 335L149.3 335.2L150.9 335.3L152.5 335.5L154 335.6L155.6 335.7L157.2 335.7L158.8 335.8L160.4 335.8L161.9 335.7L163.5 335.7L165.1 335.6L166.6 335.5L168.2 335.3L169.8 335.1L171.4 334.9L173 334.7L174.7 334.4L176.2 334.1L177.8 333.7L179.4 333.3L181 332.9L182.6 332.4L184.1 331.9L185.7 331.4L187.3 331L188.8 330.6L190.4 330.2L191.9 329.9L193.4 329.6L195 329.3L196.6 329.1L198.2 328.8L199.8 328.6L201.4 328.4L202.9 328.3L204.4 328.2L205.8 328.1L207.2 328.1L208.5 328.2L210 328.5L211.5 328.9L212.9 329.4L214.3 330.1L215.7 330.8L217.3 331.5L219 332.1L220.8 332.7L222.3 333L223.8 333.3L225.3 333.7L226.9 334L228.5 334.3L230.2 334.5L231.8 334.7L233.5 334.8L235.2 334.8L236.9 334.8L238.7 334.6L240.4 334.3L242.2 334L244 333.6L245.7 333.1L247.5 332.5L249.2 332L250.8 331.4L252.3 330.8L253.7 330.2L255.4 329.5L257 328.7L258.6 327.9L260 327L261.4 326L262.6 325L263.8 323.9L264.9 322.7L266 321.2L266.9 319.6L267.6 317.9L268.2 316.2L268.7 314.5L269.1 312.9L269.5 311.5L269.8 309.5L270 307.5L270.1 305.6L270.1 303.9L270.1 302.5L270.1 301.6z"/>
+                <path d="M266.2 301.6L266.2 302.5L266.3 303.9L266.3 305.7L266.4 307.6L266.6 309.5L267 311.4L267.4 312.9L267.9 314.4L268.5 316L269.1 317.6L269.9 319.2L270.8 320.7L271.9 322L273.1 323.2L274.5 324.2L275.9 325.1L277.4 325.9L279.1 326.6L280.8 327.2L282.7 327.7L284.2 328L285.9 328.3L287.7 328.4L289.4 328.5L291.3 328.6L293.1 328.6L294.9 328.6L296.6 328.6L298.2 328.6L300 328.6L301.7 328.5L303.4 328.4L305.1 328.3L306.7 328.2L308.3 328L309.9 327.7L311.4 327.4L313.1 327.1L314.7 326.6L316.3 326.1L317.8 325.6L319.3 325L320.6 324.2L322 323.4L323.2 322.4L324.3 321.2L325.3 320L326.3 318.7L327.1 317.4L327.9 316.2L328.5 315L329.3 313.5L329.9 312L330.4 310.6L330.7 309.3L331 308.2L331.2 306.7L331.2 305.4L331.2 304.3L331.1 303.6L329.7 303.6L329.7 304.4L329.7 305.4L329.6 306.6L329.4 307.8L329.1 309L328.8 310.2L328.4 311.5L327.8 312.8L327.1 314.2L326.4 315.3L325.6 316.4L324.8 317.6L323.9 318.8L322.9 320L321.9 321L320.8 321.8L319.7 322.6L318.4 323.2L317.1 323.7L315.7 324.2L314.2 324.7L312.6 325L311 325.4L309.6 325.6L308.1 325.8L306.5 326L304.9 326.1L303.3 326.2L301.6 326.2L299.9 326.2L298.2 326.2L296.6 326.2L294.9 326.2L293.1 326.1L291.4 326.1L289.6 326L287.9 325.8L286.2 325.6L284.7 325.4L283.3 325.1L281.7 324.6L280.1 324L278.7 323.4L277.3 322.6L276.1 321.8L275.1 320.9L274.1 320L273.3 319L272.6 317.7L271.9 316.4L271.4 315L270.9 313.5L270.5 312L270.2 310.6L269.9 309.1L269.8 307.3L269.7 305.6L269.8 304L269.8 302.5L269.8 301.4z"/>
+                <path d="M220.5 329.6L219.5 329.3L218.3 328.9L216.9 328.5L215.5 327.9L214.4 327.2L213.3 326.3L212.2 325.1L211.1 323.9L210.2 322.5L209.3 321.1L208.7 319.7L208.1 318.3L207.6 316.7L207.2 315.1L206.9 313.4L206.6 311.8L206.5 309.9L206.4 307.9L206.4 306.1L206.3 304.5L206.3 303.4L204.9 303.4L204.9 304.5L205 306.1L205 308L205 310L205.1 311.9L205.3 313.6L205.7 315.4L206.1 317.2L206.5 318.8L207.1 320.4L207.9 321.9L208.7 323.4L209.7 324.9L210.8 326.3L212 327.6L213.2 328.6L214.7 329.6L216.2 330.3L217.7 330.8L218.9 331.2L219.7 331.4z"/>
+                <path d="M126.9 327.7L125.9 327.4L124.7 327L123.3 326.6L121.9 326L120.8 325.3L119.7 324.4L118.6 323.2L117.5 322L116.6 320.6L115.7 319.2L115 317.8L114.5 316.3L114 314.7L113.6 313.1L113.2 311.5L113 309.8L112.8 307.9L112.8 306.1L112.7 304.5L112.7 303.4L111.3 303.4L111.4 304.5L111.4 306.1L111.4 308L111.5 309.9L111.8 311.7L112.1 313.4L112.5 315.1L112.9 316.8L113.5 318.4L114.3 320L115.1 321.5L116.1 323L117.2 324.4L118.4 325.7L119.6 326.7L121.1 327.7L122.6 328.3L124.1 328.9L125.3 329.3L126.1 329.5z"/>
+                <path d="M95.7 326.6L94.7 326.3L93.5 325.9L92.1 325.5L90.7 324.9L89.6 324.2L88.5 323.3L87.4 322.1L86.3 320.9L85.4 319.5L84.5 318.1L83.8 316.7L83.3 315.1L82.8 313.5L82.4 311.9L82 310.4L81.8 308.8L81.6 307.2L81.6 305.7L81.5 304.3L81.5 303.4L80.1 303.4L80.2 304.4L80.2 305.7L80.2 307.3L80.3 309L80.6 310.7L80.9 312.3L81.3 313.9L81.8 315.6L82.3 317.3L83.1 318.9L83.9 320.4L84.9 321.9L86 323.3L87.2 324.6L88.4 325.6L89.9 326.6L91.4 327.2L92.9 327.8L94.1 328.2L94.9 328.4z"/>
+                <path d="M285.1 327.6L285.9 327.4L287.1 327L288.6 326.4L290.1 325.7L291.6 324.8L292.8 323.7L294 322.5L295.1 321.1L296.1 319.6L296.9 318.1L297.7 316.5L298.2 314.8L298.7 313.1L299.1 311.4L299.4 309.9L299.7 307.9L299.8 306.1L299.8 304.5L299.9 303.5L298.5 303.3L298.5 304.5L298.4 306L298.3 307.8L298 309.6L297.6 311.1L297.2 312.7L296.7 314.3L296.2 315.9L295.5 317.3L294.6 318.7L293.7 320.1L292.6 321.3L291.5 322.5L290.4 323.4L289.3 324.1L287.9 324.7L286.5 325.1L285.3 325.5L284.3 325.8z"/>
+              </g>
+              <circle class="node" cx="49.6" cy="303.6" r="2.4" style="--t:817ms"/>
+              <circle class="node" cx="330.4" cy="303.6" r="2.4" style="--t:301ms"/>
+              <circle class="node" cx="205.6" cy="303.6" r="2.4" style="--t:328ms"/>
+              <circle class="node" cx="112" cy="303.6" r="2.4" style="--t:631ms"/>
+              <circle class="node" cx="80.8" cy="303.6" r="2.4" style="--t:727ms"/>
+              <circle class="node" cx="299.2" cy="303.6" r="2.4" style="--t:205ms"/>
+              <text class="roots__label" x="350" y="348" dominant-baseline="central" style="--t:817ms">SMITHY’S ROOTS</text>
+            </a>
+            <a class="tree t1 c-arbopedia" href="#arbopedia" tabindex="-1" transform="translate(49.6 300)">
+              <title>1. arbopedia, 9 months</title>
+              <rect class="hit" x="-15.6" y="-111" width="31.2" height="115"/>
+              <g class="grow" style="--i:0;--m:9"><g class="edge"><path d="M-2.2 0L-1.4 -60h2.8L2.2 0z"/><ellipse cx="0" cy="-63.5" rx="11.2" ry="26.5"/><ellipse cx="-5.3" cy="-51" rx="9.2" ry="14.6"/><ellipse cx="5.6" cy="-54.5" rx="9.2" ry="15.8"/></g><g class="fill"><path d="M-2.2 0L-1.4 -60h2.8L2.2 0z"/><ellipse cx="0" cy="-63.5" rx="11.2" ry="26.5"/><ellipse cx="-5.3" cy="-51" rx="9.2" ry="14.6"/><ellipse cx="5.6" cy="-54.5" rx="9.2" ry="15.8"/></g></g>
+              <circle class="ring" cy="-100.5" r="8.8"/>
+              <text class="num" y="-100.5" dominant-baseline="central" style="--i:0;--m:9">1</text>
+            </a>
+            <a class="tree t2 c-rentaventa" href="#rentaventa" tabindex="-1" transform="translate(80.8 300)">
+              <title>2. Rentaventa, 27 months</title>
+              <rect class="hit" x="-15.6" y="-291" width="31.2" height="295"/>
+              <g class="grow" style="--i:1;--m:27"><g class="edge"><path d="M-3.8 0L-2.3 -124h4.6L3.8 0z"/><ellipse cx="0" cy="-192" rx="12.2" ry="78"/><ellipse cx="-5.5" cy="-159" rx="10.6" ry="44"/><ellipse cx="5.7" cy="-169" rx="10.4" ry="46"/></g><g class="fill"><path d="M-3.8 0L-2.3 -124h4.6L3.8 0z"/><ellipse cx="0" cy="-192" rx="12.2" ry="78"/><ellipse cx="-5.5" cy="-159" rx="10.6" ry="44"/><ellipse cx="5.7" cy="-169" rx="10.4" ry="46"/></g></g>
+              <circle class="ring" cy="-280.5" r="8.8"/>
+              <text class="num" y="-280.5" dominant-baseline="central" style="--i:1;--m:27">2</text>
+              <text class="tag" x="23" y="-210" dominant-baseline="central" style="--i:1;--m:27">RENTAVENTA</text>
+            </a>
+            <a class="tree t3 c-slate" href="#budgeter" tabindex="-1" transform="translate(112 300)">
+              <title>3. budgeter, 6 months</title>
+              <rect class="hit" x="-15.6" y="-81" width="31.2" height="85"/>
+              <g class="grow" style="--i:2;--m:6"><g class="edge"><path d="M-1.8 0L-1.2 -40h2.4L1.8 0z"/><ellipse cx="0" cy="-41.5" rx="9.2" ry="18.5"/><ellipse cx="-4.3" cy="-32.5" rx="7.6" ry="10.6"/><ellipse cx="4.5" cy="-35" rx="7.6" ry="11.6"/></g><g class="fill"><path d="M-1.8 0L-1.2 -40h2.4L1.8 0z"/><ellipse cx="0" cy="-41.5" rx="9.2" ry="18.5"/><ellipse cx="-4.3" cy="-32.5" rx="7.6" ry="10.6"/><ellipse cx="4.5" cy="-35" rx="7.6" ry="11.6"/></g></g>
+              <circle class="ring" cy="-70.5" r="8.8"/>
+              <text class="num" y="-70.5" dominant-baseline="central" style="--i:2;--m:6">3</text>
+            </a>
+            <a class="tree t4 c-games is-sprout" href="#minigames" tabindex="-1" transform="translate(143.2 300)">
+              <title>4. pyplatformer, 1 month</title>
+              <rect class="hit" x="-15.6" y="-48" width="31.2" height="52"/>
+              <g class="grow" style="--i:3;--m:1"><g class="edge"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g><g class="fill"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g></g>
+              <circle class="ring" cy="-20.5" r="8.8"/>
+              <text class="num" y="-20.5" dominant-baseline="central" style="--i:3;--m:1">4</text>
+            </a>
+            <a class="tree t5 c-games is-sprout" href="#minigames" tabindex="-1" transform="translate(174.4 300)">
+              <title>5. minigames, 1 month</title>
+              <rect class="hit" x="-15.6" y="-48" width="31.2" height="52"/>
+              <g class="grow" style="--i:4;--m:1"><g class="edge"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g><g class="fill"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g></g>
+              <circle class="ring" cy="-20.5" r="8.8"/>
+              <text class="num" y="-20.5" dominant-baseline="central" style="--i:4;--m:1">5</text>
+            </a>
+            <a class="tree t6 c-vim" href="#vim-puzzles" tabindex="-1" transform="translate(205.6 300)">
+              <title>6. vim-puzzles, 3 months</title>
+              <rect class="hit" x="-15.6" y="-51" width="31.2" height="55"/>
+              <g class="grow" style="--i:5;--m:3"><g class="edge"><path d="M-1.3 0L-1 -18h2L1.3 0z"/><ellipse cx="0" cy="-19.6" rx="8" ry="10.4"/><ellipse cx="-3.7" cy="-15.4" rx="6" ry="6.2"/><ellipse cx="3.9" cy="-16.6" rx="6" ry="6.8"/></g><g class="fill"><path d="M-1.3 0L-1 -18h2L1.3 0z"/><ellipse cx="0" cy="-19.6" rx="8" ry="10.4"/><ellipse cx="-3.7" cy="-15.4" rx="6" ry="6.2"/><ellipse cx="3.9" cy="-16.6" rx="6" ry="6.8"/></g></g>
+              <circle class="ring" cy="-40.5" r="8.8"/>
+              <text class="num" y="-40.5" dominant-baseline="central" style="--i:5;--m:3">6</text>
+            </a>
+            <a class="tree t7 c-lichess is-sprout" href="#lichess-irl" tabindex="-1" transform="translate(236.8 300)">
+              <title>7. lichess-irl, 1 month</title>
+              <rect class="hit" x="-15.6" y="-48" width="31.2" height="52"/>
+              <g class="grow" style="--i:6;--m:1"><g class="edge"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g><g class="fill"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g></g>
+              <circle class="ring" cy="-20.5" r="8.8"/>
+              <text class="num" y="-20.5" dominant-baseline="central" style="--i:6;--m:1">7</text>
+            </a>
+            <a class="tree t8 c-smithy is-sprout" href="#smithy" tabindex="-1" transform="translate(268 300)">
+              <title>8. Smithy, 2 months</title>
+              <rect class="hit" x="-15.6" y="-48" width="31.2" height="52"/>
+              <g class="grow" style="--i:7;--m:2"><g class="edge"><path d="M-1.1 0V-9.6h2.2V0z"/><path d="M0 -8.4C-0.2 -13.6 -4.2 -17.4 -10 -17.8C-11 -13.6 -6.2 -8.2 0 -8.4z"/><path d="M0 -8.4C0.2 -14.8 4.7 -19.6 11.2 -20C12.2 -14.8 6.9 -8.2 0 -8.4z"/></g><g class="fill"><path d="M-1.1 0V-9.6h2.2V0z"/><path d="M0 -8.4C-0.2 -13.6 -4.2 -17.4 -10 -17.8C-11 -13.6 -6.2 -8.2 0 -8.4z"/><path d="M0 -8.4C0.2 -14.8 4.7 -19.6 11.2 -20C12.2 -14.8 6.9 -8.2 0 -8.4z"/></g></g>
+              <circle class="ring" cy="-30.5" r="8.8"/>
+              <text class="num" y="-30.5" dominant-baseline="central" style="--i:7;--m:2">8</text>
+            </a>
+            <a class="tree t9 c-slate is-sprout" href="#rentaventa-meet" tabindex="-1" transform="translate(299.2 300)">
+              <title>9. rentaventa-meet, 1 month</title>
+              <rect class="hit" x="-15.6" y="-48" width="31.2" height="52"/>
+              <g class="grow" style="--i:8;--m:1"><g class="edge"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g><g class="fill"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g></g>
+              <circle class="ring" cy="-20.5" r="8.8"/>
+              <text class="num" y="-20.5" dominant-baseline="central" style="--i:8;--m:1">9</text>
+            </a>
+            <a class="tree t10 c-site is-sprout" href="#colophon" tabindex="-1" transform="translate(330.4 300)">
+              <title>10. This site, 1 month</title>
+              <rect class="hit" x="-15.6" y="-48" width="31.2" height="52"/>
+              <g class="grow" style="--i:9;--m:1"><g class="edge"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g><g class="fill"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g></g>
+              <circle class="ring" cy="-20.5" r="8.8"/>
+              <text class="num" y="-20.5" dominant-baseline="central" style="--i:9;--m:1">10</text>
+            </a>
+            <g class="readouts">
+              <text class="readout r1" x="350" y="44" dominant-baseline="central"><tspan class="readout__n">1</tspan><tspan dx="5">arbopedia</tspan><tspan class="readout__m" dx="5">9 months</tspan></text>
+              <text class="readout r2" x="350" y="44" dominant-baseline="central"><tspan class="readout__n">2</tspan><tspan dx="5">Rentaventa</tspan><tspan class="readout__m" dx="5">27 months</tspan></text>
+              <text class="readout r3" x="350" y="44" dominant-baseline="central"><tspan class="readout__n">3</tspan><tspan dx="5">budgeter</tspan><tspan class="readout__m" dx="5">6 months</tspan></text>
+              <text class="readout r4" x="350" y="44" dominant-baseline="central"><tspan class="readout__n">4</tspan><tspan dx="5">pyplatformer</tspan><tspan class="readout__m" dx="5">1 month</tspan></text>
+              <text class="readout r5" x="350" y="44" dominant-baseline="central"><tspan class="readout__n">5</tspan><tspan dx="5">minigames</tspan><tspan class="readout__m" dx="5">1 month</tspan></text>
+              <text class="readout r6" x="350" y="44" dominant-baseline="central"><tspan class="readout__n">6</tspan><tspan dx="5">vim-puzzles</tspan><tspan class="readout__m" dx="5">3 months</tspan></text>
+              <text class="readout r7" x="350" y="44" dominant-baseline="central"><tspan class="readout__n">7</tspan><tspan dx="5">lichess-irl</tspan><tspan class="readout__m" dx="5">1 month</tspan></text>
+              <text class="readout r8" x="350" y="44" dominant-baseline="central"><tspan class="readout__n">8</tspan><tspan dx="5">Smithy</tspan><tspan class="readout__m" dx="5">2 months</tspan></text>
+              <text class="readout r9" x="350" y="44" dominant-baseline="central"><tspan class="readout__n">9</tspan><tspan dx="5">rentaventa-meet</tspan><tspan class="readout__m" dx="5">1 month</tspan></text>
+              <text class="readout r10" x="350" y="44" dominant-baseline="central"><tspan class="readout__n">10</tspan><tspan dx="5">This site</tspan><tspan class="readout__m" dx="5">1 month</tspan></text>
+            </g>
+            <line class="ground" x1="0" y1="300" x2="350" y2="300"/>
+            <g class="figure">
+              <circle cx="13.5" cy="291.6" r="1.55"/><rect x="11.8" y="293.4" width="3.5" height="3.9" rx="1.1"/><rect x="11.9" y="296.6" width="1.3" height="2.4"/><rect x="13.8" y="296.6" width="1.3" height="2.4"/>
+            </g>
+          </svg>
+          <span class="stand__sentinel" aria-hidden="true"></span>
+        </div>
+        <figcaption>
+          <p class="plate__say">The tall one is Rentaventa. The sprout two months tall is Smithy, and its roots already reach six of the others.</p>
+          <p>Height: months with work, counted <span class="nb">2026-11-25</span>. One figure is one month. Below the line: Smithy&rsquo;s roots, drawn only to the projects on its board.</p>
+        </figcaption>
+      </figure>
     </section>
 
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Luis Herrada. All rights reserved.</p>
-    
-    <div class="social-links">
-      <a href="https://www.linkedin.com/in/luisehk" target="_blank">LinkedIn</a>
-      <a href="https://github.com/luisehk" target="_blank">GitHub</a>
+    <div class="cover__more">
+      <p class="cover__lede">With a partner I build <a href="#rentaventa">Rentaventa</a>, a real-estate platform for the city&rsquo;s brokers. On my own I build <a href="#smithy">Smithy</a>, the workshop where AI agents do most of my building and I keep the decisions.</p>
+      <p class="cover__next">Read <a href="how-i-build.html">how I build with agents</a>, or <a href="#key">pick a tree</a>.</p>
+      <dl class="cover__small">
+        <div><dt>Creed</dt><dd>Simple, maintainable solutions to complex problems.</dd></div>
+        <div><dt>Note</dt><dd>What I have not verified prints <span class="nb"><span class="pend" lang="es">[pendiente]</span>:</span> pending.</dd></div>
+        <div><dt>Edition</dt><dd>November 2026.</dd></div>
+      </dl>
     </div>
-  </footer>
+
+    <details class="fold keywrap" id="key">
+      <summary><span>Key to Plate 1</span> <span class="fold__state">Ten trees</span></summary>
+      <table class="key">
+        <caption>Key to Plate 1</caption>
+        <thead>
+          <tr><th scope="col"><abbr title="Number">No.</abbr></th><th scope="col">Tree</th><th scope="col" class="num">Months</th><th scope="col" class="num key__planted">Planted</th><th scope="col"><span class="vh">On Smithy&rsquo;s </span>Board</th></tr>
+        </thead>
+        <tbody>
+          <tr class="k1 c-arbopedia">
+            <td><span class="chip">1</span></td>
+            <th scope="row"><a href="#arbopedia">arbopedia</a> <span class="key__when">planted <time datetime="2023-07-13"><span class="nb">2023-07-13</span></time></span></th>
+            <td class="num">9</td>
+            <td class="num key__planted"><time datetime="2023-07-13"><span class="nb">2023-07-13</span></time></td>
+            <td><span class="key__root" aria-hidden="true"></span>yes</td>
+          </tr>
+          <tr class="k2 c-rentaventa">
+            <td><span class="chip">2</span></td>
+            <th scope="row"><a href="#rentaventa">Rentaventa</a> <span class="key__when">planted <time datetime="2024-08">2024-08</time></span></th>
+            <td class="num">27</td>
+            <td class="num key__planted"><time datetime="2024-08">2024-08</time></td>
+            <td><span class="key__root" aria-hidden="true"></span>yes</td>
+          </tr>
+          <tr class="k3 c-slate">
+            <td><span class="chip">3</span></td>
+            <th scope="row"><a href="#budgeter">budgeter</a> <span class="key__when">planted <time datetime="2026-01-29"><span class="nb">2026-01-29</span></time></span></th>
+            <td class="num">6</td>
+            <td class="num key__planted"><time datetime="2026-01-29"><span class="nb">2026-01-29</span></time></td>
+            <td><span class="key__root" aria-hidden="true"></span>yes</td>
+          </tr>
+          <tr class="k4 c-games">
+            <td><span class="chip">4</span></td>
+            <th scope="row"><a href="#minigames">pyplatformer</a> <span class="key__when">planted <time datetime="2026-08-06"><span class="nb">2026-08-06</span></time></span></th>
+            <td class="num">1</td>
+            <td class="num key__planted"><time datetime="2026-08-06"><span class="nb">2026-08-06</span></time></td>
+            <td><span class="key__free" aria-hidden="true"></span>no</td>
+          </tr>
+          <tr class="k5 c-games">
+            <td><span class="chip">5</span></td>
+            <th scope="row"><a href="#minigames">minigames</a> <span class="key__when">planted <time datetime="2026-08-14"><span class="nb">2026-08-14</span></time></span></th>
+            <td class="num">1</td>
+            <td class="num key__planted"><time datetime="2026-08-14"><span class="nb">2026-08-14</span></time></td>
+            <td><span class="key__free" aria-hidden="true"></span>no</td>
+          </tr>
+          <tr class="k6 c-vim">
+            <td><span class="chip">6</span></td>
+            <th scope="row"><a href="#vim-puzzles">vim-puzzles</a> <span class="key__when">planted <time datetime="2026-08-20"><span class="nb">2026-08-20</span></time></span></th>
+            <td class="num">3</td>
+            <td class="num key__planted"><time datetime="2026-08-20"><span class="nb">2026-08-20</span></time></td>
+            <td><span class="key__root" aria-hidden="true"></span>yes</td>
+          </tr>
+          <tr class="k7 c-lichess">
+            <td><span class="chip">7</span></td>
+            <th scope="row"><a href="#lichess-irl">lichess-irl</a> <span class="key__when">planted <time datetime="2026-08-27"><span class="nb">2026-08-27</span></time></span></th>
+            <td class="num">1</td>
+            <td class="num key__planted"><time datetime="2026-08-27"><span class="nb">2026-08-27</span></time></td>
+            <td><span class="key__free" aria-hidden="true"></span>no</td>
+          </tr>
+          <tr class="k8 c-smithy">
+            <td><span class="chip">8</span></td>
+            <th scope="row"><a href="#smithy">Smithy</a> <span class="key__when">planted <time datetime="2026-10-16"><span class="nb">2026-10-16</span></time></span></th>
+            <td class="num">2</td>
+            <td class="num key__planted"><time datetime="2026-10-16"><span class="nb">2026-10-16</span></time></td>
+            <td><span class="key__root" aria-hidden="true"></span>its own</td>
+          </tr>
+          <tr class="k9 c-slate">
+            <td><span class="chip">9</span></td>
+            <th scope="row"><a href="#rentaventa-meet">rentaventa-meet</a> <span class="key__when">planted <time datetime="2026-10-20"><span class="nb">2026-10-20</span></time></span></th>
+            <td class="num">1</td>
+            <td class="num key__planted"><time datetime="2026-10-20"><span class="nb">2026-10-20</span></time></td>
+            <td><span class="key__root" aria-hidden="true"></span>yes</td>
+          </tr>
+          <tr class="k10 c-site">
+            <td><span class="chip">10</span></td>
+            <th scope="row"><a href="#colophon">This site</a> <span class="key__when">planted <time datetime="2026-11-25"><span class="nb">2026-11-25</span></time></span></th>
+            <td class="num">1</td>
+            <td class="num key__planted"><time datetime="2026-11-25"><span class="nb">2026-11-25</span></time></td>
+            <td><span class="key__root" aria-hidden="true"></span>yes</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="key__note">Trees stand from left to right in the order of their first commit. Four were planted in August 2026, before the workshop existed. Three of them stand free. The fourth, vim-puzzles, became Smithy&rsquo;s first outside pilot.</p>
+    </details>
+
+    <details class="fold howto">
+      <summary><span>How to read a sheet</span></summary>
+      <section aria-labelledby="howto-title">
+        <h2 class="label fold__title" id="howto-title">How to read a sheet</h2>
+        <p>Every project gets one sheet, in the form my tree archive gives a species.</p>
+        <dl class="howto__list">
+          <div><dt><span class="status__bar" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></span>Status</dt><dd>Six states, in order: sketch, in dev, pre-launch, live, done, relic. One is filled. A private tool in daily use reads &ldquo;in use&rdquo; where a public one reads &ldquo;live&rdquo;.</dd></div>
+          <div><dt><span class="months months--mini" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i><i class="on"></i><i class="soon"></i></span>Worked on in 2026</dt><dd>Twelve dots, one per month. A filled dot is a month with at least one commit. December is dashed: not counted yet.</dd></div>
+          <div><dt><span class="pend" lang="es">[pendiente]</span></dt><dd>Not verified yet. The word is the archive&rsquo;s.</dd></div>
+        </dl>
+      </section>
+    </details>
+  </div>
+
+  <section class="sheets" id="sheets" aria-labelledby="sheets-title">
+    <div class="rule">
+      <h2 class="label" id="sheets-title">The sheets</h2>
+      <p class="label">Six projects</p>
+    </div>
+    <div class="sheets__grid">
+      <article class="sheet c-smithy" id="smithy" aria-labelledby="smithy-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>Tool, for one user</span> <a href="#tree-8">Plate 1, tree 8</a></p>
+          <h3 class="sheet__name" id="smithy-name" style="--r:3.0">Smithy</h3>
+          <p class="sheet__line">The workshop where AI agents build my software and I keep the decisions.</p>
+        </header>
+        <div class="sheet__body">
+          <dl class="fields">
+            <div class="field field--status">
+              <dt>Status</dt>
+              <dd class="status"><span class="status__bar" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></span><b>In use</b><span class="vh"> (state 4 of 6)</span></dd>
+              <dd>In daily use since October 2026. Private.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The complex challenge</dt>
+              <dd>AI agents can write code faster than one person can follow.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The simple answer</dt>
+              <dd>A board that moves only on facts, a ledger of decisions, and one short list of what needs me.</dd>
+            </div>
+            <div class="field">
+              <dt>Counts <span class="field__note">Read <span class="nb">2026-11-25</span></span></dt>
+              <dd>
+                <ul class="tally">
+                  <li><b>676</b> <span>work items, 248 done</span></li>
+                  <li><b>1,154</b> <span>gate verdicts</span></li>
+                  <li><b>63</b> <span>decisions written</span></li>
+                  <li><b>184</b> <span>reports</span></li>
+                  <li><b>9</b> <span>projects on one board</span></li>
+                </ul>
+              </dd>
+            </div>
+          </dl>
+          <details class="fold">
+            <summary><span>Months, where it runs, sources</span></summary>
+            <dl class="fields fields--more">
+              <div class="field">
+                <dt>Worked on in 2026 <span class="field__note">Counted <span class="nb">2026-11-25</span></span></dt>
+                <dd><span class="months" aria-hidden="true"><i>J</i><i>F</i><i>M</i><i>A</i><i>M</i><i>J</i><i>J</i><i>A</i><i>S</i><i class="on">O</i><i class="on">N</i><i class="soon">D</i></span>October and November. It was 40 days old on the count date.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Where it runs</dt>
+                <dd>Claude Code sessions on my own machines.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Sources</dt>
+                <dd>Private repository. The method is public: <a href="how-i-build.html">How I build with agents</a>. <span class="revised">Last revised <span class="nb">2026-11-25</span>.</span></dd>
+              </div>
+            </dl>
+          </details>
+          <details class="notes">
+            <summary><span>Field notes</span></summary>
+            <div class="notes__body">
+              <p>Smithy is the tool I built to build everything else. Work items move across a board only when something real happens: a claim, a passed gate, a merge, a deploy. Agents do the work and stamp each gate. Decisions go in a ledger. Anything that needs me lands in one short list.</p>
+              <ul class="dated">
+                <li><time datetime="2026-10-16"><span class="nb">2026-10-16</span></time> <span>First commit. Built with itself from that day.</span></li>
+                <li><time datetime="2026-10">October 2026</time> <span>vim-puzzles becomes its first outside pilot.</span></li>
+                <li><time datetime="2026-11">November 2026</time> <span>Nine projects on one board, this site among them.</span></li>
+              </ul>
+              <p>One person, many agents, one record.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article class="sheet c-rentaventa" id="rentaventa" aria-labelledby="rentaventa-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>Product, built with a partner</span> <a href="#tree-2">Plate 1, tree 2</a></p>
+          <h3 class="sheet__name" id="rentaventa-name" style="--r:4.83">Rentaventa</h3>
+          <p class="sheet__line">Rent and sale listings for Monterrey, built for brokers who work from WhatsApp.</p>
+        </header>
+        <div class="sheet__body">
+          <dl class="fields">
+            <div class="field field--status">
+              <dt>Status</dt>
+              <dd class="status"><span class="status__bar" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i><i></i></span><b>Pre-launch</b><span class="vh"> (state 3 of 6)</span></dd>
+              <dd>Since August 2024.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The complex challenge</dt>
+              <dd>Brokers in Monterrey live in WhatsApp.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The simple answer</dt>
+              <dd>Meet them there. A broker publishes a listing, sends photos or works a lead in a chat with an agent.</dd>
+            </div>
+            <div class="field">
+              <dt>Counts <span class="field__note">Read <span class="nb">2026-11-25</span></span></dt>
+              <dd>
+                <ul class="tally">
+                  <li><b>27</b> <span>months with work</span></li>
+                  <li><b>about 10</b> <span>repositories</span></li>
+                  <li><b>86</b> <span>decisions written</span></li>
+                  <li><b><span class="pend" lang="es">[pendiente]</span></b> <span>launch date</span></li>
+                </ul>
+              </dd>
+            </div>
+          </dl>
+          <details class="fold">
+            <summary><span>Months, where it runs, sources</span></summary>
+            <dl class="fields fields--more">
+              <div class="field">
+                <dt>Worked on in 2026 <span class="field__note">Counted <span class="nb">2026-11-25</span></span></dt>
+                <dd><span class="months" aria-hidden="true"><i class="on">J</i><i class="on">F</i><i class="on">M</i><i class="on">A</i><i class="on">M</i><i class="on">J</i><i class="on">J</i><i class="on">A</i><i class="on">S</i><i class="on">O</i><i class="on">N</i><i class="soon">D</i></span>January to November. 27 months with work in all: every month since August 2024 but one.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Where it runs</dt>
+                <dd>WhatsApp, the web and a phone.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Sources</dt>
+                <dd><a class="src" href="https://rentaventa.mx">rentaventa.mx (in Spanish)</a>. <span class="revised">Last revised <span class="nb">2026-11-25</span>.</span></dd>
+              </div>
+            </dl>
+          </details>
+          <details class="notes">
+            <summary><span>Field notes</span></summary>
+            <div class="notes__body">
+              <p>Rentaventa is the product I am building with a partner for real-estate brokers in Monterrey. Listings for rent and sale on a map, a CRM for leads, and two ways to work without opening a dashboard: a WhatsApp agent for brokers and a Claude connector for the team. Pre-launch.</p>
+              <ul class="dated">
+                <li><time datetime="2024-08">August 2024</time> <span>It begins.</span></li>
+                <li><time datetime="2025-11">November 2025</time> <span>The web app is rebuilt in React.</span></li>
+                <li><time datetime="2026-03">March 2026</time> <span>The WhatsApp agent.</span></li>
+                <li><time datetime="2026-04">April 2026</time> <span>The mobile app.</span></li>
+                <li><time datetime="2026-10">October 2026</time> <span>The Claude connector.</span></li>
+                <li><time datetime="2026-11">November 2026</time> <span>Broker rooms, in progress.</span></li>
+              </ul>
+              <p>The WhatsApp agent runs on Claude. Every write through the connector is a preview first and a commit after approval. Behind them: a Django and PostGIS API, a React web app with server-rendered property pages, a React Native app, a small k3s cluster.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article class="sheet c-arbopedia" id="arbopedia" aria-labelledby="arbopedia-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>Open archive</span> <a href="#tree-1">Plate 1, tree 1</a></p>
+          <h3 class="sheet__name" id="arbopedia-name" style="--r:4.46">arbopedia<span class="mark-dot" aria-hidden="true">.</span></h3>
+          <p class="sheet__line">An open archive of the trees of Mexico.</p>
+        </header>
+        <div class="sheet__body">
+          <dl class="fields">
+            <div class="field field--status">
+              <dt>Status</dt>
+              <dd class="status"><span class="status__bar" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></span><b>Live</b><span class="vh"> (state 4 of 6)</span></dd>
+              <dd>396 sheets on <span class="nb">2026-11-25</span>. In progress, and it says so.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The complex challenge</dt>
+              <dd>Every tree of Mexico, with a source behind every fact.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The simple answer</dt>
+              <dd>One sheet per species, read from printed field guides page by page. What is not verified prints <span class="nb"><span class="pend" lang="es">[pendiente]</span>.</span></dd>
+            </div>
+            <div class="field">
+              <dt>Counts <span class="field__note">Read <span class="nb">2026-11-25</span></span></dt>
+              <dd>
+                <ul class="tally">
+                  <li><b>396</b> <span>sheets</span></li>
+                  <li><b>1,421</b> <span>pages read</span></li>
+                  <li><b>10</b> <span>printed works</span></li>
+                  <li><b>65</b> <span>decisions written</span></li>
+                  <li><b><span class="pend" lang="es">[pendiente]</span></b> <span>species still to go</span></li>
+                </ul>
+              </dd>
+            </div>
+          </dl>
+          <details class="fold">
+            <summary><span>Months, where it runs, sources</span></summary>
+            <dl class="fields fields--more">
+              <div class="field">
+                <dt>Worked on in 2026 <span class="field__note">Counted <span class="nb">2026-11-25</span></span></dt>
+                <dd><span class="months" aria-hidden="true"><i>J</i><i>F</i><i>M</i><i>A</i><i>M</i><i>J</i><i class="on">J</i><i class="on">A</i><i class="on">S</i><i class="on">O</i><i>N</i><i class="soon">D</i></span>July to October. Nine months with work in all: four in 2023, one in 2024, four in 2026.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Where it runs</dt>
+                <dd>The web. Server-rendered pages, no build step, works without JavaScript.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Sources</dt>
+                <dd><a class="src" href="https://arbopedia.mx">arbopedia.mx (in Spanish)</a>. <span class="revised">Last revised <span class="nb">2026-11-25</span>.</span></dd>
+              </div>
+            </dl>
+          </details>
+          <details class="notes">
+            <summary><span>Field notes</span></summary>
+            <div class="notes__body">
+              <p>arbopedia is an open archive of the trees of Mexico. Every species gets a sheet: its scientific name, the names people use where it grows, its height drawn next to a person, where it has been found and the months it flowers. Every fact cites the page it came from. What is not verified prints <span class="nb"><span class="pend" lang="es">[pendiente]</span>.</span></p>
+              <ul class="dated">
+                <li><time datetime="2023">2023</time> <span>The first version.</span></li>
+                <li><time datetime="2026-07">July to September 2026</time> <span>Rebuilt as an open archive with its own design system.</span></li>
+                <li><time datetime="2026-11-25"><span class="nb">2026-11-25</span></time> <span>396 sheets, 1,421 pages read across 10 printed works.</span></li>
+              </ul>
+              <p>Checked against GBIF, the IUCN Red List and POWO. Indigenous names are never translated and always carry their language. Colour contrast is recomputed from the CSS on every CI run. One Instagram post a day. Texts are CC BY-SA 4.0.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article class="sheet c-vim" id="vim-puzzles" aria-labelledby="vim-puzzles-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>Trainer</span> <a href="#tree-6">Plate 1, tree 6</a></p>
+          <h3 class="sheet__name" id="vim-puzzles-name" style="--r:4.9"><span class="mark-cursor">v</span>im-puzzles</h3>
+          <p class="sheet__line">Vim puzzles, scored against par.</p>
+        </header>
+        <div class="sheet__body">
+          <dl class="fields">
+            <div class="field field--status">
+              <dt>Status</dt>
+              <dd class="status"><span class="status__bar" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></span><b>Live</b><span class="vh"> (state 4 of 6)</span></dd>
+              <dd>At vim.herrada.me. Never announced.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The complex challenge</dt>
+              <dd>I use vim all day, and this is the trainer I wanted.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The simple answer</dt>
+              <dd>200 short puzzles in a real vim emulation, each scored against par. No accounts and no backend.</dd>
+            </div>
+            <div class="field">
+              <dt>Counts <span class="field__note">Read <span class="nb">2026-11-25</span></span></dt>
+              <dd>
+                <ul class="tally">
+                  <li><b>200</b> <span>puzzles</span></li>
+                  <li><b>11</b> <span>categories</span></li>
+                  <li><b>16</b> <span>lessons</span></li>
+                  <li><b>11</b> <span>decisions written</span></li>
+                </ul>
+              </dd>
+            </div>
+          </dl>
+          <details class="fold">
+            <summary><span>Months, where it runs, sources</span></summary>
+            <dl class="fields fields--more">
+              <div class="field">
+                <dt>Worked on in 2026 <span class="field__note">Counted <span class="nb">2026-11-25</span></span></dt>
+                <dd><span class="months" aria-hidden="true"><i>J</i><i>F</i><i>M</i><i>A</i><i>M</i><i>J</i><i>J</i><i class="on">A</i><i class="on">S</i><i class="on">O</i><i>N</i><i class="soon">D</i></span>August to October. First commit <span class="nb">2026-08-20</span>.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Where it runs</dt>
+                <dd>The browser, no server side.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Sources</dt>
+                <dd><a class="src" href="https://vim.herrada.me">vim.herrada.me</a>. <span class="revised">Last revised <span class="nb">2026-11-25</span>.</span></dd>
+              </div>
+            </dl>
+          </details>
+          <details class="notes">
+            <summary><span>Field notes</span></summary>
+            <div class="notes__body">
+              <p>vim-puzzles is a trainer for vim: 200 short editing puzzles in a real vim emulation in the browser, each scored against par like golf. No accounts and no backend. Progress stays in your browser.</p>
+              <ul class="dated">
+                <li><time datetime="2026-08-20"><span class="nb">2026-08-20</span></time> <span>First commit.</span></li>
+                <li><time datetime="2026-10">October 2026</time> <span>The corpus reaches 200 puzzles, and the app becomes Smithy&rsquo;s first outside pilot.</span></li>
+              </ul>
+              <p>Three stars at or under par. Every solution is replayed by the real engine in CI, so no puzzle ships unless it is solvable at its par. It looks like tmux panes in Solarized Dark because that is what my terminal looks like.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article class="sheet c-lichess" id="lichess-irl" aria-labelledby="lichess-irl-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>One-desk tool</span> <a href="#tree-7">Plate 1, tree 7</a></p>
+          <h3 class="sheet__name" id="lichess-irl-name" style="--r:4.01">lichess-irl</h3>
+          <p class="sheet__line">Online chess on a real board.</p>
+        </header>
+        <div class="sheet__body">
+          <dl class="fields">
+            <div class="field field--status">
+              <dt>Status</dt>
+              <dd class="status"><span class="status__bar" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i><i></i></span><b>Pre-launch</b><span class="vh"> (state 3 of 6)</span></dd>
+              <dd>Code complete. The first full game on the board is still ahead.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The complex challenge</dt>
+              <dd>Chess is better on a real board.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The simple answer</dt>
+              <dd>A webcam above the board, four printed markers at its corners, a voice for the opponent&rsquo;s move, and the space bar as the clock.</dd>
+            </div>
+            <div class="field">
+              <dt>Counts <span class="field__note">Read <span class="nb">2026-11-25</span></span></dt>
+              <dd>
+                <ul class="tally">
+                  <li><b>4</b> <span>printed markers</span></li>
+                  <li><b>3</b> <span>decisions written</span></li>
+                  <li><b><span class="pend" lang="es">[pendiente]</span></b> <span>first full game on the board</span></li>
+                </ul>
+              </dd>
+            </div>
+          </dl>
+          <details class="fold">
+            <summary><span>Months, where it runs, sources</span></summary>
+            <dl class="fields fields--more">
+              <div class="field">
+                <dt>Worked on in 2026 <span class="field__note">Counted <span class="nb">2026-11-25</span></span></dt>
+                <dd><span class="months" aria-hidden="true"><i>J</i><i>F</i><i>M</i><i>A</i><i>M</i><i>J</i><i>J</i><i class="on">A</i><i>S</i><i>O</i><i>N</i><i class="soon">D</i></span>August. The piece set came earlier, in December 2025.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Where it runs</dt>
+                <dd>One desk.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Sources</dt>
+                <dd>Private repository. The piece set is public: <a href="https://github.com/luisehk/flutter-chessground/tree/add-cubesandpi-3d-piece-set">a branch on my fork of flutter-chessground (GitHub)</a>. <span class="revised">Last revised <span class="nb">2026-11-25</span>.</span></dd>
+              </div>
+            </dl>
+          </details>
+          <details class="notes">
+            <summary><span>Field notes</span></summary>
+            <div class="notes__body">
+              <p>lichess-irl lets me play Lichess on a physical board. A webcam looks straight down, the app reads my opponent&rsquo;s moves out loud, I make my move on the board and press the space bar like a chess clock. Built for exactly one desk.</p>
+              <ul class="dated">
+                <li><time datetime="2025-12">December 2025</time> <span>A 3D piece set for the board package behind the Lichess mobile app. A branch on a public fork, not merged upstream.</span></li>
+                <li><time datetime="2026-08">August 2026</time> <span>lichess-irl.</span></li>
+              </ul>
+              <p>Rapid games at 15+10. Moves go through the official Lichess Board API. A terminal interface shows the board, both clocks and a running log. The four markers sit just outside the board&rsquo;s corners, numbered 0 to 3 clockwise from the top left as the camera sees them.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article class="sheet c-games" id="minigames" aria-labelledby="minigames-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>Games</span> <a href="#tree-5">Plate 1, trees 4 and 5</a></p>
+          <h3 class="sheet__name" id="minigames-name" style="--r:4.52">minigames</h3>
+          <p class="sheet__line">Thirteen tiny games, one architecture.</p>
+        </header>
+        <div class="sheet__body">
+          <dl class="fields">
+            <div class="field field--status">
+              <dt>Status</dt>
+              <dd class="status"><span class="status__bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="on"></i><i></i></span><b>Done</b><span class="vh"> (state 5 of 6)</span></dd>
+              <dd>Built in one week, August 2026. Private.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The complex challenge</dt>
+              <dd>Thirteen games without thirteen architectures.</dd>
+            </div>
+            <div class="field field--pair">
+              <dt>The simple answer</dt>
+              <dd>One pure function steps every world. The same seed and the same inputs give the same game, so every game is tested without a screen.</dd>
+            </div>
+            <div class="field">
+              <dt>Counts <span class="field__note">Read <span class="nb">2026-11-25</span></span></dt>
+              <dd>
+                <ul class="tally">
+                  <li><b>13</b> <span>games</span></li>
+                  <li><b>570+</b> <span>tests</span></li>
+                  <li><b>1</b> <span>week</span></li>
+                  <li><b>10</b> <span>decisions written</span></li>
+                </ul>
+              </dd>
+            </div>
+          </dl>
+          <details class="fold">
+            <summary><span>Months, where it runs, sources</span></summary>
+            <dl class="fields fields--more">
+              <div class="field">
+                <dt>Worked on in 2026 <span class="field__note">Counted <span class="nb">2026-11-25</span></span></dt>
+                <dd><span class="months" aria-hidden="true"><i>J</i><i>F</i><i>M</i><i>A</i><i>M</i><i>J</i><i>J</i><i class="on">A</i><i>S</i><i>O</i><i>N</i><i class="soon">D</i></span>August. Thirteen games from <span class="nb">2026-08-14</span> to <span class="nb">2026-08-21</span>.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Where it runs</dt>
+                <dd>A desktop window, in Python.</dd>
+              </div>
+              <div class="field field--half">
+                <dt>Sources</dt>
+                <dd>Private repository. <span class="revised">Last revised <span class="nb">2026-11-25</span>.</span></dd>
+              </div>
+            </dl>
+          </details>
+          <details class="notes">
+            <summary><span>Field notes</span></summary>
+            <div class="notes__body">
+              <p>minigames is a family of 13 tiny 2D games in Python: catch, snake, breakout, a platformer, air hockey, a nine-car racer. They share one architecture and one quality gate, and each has its own generated 8-bit tune.</p>
+              <ul class="dated">
+                <li><time datetime="2026-08-06"><span class="nb">2026-08-06</span></time> <span>pyplatformer, the sketch: a window, a cloud and a collision box. It is tree 4 on the plate.</span></li>
+                <li><time datetime="2026-08-14"><span class="nb">2026-08-14</span> to <span class="nb">2026-08-21</span></time> <span>Thirteen games.</span></li>
+              </ul>
+              <p>Every shape is a placeholder that can be swapped for a drawing in two lines. The menu gives each game a hook of a few words: &ldquo;catch what falls&rdquo;, &ldquo;grow long, don&rsquo;t crash&rdquo;, &ldquo;thread the gaps&rdquo;, &ldquo;run, jump, dash&rdquo;, &ldquo;two players, one keyboard&rdquo;.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheets sheets--short" aria-labelledby="shorts-title">
+    <div class="rule">
+      <h2 class="label" id="shorts-title">One line each</h2>
+      <p class="label">Four more</p>
+    </div>
+    <div class="sheets__grid sheets__grid--short">
+      <article class="sheet sheet--short c-slate" id="budgeter" aria-labelledby="budgeter-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>Personal tool</span> <a href="#tree-3">Plate 1, tree 3</a></p>
+          <h3 class="sheet__name" id="budgeter-name" style="--r:3.7">budgeter</h3>
+          <p class="sheet__line">A budget that stays in your browser. Bank statements in, a budget out, nothing uploaded.</p>
+        </header>
+        <div class="sheet__body">
+          <details class="fold fold--sheet">
+            <summary><span>The sheet</span> <span class="fold__state"><span class="vh">Status: </span>Live</span></summary>
+            <dl class="fields">
+              <div class="field field--status">
+                <dt>Status</dt>
+                <dd class="status"><span class="status__bar" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></span><b>Live</b><span class="vh"> (state 4 of 6)</span></dd>
+                <dd>In Spanish.</dd>
+              </div>
+              <div class="field">
+                <dt>Worked on in 2026 <span class="field__note">Counted <span class="nb">2026-11-25</span></span></dt>
+                <dd><span class="months" aria-hidden="true"><i class="on">J</i><i class="on">F</i><i class="on">M</i><i class="on">A</i><i>M</i><i class="on">J</i><i>J</i><i>A</i><i>S</i><i class="on">O</i><i>N</i><i class="soon">D</i></span>January to April, June and October. First commit <span class="nb">2026-01-29</span>.</dd>
+              </div>
+              <div class="field">
+                <dt>Notes</dt>
+                <dd>At least my third try at this since 2015. Decisions written: none.</dd>
+              </div>
+              <div class="field">
+                <dt>Sources</dt>
+                <dd><a class="src" href="https://budgeter.herrada.me">budgeter.herrada.me (in Spanish)</a>. <span class="revised">Last revised <span class="nb">2026-11-25</span>.</span></dd>
+              </div>
+            </dl>
+          </details>
+        </div>
+      </article>
+
+      <article class="sheet sheet--short c-slate" id="rentaventa-meet" aria-labelledby="rentaventa-meet-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>Team tool</span> <a href="#tree-9">Plate 1, tree 9</a></p>
+          <h3 class="sheet__name" id="rentaventa-meet-name" style="--r:6.9">rentaventa-meet</h3>
+          <p class="sheet__line">Video calls that file their own action items.</p>
+        </header>
+        <div class="sheet__body">
+          <details class="fold fold--sheet">
+            <summary><span>The sheet</span> <span class="fold__state"><span class="vh">Status: </span>In use</span></summary>
+            <dl class="fields">
+              <div class="field field--status">
+                <dt>Status</dt>
+                <dd class="status"><span class="status__bar" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></span><b>In use</b><span class="vh"> (state 4 of 6)</span></dd>
+                <dd>Used by the Rentaventa team. Private.</dd>
+              </div>
+              <div class="field">
+                <dt>Worked on in 2026 <span class="field__note">Counted <span class="nb">2026-11-25</span></span></dt>
+                <dd><span class="months" aria-hidden="true"><i>J</i><i>F</i><i>M</i><i>A</i><i>M</i><i>J</i><i>J</i><i>A</i><i>S</i><i class="on">O</i><i>N</i><i class="soon">D</i></span>October. First commit <span class="nb">2026-10-20</span>.</dd>
+              </div>
+              <div class="field">
+                <dt>Notes</dt>
+                <dd>After a call an agent writes the notes and files the action items on my board. 18 decisions written.</dd>
+              </div>
+              <div class="field">
+                <dt>Sources</dt>
+                <dd>Private repository. <span class="revised">Last revised <span class="nb">2026-11-25</span>.</span></dd>
+              </div>
+            </dl>
+          </details>
+        </div>
+      </article>
+
+      <article class="sheet sheet--short c-slate" id="the-desk" aria-labelledby="the-desk-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>Working setup</span> <span>Not on the plate</span></p>
+          <h3 class="sheet__name" id="the-desk-name" style="--r:3.7">The desk</h3>
+          <p class="sheet__line">i3, tmux and vim. Keyboard first, distractions blocked.</p>
+        </header>
+        <div class="sheet__body">
+          <details class="fold fold--sheet">
+            <summary><span>The sheet</span> <span class="fold__state"><span class="vh">Status: </span>In use</span></summary>
+            <dl class="fields">
+              <div class="field field--status">
+                <dt>Status</dt>
+                <dd class="status"><span class="status__bar" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></span><b>In use</b><span class="vh"> (state 4 of 6)</span></dd>
+                <dd>Where I work. On Smithy&rsquo;s board.</dd>
+              </div>
+              <div class="field">
+                <dt>Notes</dt>
+                <dd>Months with work: <span class="nb"><span class="pend" lang="es">[pendiente]</span>.</span> So it has no tree on the plate.</dd>
+              </div>
+              <div class="field">
+                <dt>Sources</dt>
+                <dd>Private repository. <span class="revised">Last revised <span class="nb">2026-11-25</span>.</span></dd>
+              </div>
+            </dl>
+          </details>
+        </div>
+      </article>
+
+      <article class="sheet sheet--short c-slate" id="crispy-wookie" aria-labelledby="crispy-wookie-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>Earlier</span> <span>Not on the plate</span></p>
+          <h3 class="sheet__name" id="crispy-wookie-name" style="--r:5.81">crispy-wookie</h3>
+          <p class="sheet__line">I have wanted one place for everything since 2015.</p>
+        </header>
+        <div class="sheet__body">
+          <details class="fold fold--sheet">
+            <summary><span>The sheet</span> <span class="fold__state"><span class="vh">Status: </span>Relic</span></summary>
+            <dl class="fields">
+              <div class="field field--status">
+                <dt>Status</dt>
+                <dd class="status"><span class="status__bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i class="on"></i></span><b>Relic</b><span class="vh"> (state 6 of 6)</span></dd>
+                <dd>2015. Public.</dd>
+              </div>
+              <div class="field">
+                <dt>Notes</dt>
+                <dd>Its README: &ldquo;I want everything in one single place instead of using 30 different apps.&rdquo; The ancestor of budgeter and, in spirit, of Smithy.</dd>
+              </div>
+              <div class="field">
+                <dt>Sources</dt>
+                <dd><a class="src" href="https://github.com/luisehk/crispy-wookie">crispy-wookie (GitHub)</a>. <span class="revised">Last revised <span class="nb">2026-11-25</span>.</span></dd>
+              </div>
+            </dl>
+          </details>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheets sheets--author" aria-label="The author">
+    <div class="rule">
+      <p class="label">The last sheet</p>
+      <p class="label">Who wrote this</p>
+    </div>
+    <div class="sheets__grid sheets__grid--one">
+      <article class="sheet sheet--author c-site" id="author" aria-labelledby="author-name">
+        <header class="sheet__head">
+          <p class="sheet__kicker"><span>The author</span> <span>Software engineer</span></p>
+          <h2 class="sheet__name" id="author-name" style="--r:5.46">Luis Herrada</h2>
+          <p class="sheet__line">I build software, and the workshop that builds it with me.</p>
+          <img class="author__face" src="assets/avatar.webp" width="96" height="96" alt="An illustrated portrait of Luis: dark hair, a beard and glasses." loading="lazy" decoding="async">
+        </header>
+        <div class="sheet__body">
+          <dl class="fields author__facts">
+            <div class="field field--half">
+              <dt>Based in</dt>
+              <dd>Monterrey, Mexico.</dd>
+            </div>
+            <div class="field field--half">
+              <dt>Shipping since</dt>
+              <dd>2008. 18+ years.</dd>
+            </div>
+            <div class="field">
+              <dt>Now <span class="field__note">November 2026</span></dt>
+              <dd>Getting Rentaventa ready for launch, and handing Smithy more of the work.</dd>
+            </div>
+          </dl>
+          <div class="author__cols">
+            <div class="author__col">
+              <section class="prose" aria-labelledby="about-title">
+                <h3 class="label" id="about-title">About</h3>
+                <p>I&rsquo;m Luis, a software engineer in Monterrey, Mexico. I have spent 18+ years taking products from the first idea to production, and I still like the simple solution best. Today I build Rentaventa, a real-estate platform for the city&rsquo;s brokers, with a partner. I also build Smithy, the workshop where AI agents do most of my building and I keep the decisions. The rest is for the love of it: an archive of Mexico&rsquo;s trees, a vim trainer, chess on a real board, a box of tiny games.</p>
+              </section>
+              <details class="fold fold--prose">
+              <summary><span>How I work</span></summary>
+              <section class="prose" aria-labelledby="work-title">
+                <h3 class="label fold__title" id="work-title">How I work</h3>
+                <p>From 2016 to 2019 I ran Vordem, a digital product agency. Its home page had a heading I still work by: &ldquo;A balanced approach.&rdquo; Strategists, developers, designers and product managers on one problem, looking for the simple answer. Today agents hold some of those seats. One shapes the work with me. One argues with the design before any code exists. One builds. A panel of reviewers reads the result and never sees the plan. The decisions stay with me.</p>
+                <p>I work in a terminal: i3, tmux, vim. Every project I own has one command that has to pass before anything ships, and a written record of why things are the way they are. That holds for the real-estate platform and for the tiny games.</p>
+                <p><a href="how-i-build.html">How I build with agents</a> has the whole method.</p>
+              </section>
+              </details>
+            </div>
+            <div class="author__col">
+              <details class="fold fold--prose">
+              <summary><span>Habits</span></summary>
+              <section class="prose" aria-labelledby="habits-title">
+                <h3 class="label fold__title" id="habits-title">Habits</h3>
+                <ul class="habits">
+                  <li>One command gates every repo. Nothing ships that does not pass.</li>
+                  <li>I write down why. More than 250 decision records across seven projects, ten of them for thirteen tiny games.</li>
+                  <li>Status is stated as it is. Pre-launch means pre-launch.</li>
+                  <li>Machines check the work. Every vim puzzle is replayed in CI. Every game is replayed from a seed.</li>
+                </ul>
+              </section>
+              </details>
+              <details class="fold fold--prose">
+              <summary><span>Beyond code</span></summary>
+              <section class="prose" aria-labelledby="beyond-title">
+                <h3 class="label fold__title" id="beyond-title">Beyond code</h3>
+                <p>Away from the keyboard: guitar, chess, science articles and a good book.</p>
+                <dl class="beyond">
+                  <div><dt>Guitar</dt><dd>Self-taught as a teenager. Mostly leads where a few notes carry the line. My pedal settings sheet has two songs filled in. The rows for Shine On You Crazy Diamond are still blank.</dd></div>
+                  <div><dt>Chess</dt><dd>Rapid, 15+10. Soon on a real board.</dd></div>
+                </dl>
+              </section>
+              </details>
+              <p class="motto">My advice has been the same since 2019: just start and keep practicing.</p>
+            </div>
+          </div>
+          <section class="prose author__record" id="record" aria-labelledby="record-title">
+            <h3 class="label" id="record-title">Before <span class="field__note">The record, 2008 to 2019</span></h3>
+            <ol class="record">
+              <li><time datetime="2008">2008</time> <span>First software job. Mobile, web and games at four companies until 2014.</span></li>
+              <li><time datetime="2013">2013</time> <span>B.S. in Software Development, Universidad Tec Milenio, Monterrey.</span></li>
+              <li><time datetime="2014">2014 to 2016</time> <span>Tech lead at BanregioLABS, Monterrey. Banking APIs and mobile banking. Led the move to service-oriented architecture and brought in continuous integration.</span></li>
+              <li><time datetime="2016">2016 to 2019</time> <span>Founder and head of tech at Vordem, a remote-first digital product agency in Monterrey. A team of ten, 10+ products shipped, for startups and big companies in finance, retail, transportation and education.</span></li>
+              <li><time datetime="2019">2019</time> <span>Talks at local meetups and three posts on my site. &ldquo;Just start and keep practicing.&rdquo;</span></li>
+            </ol>
+            <p class="record__rest">The rest of the record is on <a href="https://www.linkedin.com/in/luisehk">LinkedIn</a>.</p>
+          </section>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+<footer class="foot" id="colophon">
+  <div class="foot__ground" aria-hidden="true">
+    <svg viewBox="0 0 90 44" width="90" height="44" focusable="false">
+      <path class="foot__root" d="M0 36.5C11 37.6 19.5 32.6 30 33.2S44.6 32.4 48.4 26.8S51.8 20.6 52 15.6"/>
+      <circle class="foot__node" cx="52" cy="15.6" r="2.4"/>
+      <g class="foot__sprout" transform="translate(52 12)"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g>
+      <g class="foot__figure"><circle cx="24" cy="3.55" r="1.55"/><rect x="22.25" y="5.45" width="3.5" height="3.9" rx="1.1"/><rect x="22.4" y="8.6" width="1.3" height="2.4"/><rect x="24.3" y="8.6" width="1.3" height="2.4"/></g>
+    </svg>
+  </div>
+  <div class="foot__cols">
+    <div>
+      <h2 class="label">Colophon</h2>
+      <p>Preview. Drawn by AI agents as a work item on my own board.</p>
+      <p class="foot__small">This site is tree 10 on <a href="#tree-10">the plate</a>: planted <span class="nb">2026-11-25</span>, one month tall, on Smithy&rsquo;s board. Set in Fraunces and Instrument Sans.</p>
+    </div>
+    <div>
+      <h2 class="label">Elsewhere</h2>
+      <ul class="foot__links">
+        <li><a href="https://www.linkedin.com/in/luisehk">LinkedIn</a></li>
+        <li><a href="https://github.com/luisehk">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="foot__legal"><span>&copy; 2026 Luis Herrada</span> <span>Preview.</span></p>
+</footer>
 </body>
 </html>
-

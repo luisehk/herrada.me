@@ -1,99 +1,2454 @@
-/* GLOBAL RESETS & BODY */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ==========================================================================
+   herrada.me: a field guide to what I build (HM-0002, direction D, "ficha").
+   One stylesheet, two type families, one colour per sheet.
+   Phone first. Both colour schemes are designed. Complete without JavaScript.
+   ========================================================================== */
+
+/* 0. Fonts
+   ==========================================================================
+   Two files, served from fonts/ with their licences beside them (SIL Open Font License 1.1).
+   Each is the latin range Google Fonts serves for this request, downloaded once on 2026-11-25:
+   css2?family=Fraunces:opsz,wght,SOFT@72..144,900,100&family=Instrument+Sans:wdth,wght@75..100,400..700&display=swap
+   The pages preload both, and no request leaves this host. Text shows at once in the fallback
+   stack and swaps. */
+
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("fonts/fraunces-v38-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Instrument Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-stretch: 75% 100%;
+  font-display: swap;
+  src: url("fonts/instrument-sans-v4-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* 1. Tokens
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* Herbarium paper: a cool, faintly green white. It sits a step away from the cream of the
+     tree archive and from the buff and cream papers of the other directions. */
+  --paper: #EEF0E6;
+  --ink: #17211C;                    /* 14.4:1 on paper */
+  --muted: #595E54;                  /* 5.8:1 on paper */
+  --hair: rgb(23 33 28 / .26);       /* there are no greys: a hairline is ink, faded */
+  --hair-faint: rgb(23 33 28 / .15);
+  --wash: rgb(23 33 28 / .055);
+  --root: #A6481F;                   /* Smithy's rust, drawn as a line on the ground: 5.1:1 */
+
+  /* Text set on a colour header: the paper of the page, and its ink. */
+  --on-dark: #EEF0E6;
+  --on-light: #17211C;
+
+  --serif: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: "Instrument Sans", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "DejaVu Sans Mono", monospace;
+
+  --gutter: clamp(16px, 5.13vw, 20px);
+  --pad: var(--gutter);              /* the inset of a sheet's text */
+  --measure: 34em;
+  --page: 1440px;
+}
+
+@media (min-width: 600px) {
+  :root { --gutter: 32px; }
+}
+
+@media (min-width: 960px) {
+  :root { --gutter: clamp(40px, 5.55vw, 80px); }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1C150F;                /* umber: the soil under the stand, browner than a charcoal */
+    --ink: #F6F2E7;                  /* 16.1:1 */
+    --muted: #B8AF9B;                /* 8.2:1 */
+    --hair: rgb(246 242 231 / .28);
+    --hair-faint: rgb(246 242 231 / .16);
+    --wash: rgb(246 242 231 / .06);
+    --root: #D8793F;                 /* 5.7:1 on umber */
+    --on-dark: #F6F2E7;
+  }
+}
+
+/* One colour per sheet. --c is the header and the tree on the plate, and it never changes.
+   --mark is the same colour used as a small mark on the page ground, so it is
+   lifted in the dark until it clears 3:1 against umber. */
+.c-smithy     { --c: #A6481F; --on-c: var(--on-dark);  --mark: #A6481F; --on-mark: var(--on-dark); }
+.c-rentaventa { --c: #D9A066; --on-c: var(--on-light); --mark: #D9A066; --on-mark: var(--on-light); --mark-edge: var(--ink); }
+.c-arbopedia  { --c: #064434; --on-c: var(--on-dark);  --mark: #064434; --on-mark: var(--on-dark); }
+.c-vim        { --c: #002B36; --on-c: var(--on-dark);  --mark: #002B36; --on-mark: var(--on-dark); }
+.c-lichess    { --c: #2F5F45; --on-c: var(--on-dark);  --mark: #2F5F45; --on-mark: var(--on-dark); }
+.c-games      { --c: #181A2E; --on-c: #F0C85A;         --mark: #181A2E; --on-mark: #F0C85A; }
+.c-slate      { --c: #2F4858; --on-c: var(--on-dark);  --mark: #2F4858; --on-mark: var(--on-dark); }
+.c-site       { --c: var(--ink); --on-c: var(--paper); --mark: var(--ink); --on-mark: var(--paper); }
+
+@media (prefers-color-scheme: dark) {
+  .c-smithy     { --mark: #D8793F; --on-mark: #1C150F; }
+  .c-rentaventa { --mark-edge: #D9A066; }
+  .c-arbopedia  { --mark: #3E9E79; --on-mark: #1C150F; }
+  .c-vim        { --mark: #2AA198; --on-mark: #1C150F; }
+  .c-lichess    { --mark: #7DB592; --on-mark: #1C150F; }
+  .c-games      { --mark: #F0C85A; --on-mark: #181A2E; }
+  .c-slate      { --mark: #8FB0C4; --on-mark: #1C150F; }
+}
+
+/* 2. Base
+   ========================================================================== */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-synthesis: none;              /* two files, no faked italics or weights */
+  scroll-padding-top: 12px;
 }
 
 body {
-  font-family: "Arial", sans-serif;
-  background: #F9FAFB;  /* near-white background */
-  color: #333;
-  line-height: 1.6;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.0625rem/1.53 var(--sans);   /* 17 on 26 */
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
 }
 
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
+h1, h2, h3, p, dl, dd, ol, ul, figure, table { margin: 0; }
+p, dd, li { text-wrap: pretty; }
+ol, ul { padding: 0; list-style: none; }
+img, svg { display: block; max-width: 100%; }
+b, strong { font-weight: 600; }
+.num { font-variant-numeric: tabular-nums; }
+abbr { text-decoration: none; }
+
+code {
+  font-family: var(--mono);
+  font-size: .9em;
+  padding: .06em .32em .1em;
+  border: 1px solid var(--hair);
+  border-radius: 3px;
+  white-space: nowrap;
 }
 
-/* HEADER & FOOTER */
-header, footer {
-  background: #FAFAFA;
-  padding: 1em;
+::selection { background: #A6481F; color: #F6F2E7; }
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: .08em;
+  text-underline-offset: .2em;
+  text-decoration-color: currentColor;
+  text-decoration-color: color-mix(in srgb, currentColor 48%, transparent);
+  transition: text-decoration-color .15s ease-out;
 }
 
-.site-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+a:hover {
+  text-decoration-color: currentColor;
+  text-decoration-thickness: .13em;
 }
 
-nav ul {
+/* The focus ring is 3 px wide, the width of the focus border on my desktop. */
+:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The field label: the narrow width of the text face, in small tracked capitals. */
+.label,
+.field dt,
+.key caption,
+.key thead th,
+.masthead a,
+.sheet__kicker,
+.status b,
+.notes summary,
+.fold > summary,
+.howto__list dt,
+.beyond dt,
+.card__meta dt,
+.stamps dt,
+.cover__small dt,
+.chapter-head__pair dt {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: .78125rem;              /* 12.5 */
+  line-height: 1.3;
+  font-stretch: 78%;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* What is not verified prints [pendiente]: a dashed outline, as the archive prints it. */
+.pend,
+.stamp {
+  display: inline-block;
+  font-size: max(.7em, 11.5px);
+  font-weight: 600;
+  font-stretch: 80%;
+  letter-spacing: .12em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: .12em .66em .14em .72em;
+  border: 1.5px dashed currentColor;
+  border-radius: 999px;
+  vertical-align: .1em;
+}
+
+/* A stamp is the opposite of [pendiente]: a verdict that exists. Same tag, solid line. */
+.stamp { border-style: solid; }
+
+.nb { white-space: nowrap; }
+
+.skip {
+  position: absolute;
+  left: var(--gutter);
+  top: 8px;
+  z-index: 10;
+  padding: 11px 16px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-300%);
+}
+
+.skip:focus { transform: none; }
+
+/* 3. Masthead
+   ========================================================================== */
+
+.masthead {
   display: flex;
-  list-style: none;
-  gap: 1em;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 16px;
+  max-width: var(--page);
+  min-height: 50px;
+  margin: 0 auto;
+  padding: 4px var(--gutter) 0;
 }
 
-nav a {
+.masthead a {
+  position: relative;
+  display: inline-block;
+  padding: 3px 0 2px;
   text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  padding: 0.2em 0.5em;
-  transition: background 0.2s ease;
 }
 
-nav a:hover {
-  background: #009688; /* teal accent */
-  color: #fff;
-  border-radius: 4px;
+/* A link in a row of labels keeps a 44 px target, and its focus ring stays close to the words. */
+.masthead a::before,
+.key tbody a::before,
+.sheet__kicker a::before,
+.foot__links a::before,
+.close__links a::before {
+  content: "";
+  position: absolute;
+  inset: -14px -6px;
 }
 
-.active {
-  background: #009688;
-  color: #fff;
-  border-radius: 4px;
+/* A source that stands alone in its field gets the same 44 px target. It stays inline, so it
+   still wraps like text: the padding of an inline box adds to what a finger can hit, not to the line. */
+.src { padding-block: 12px; }
+
+.masthead ul {
+  display: flex;
+  gap: clamp(14px, 4.6vw, 30px);
 }
 
-/* MAIN CONTENT WRAPPER */
-main {
-  margin: 1.5em auto;
-  max-width: 800px;
-  padding: 0 1em;
+.masthead li { display: flex; }
+
+.masthead nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: .14em;                      /* the tracking after the last letter is not underlined */
+  bottom: -5px;
+  height: 2px;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity .15s ease-out;
 }
 
-/* FOOTER */
-footer {
-  text-align: center;
-  font-size: 0.9rem;
-  padding: 1em 0;
+.masthead nav a:hover::after { opacity: .45; }
+.masthead nav a[aria-current="page"]::after { opacity: 1; }
+
+/* 4. The front: cover, plate, what I build, the key, how to read a sheet
+   ==========================================================================
+   The five blocks are written in the order a phone reads them. The plate comes
+   second, so the first screen of a phone is the cover line, the name and the stand. */
+
+.front {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
 }
 
-.social-links {
-  margin-top: 0.5em;
+.cover h1 {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: clamp(3.25rem, 16.4vw, 4rem);
+  line-height: .9;
+  letter-spacing: -.022em;
+  margin: 8px 0 16px -.035em;        /* the heavy A hangs a hair into the margin */
 }
 
-.social-links a {
-  margin: 0 0.5em;
-  text-decoration: none;
-  color: #333;
-  font-weight: bold;
-}
-.social-links a:hover {
-  color: #009688;
+.cover__by {
+  font-size: 1.1875rem;
+  line-height: 1.37;
+  font-weight: 600;
+  text-wrap: balance;
 }
 
-/* HOME PAGE (index.html) */
-.profile-pic {
-  max-width: 150px;
+/* The plate */
+
+.plate {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 2px solid var(--ink);
+}
+
+.plate__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+}
+
+.stand {
+  position: relative;
+  margin-top: 6px;
+}
+
+.stand__svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* The script watches this point, near the middle of the stand, to know when the plate is in view. */
+.stand__sentinel {
+  position: absolute;
+  left: 0;
+  top: 46%;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.stand__svg text { font-family: var(--sans); }
+
+.scale line { stroke: var(--hair-faint); stroke-width: 1; }
+.scale text { font-size: 10px; font-weight: 600; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.scale .scale__unit { font-size: 9px; letter-spacing: .1em; }
+
+/* Four first commits fall in one month. The bracket is the only note written on the drawing. */
+.bracket path { fill: none; stroke: var(--muted); stroke-width: 1; }
+.bracket text { font-size: 8.4px; font-weight: 600; letter-spacing: .1em; fill: var(--muted); text-anchor: middle; }
+
+.ground { stroke: var(--ink); stroke-width: 2; }
+.figure { fill: var(--ink); }
+
+.tree .hit { fill: transparent; }
+.tree .edge { fill: var(--ink); stroke: var(--ink); stroke-width: 2.4; stroke-linejoin: round; }  /* a thin ink outline, so the palest fill still reads */
+.tree.is-sprout .edge { stroke-width: 1.5; }                       /* a sprout is small: a finer line lets its colour show */
+.tree .fill { fill: var(--c); }
+.tree .num { font-size: 11.5px; font-weight: 700; fill: var(--ink); text-anchor: middle; }
+.tree .tag { font-size: 9.6px; font-weight: 700; letter-spacing: .1em; fill: var(--ink); }   /* the tall one is named where it stands */
+
+/* A link from a sheet back to "Plate 1, tree 8" lands here and finds its tree ringed and its
+   row marked. The same ring follows the keyboard down the key. All of it is :target and :has(). */
+.plate__at { position: absolute; }
+.tree .ring { fill: none; stroke: var(--ink); stroke-width: 1.4; opacity: 0; }
+
+.front:has(#tree-1:target) .t1 .ring,
+.front:has(#tree-2:target) .t2 .ring,
+.front:has(#tree-3:target) .t3 .ring,
+.front:has(#tree-4:target) .t4 .ring,
+.front:has(#tree-5:target) .t5 .ring,
+.front:has(#tree-6:target) .t6 .ring,
+.front:has(#tree-7:target) .t7 .ring,
+.front:has(#tree-8:target) .t8 .ring,
+.front:has(#tree-9:target) .t9 .ring,
+.front:has(#tree-10:target) .t10 .ring,
+.front:has(#tree-5:target) .t4 .ring,
+.front:has(.key .k1:focus-within) .t1 .ring,
+.front:has(.key .k2:focus-within) .t2 .ring,
+.front:has(.key .k3:focus-within) .t3 .ring,
+.front:has(.key .k4:focus-within) .t4 .ring,
+.front:has(.key .k5:focus-within) .t5 .ring,
+.front:has(.key .k6:focus-within) .t6 .ring,
+.front:has(.key .k7:focus-within) .t7 .ring,
+.front:has(.key .k8:focus-within) .t8 .ring,
+.front:has(.key .k9:focus-within) .t9 .ring,
+.front:has(.key .k10:focus-within) .t10 .ring { opacity: 1; }
+
+.front:has(#tree-1:target) .k1,
+.front:has(#tree-2:target) .k2,
+.front:has(#tree-3:target) .k3,
+.front:has(#tree-4:target) .k4,
+.front:has(#tree-5:target) .k5,
+.front:has(#tree-6:target) .k6,
+.front:has(#tree-7:target) .k7,
+.front:has(#tree-8:target) .k8,
+.front:has(#tree-9:target) .k9,
+.front:has(#tree-10:target) .k10,
+.front:has(#tree-5:target) .k4 { background: var(--wash); }
+
+/* The readout: one line at the top right of the plate that names a tree. It shows for the tree
+   a sheet's link pointed at, for the row the keyboard is on, and for whatever the pointer is over.
+   The later rules outrank the earlier ones, so only one name ever shows. */
+.readout {
+  font-size: 10px;
+  font-weight: 700;
+  fill: var(--ink);
+  text-anchor: end;
+  opacity: 0;
+  transition: opacity .15s ease-out;
+}
+
+.readout__n { fill: var(--muted); }
+.readout__m { font-weight: 500; fill: var(--muted); }
+
+.front:has(.at1:target) .r1,
+.front:has(.at2:target) .r2,
+.front:has(.at3:target) .r3,
+.front:has(.at4:target) .r4,
+.front:has(.at5:target) .r5,
+.front:has(.at6:target) .r6,
+.front:has(.at7:target) .r7,
+.front:has(.at8:target) .r8,
+.front:has(.at9:target) .r9,
+.front:has(.at10:target) .r10 { opacity: 1; }
+
+.front:has(.key tbody tr:focus-within) .readout { opacity: 0; }
+
+.front:has(.key .k1:focus-within) .r1,
+.front:has(.key .k2:focus-within) .r2,
+.front:has(.key .k3:focus-within) .r3,
+.front:has(.key .k4:focus-within) .r4,
+.front:has(.key .k5:focus-within) .r5,
+.front:has(.key .k6:focus-within) .r6,
+.front:has(.key .k7:focus-within) .r7,
+.front:has(.key .k8:focus-within) .r8,
+.front:has(.key .k9:focus-within) .r9,
+.front:has(.key .k10:focus-within) .r10 { opacity: 1; }
+
+.roots__art { fill: var(--root); }
+.rv { fill: none; stroke: #fff; stroke-width: 11; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.node { fill: var(--root); }
+.roots__label { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; fill: var(--root); text-anchor: end; }
+
+.stand a { text-decoration: none; }
+.stand a:focus-visible { outline: none; }
+.stand a:focus-visible .hit { stroke: var(--ink); stroke-width: 2; }
+
+.plate figcaption {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  max-width: var(--measure);
+  font-size: .9375rem;
+  line-height: 1.47;
+  color: var(--muted);
+}
+
+/* The one sentence that says what the drawing argues. */
+.plate figcaption .plate__say {
+  font-size: 1.0625rem;
+  line-height: 1.47;
+  font-weight: 500;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+/* What I build, and where to go next */
+
+.cover__more {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hair);
+}
+
+.cover__lede {
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+.cover__next { margin-top: 8px; }
+
+.cover__small {
+  display: grid;
+  gap: 7px;
+  margin-top: 20px;
+  padding-top: 13px;
+  border-top: 1px solid var(--hair);
+  font-size: .9375rem;               /* 15 on 22 */
+  line-height: 1.47;
+}
+
+.cover__small div {
+  display: grid;
+  grid-template-columns: 5.4em minmax(0, 1fr);
+  align-items: baseline;
+}
+
+.cover__small dt { color: var(--muted); }
+
+/* The key: the same ten trees as text. These are the links a keyboard reaches. */
+
+.keywrap { margin-top: 34px; }
+
+.key {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;               /* the table never grows past its column, whatever the font */
+  font-size: .9375rem;
+  line-height: 1.25;
+}
+
+.key caption {
+  padding-bottom: 8px;
+  text-align: left;
+}
+
+.key th,
+.key td {
+  padding: 0 8px 0 0;
+  text-align: left;
+  font-weight: 400;
+  vertical-align: middle;
+  border-top: 1px solid var(--hair);
+}
+
+.key thead th {
+  height: 30px;
+  color: var(--muted);
+  border-top: 2px solid var(--ink);
+  white-space: nowrap;
+}
+
+.key thead th:nth-child(1) { width: 32px; }
+.key thead th:nth-child(3) { width: 54px; }
+.key thead th:nth-child(4) { width: 100px; }
+.key thead th:nth-child(5) { width: 68px; }
+
+.key tbody th,
+.key tbody td { height: 44px; }
+
+.key tbody tr:last-child th,
+.key tbody tr:last-child td { border-bottom: 1px solid var(--hair); }
+
+.key th:last-child,
+.key td:last-child { padding-right: 0; white-space: nowrap; }
+
+.key .num { text-align: right; padding-right: 14px; white-space: nowrap; }
+
+.key tbody a {
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+  text-decoration-color: transparent;
+}
+
+.key tbody a:hover,
+.key tbody tr:hover a { text-decoration-color: currentColor; }
+
+/* On the narrowest phones the planting date moves under the name. */
+.key__when { display: none; }
+
+@media (max-width: 379px) {
+  .key .key__planted { display: none; }
+  .key thead th:nth-child(3) { width: 60px; }
+  .key thead th:nth-child(5) { width: 64px; }
+  .key .num { padding-right: 7px; }
+  .key tbody th { padding-block: 7px 8px; }
+  .key tbody a::before { inset: -8px -6px -24px; }
+  .key__when { display: block; font-size: .8125rem; line-height: 1.4; color: var(--muted); white-space: nowrap; }
+}
+
+.chip {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid var(--ink);
   border-radius: 50%;
+  background: var(--c);
+  color: var(--on-c);
+  font-size: .6875rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.key__root,
+.key__free {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: var(--root);
+  vertical-align: .02em;
+}
+
+.key__free {
+  background: none;
+  border: 1.5px solid var(--muted);
+}
+
+.key__note {
+  margin-top: 12px;
+  max-width: var(--measure);
+  font-size: .9375rem;
+  line-height: 1.47;
+  color: var(--muted);
+}
+
+/* How to read a sheet: the three marks, drawn small, and what each one means. */
+
+.howto {
+  margin-top: 36px;
+  padding-top: 10px;
+  border-top: 2px solid var(--ink);
+}
+
+.howto p {
+  margin-top: 10px;
+  max-width: var(--measure);
+}
+
+.howto__list {
+  margin-top: 12px;
+  font-size: .9375rem;
+  line-height: 1.47;
+  border-bottom: 1px solid var(--hair);
+}
+
+.howto__list div {
+  display: grid;
+  grid-template-columns: 7.4em minmax(0, 1fr);
+  column-gap: 16px;
+  align-items: start;
+  padding: 11px 0 12px;
+  border-top: 1px solid var(--hair);
+}
+
+.howto__list dt {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.howto__list dt .status__bar {
+  max-width: 104px;
+  gap: 3px;
+  margin: 6px 0 8px;
+}
+
+.howto__list dt .status__bar i { height: 9px; }
+
+.howto__list dt .months {
+  max-width: 104px;
+  gap: 2px;
+  margin: 5px 0 8px;
+}
+
+.howto__list dt .months i { border-width: 1.25px; font-size: 0; }
+.howto__list dt .months i.on { background: var(--ink); border-color: var(--ink); }
+
+.howto__list dt .pend { margin-top: 3px; color: var(--ink); letter-spacing: .1em; }
+
+/* 5. Rules between the parts of the guide
+   ========================================================================== */
+
+.sheets {
+  max-width: var(--page);
+  margin: 0 auto;
+}
+
+.rule {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+  margin: 56px var(--gutter) 22px;
+  padding-top: 10px;
+  border-top: 2px solid var(--ink);
+}
+
+.rule p:last-child { color: var(--muted); }
+
+/* 6. A sheet
+   ========================================================================== */
+
+.sheets__grid {
+  display: grid;
+  gap: 44px;
+}
+
+.sheet { min-width: 0; }
+
+.sheet__head {
+  container-type: inline-size;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 16px var(--pad) 22px;
+  background: var(--c);
+  color: var(--on-c);
+}
+
+.sheet__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+  margin-bottom: auto;               /* in a row of sheets the name and its line sit on the same floor */
+}
+
+.sheet__kicker a {
+  position: relative;
+  text-decoration-thickness: 1px;
+}
+
+.sheet__name {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: clamp(3.4rem, 15vw, 6rem);
+  /* A name always fits one line: --r is its measured width in ems, and the sheet scales it. */
+  font-size: min(92cqw / var(--r), 27.5cqw, 9.5rem);
+  line-height: .86;
+  letter-spacing: -.03em;
+  margin: .15em 0 .2em -.035em;      /* in ems: a descender never touches the line under it */
+}
+
+.sheet__line {
+  max-width: 24em;
+  font-size: 1.1875rem;              /* 19 on 26 */
+  line-height: 1.37;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+/* The single accent a header may carry. */
+.mark-dot { color: #FFC300; }        /* arbopedia ends its own headline with an amber full stop */
+
+.mark-cursor {                       /* vim-puzzles: the block cursor rests on the first character */
+  color: #002B36;
+  background: linear-gradient(#2AA198, #2AA198) no-repeat 0 58% / 100% 66%;
+  padding: 0 .035em 0 .05em;
+  margin: 0 .03em 0 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* The two darkest headers get a hairline of faded paper, so they still read as blocks. */
+  .sheet.c-vim .sheet__head,
+  .sheet.c-games .sheet__head,
+  .card.c-vim .card__head { box-shadow: inset 0 0 0 1px var(--hair); }
+}
+
+.sheet__body {
+  container: sheet / inline-size;
+  padding: 3px var(--pad) 0;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding: 12px 0 13px;
+  border-top: 1px solid var(--hair);
+}
+
+.fields > .field:first-child,
+.fields > .field--half:first-child + .field--half { border-top: 0; }
+
+.field dt {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 14px;
+  margin-bottom: 4px;
+  color: var(--muted);
+}
+
+.field--half { grid-column: span 1; padding-right: 16px; }
+.field--half + .field--half { padding-right: 0; }
+
+.field--pair dd {
+  font-size: 1.1875rem;
+  line-height: 1.42;
+  text-wrap: pretty;
+}
+
+@container sheet (min-width: 500px) {
+  .field--pair { grid-column: span 1; padding-right: 22px; }
+  .field--pair + .field--pair { padding: 12px 0 13px 22px; border-left: 1px solid var(--hair); }
+}
+
+/* Status: six short segments with one filled, and its word beside it. */
+
+.field--status {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+}
+
+.field--status dt { margin: 0; }
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.status__bar {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 4px;
+  max-width: 236px;
+}
+
+.status__bar i {
+  flex: 1;
+  height: 10px;
+  border: 1.5px solid var(--ink);
+}
+
+.status__bar i.on { background: var(--ink); }
+
+.status b { white-space: nowrap; }
+
+.status b .pend { font-size: 1em; letter-spacing: .1em; padding-block: .05em; vertical-align: 0; }
+
+.field--status dd + dd {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+}
+
+/* Worked on in 2026: twelve dots, the way a sheet says when a tree flowers. */
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(3px, 1.5cqw, 6px);
+  max-width: 372px;
+  margin: 3px 0 8px;
+}
+
+.months i {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  font: normal 700 clamp(.5625rem, 3cqw, .65625rem)/1 var(--sans);
+  color: var(--muted);
+}
+
+.months i.on {
+  background: var(--mark);
+  border-color: var(--mark-edge, var(--mark));
+  color: var(--on-mark);
+}
+
+.months i.soon { border-style: dashed; }   /* December: not counted yet */
+
+@container sheet (max-width: 300px) {
+  .months i { font-size: 0; }        /* too small for letters: the dots stay, the words under them say the months */
+}
+
+/* Counts, each with its unit. */
+
+.tally {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: .75em;
+}
+
+.tally li {
+  display: grid;
+  grid-template-columns: 5.9em minmax(0, 1fr);
+  grid-template-columns: subgrid;    /* the number column is as wide as its widest number */
+  grid-column: 1 / -1;
+  align-items: baseline;
+}
+
+.tally b {
+  justify-self: end;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tally .pend { vertical-align: .06em; }
+
+.revised {
   display: block;
-  margin: 0 auto 1em;
+  margin-top: 2px;
+  font-size: .9375rem;
+  line-height: 1.47;
+  color: var(--muted);
 }
 
-/* Home page sections */
-.intro,
-.personal-touch {
-  margin-bottom: 2em; /* Add vertical spacing between these sections */
+/* Field notes: the short blurb opens on a tap. */
+
+.notes { border-block: 1px solid var(--hair); }
+
+.notes summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  cursor: pointer;
+  list-style: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
+.notes summary::-webkit-details-marker { display: none; }
+
+.notes summary::after {              /* a plus that loses its upright when the notes are open */
+  content: "";
+  flex: none;
+  width: 13px;
+  height: 13px;
+  background:
+    linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
+}
+
+.notes[open] summary::after {
+  background: linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat;
+}
+
+.notes summary:hover span {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+}
+
+.notes summary:focus-visible { outline-offset: 0; }
+
+/* Folds: what a phone keeps closed until tapped. The key and the legend on the front, a
+   sheet's months and sources, the body of a short sheet, three parts of the author's sheet.
+   On a desk (section 10) the summary goes and the part stands open. */
+
+.fold { border-top: 1px solid var(--hair); }
+
+.fold > summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  cursor: pointer;
+  list-style: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fold > summary::-webkit-details-marker { display: none; }
+
+.fold > summary::after {
+  content: "";
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin-left: auto;
+  background:
+    linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
+}
+
+.fold[open] > summary::after {
+  background: linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat;
+}
+
+.fold > summary:hover > span:first-child {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+}
+
+.fold > summary:focus-visible { outline-offset: 0; }
+
+.fold__state { color: var(--muted); }
+
+/* The heading inside a fold repeats its summary, so a phone shows only the summary. */
+.fold__title,
+.keywrap .key caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sheet__body > .fold + .notes,
+.sheet__body > .fields + .fold { border-top: 1px solid var(--hair); }
+.sheet__body > .fold + .notes { border-top: 0; }
+.fold > .fields--more { padding-bottom: 6px; }
+
+.keywrap.fold,
+.howto.fold { margin-top: 20px; }
+.howto.fold { border-top: 2px solid var(--ink); }
+.keywrap > .key { margin-top: 4px; }
+.howto.fold > summary { font-size: .78125rem; }
+.howto.fold section { padding-bottom: 14px; }
+
+.fold--prose > .prose { border-top: 0; padding-top: 0; }
+.author__col > .fold:last-of-type { border-bottom: 1px solid var(--hair); }
+
+.author__col > .fold + .motto { margin: 20px 0 18px; }
+
+/* A short sheet on a phone: its name and its line, the rest one tap away. */
+.sheets__grid--short { row-gap: 24px; }
+.sheet--short .fold--sheet { border-top: 0; }
+.sheet--short .fold--sheet > summary { border-bottom: 1px solid var(--hair); }
+.sheet--short .fold--sheet[open] > summary { border-bottom: 0; }
+
+.notes__body {
+  display: grid;
+  gap: 12px;
+  max-width: var(--measure);
+  padding: 2px 0 20px;
+}
+
+.dated {
+  display: grid;
+  gap: 8px;
+  padding: 11px 0 12px;
+  border-block: 1px solid var(--hair);
+}
+
+.dated li { display: grid; }
+
+.dated time {
+  font-size: .9375rem;
+  line-height: 1.47;
+  color: var(--muted);
+}
+
+@container sheet (min-width: 500px) {
+  .dated li { grid-template-columns: 11.6em minmax(0, 1fr); column-gap: 1em; align-items: baseline; }
+}
+
+/* Short sheets: one line each. */
+
+.sheet--short .sheet__name {
+  font-size: clamp(2rem, 9vw, 2.6rem);
+  font-size: min(92cqw / var(--r), 11cqw, 4.5rem);
+  line-height: .9;
+  margin: .3em 0 .2em -.03em;
+}
+
+.sheet--short .sheet__line {
+  font-size: 1.0625rem;
+  line-height: 1.53;
+}
+
+.sheet--short .sheet__body { padding-bottom: 0; }
+.sheet--short .fields { border-bottom: 1px solid var(--hair); }
+
+/* The author's sheet. */
+
+.sheet--author .sheet__kicker {
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 48px;
+}
+
+.sheet--author .sheet__kicker span:last-child { margin-left: auto; }
+
+.author__face {
+  position: absolute;
+  top: 16px;
+  left: var(--pad);
+  width: 48px;
+  height: 48px;
+  border: 1.5px solid var(--on-c);
+  border-radius: 50%;
+  background: #D9DDE3;
+}
+
+.sheet--author .sheet__kicker span:first-child { padding-left: 60px; }
+
+.author__cols { display: grid; }
+.author__col { min-width: 0; }
+
+.prose {
+  display: grid;
+  gap: 10px;
+  padding: 12px 0 18px;
+  border-top: 1px solid var(--hair);
+}
+
+.prose > .label {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 14px;
+  margin-bottom: -4px;
+  color: var(--muted);
+}
+
+.prose > p,
+.prose > ul,
+.prose > dl { max-width: var(--measure); }
+
+.habits {
+  display: grid;
+  gap: 8px;
+}
+
+.habits li {
+  position: relative;
+  padding-left: 1.15em;
+}
+
+.habits li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .66em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.beyond {
+  display: grid;
+  gap: 6px;
+}
+
+.beyond div {
+  display: grid;
+  grid-template-columns: 4.6em minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: baseline;
+}
+
+.beyond dt { color: var(--muted); }
+
+.motto {
+  margin-top: 10px;
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: clamp(1.75rem, 7.8vw, 2.25rem);
+  line-height: 1;
+  letter-spacing: -.015em;
+  text-wrap: balance;
+}
+
+/* Before: the record, 2008 to 2019. The nav item "Record" lands here. */
+
+.record {
+  display: grid;
+  gap: 12px;
+}
+
+.record li { display: grid; }
+
+@container sheet (min-width: 440px) {
+  .record li { grid-template-columns: 9.4em minmax(0, 1fr); column-gap: 14px; align-items: baseline; }
+}
+
+.record time {                       /* the years stand in the display face, as dates do on a plate */
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: 1.375rem;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+}
+
+/* 7. Footer
+   ========================================================================== */
+
+.foot {
+  max-width: var(--page);
+  margin: 72px auto 0;
+  padding: 0 var(--gutter) 30px;
+}
+
+.foot__ground {
+  position: relative;
+  height: 46px;
+}
+
+.foot__ground::before {              /* the same ground line as the plate */
+  content: "";
+  position: absolute;
+  inset: 11px 0 auto;
+  height: 2px;
+  background: var(--ink);
+}
+
+.foot__ground svg {
+  position: relative;
+  overflow: visible;
+}
+
+.foot__root { fill: none; stroke: var(--root); stroke-width: 1.8; stroke-linecap: round; }
+.foot__node { fill: var(--root); }
+.foot__sprout,
+.foot__figure { fill: var(--ink); }
+
+.foot__cols {
+  display: grid;
+  gap: 22px;
+  margin-top: 8px;
+}
+
+.foot__cols .label {
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+
+.foot__cols p { max-width: var(--measure); }
+
+.foot__small {
+  margin-top: 8px;
+  font-size: .9375rem;
+  line-height: 1.47;
+  color: var(--muted);
+}
+
+.foot__links {
+  display: flex;
+  gap: 24px;
+}
+
+.foot__links a {
+  position: relative;
+  display: inline-block;
+  margin: 8px 0;
+  font-weight: 600;
+}
+
+.foot__legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 24px;
+  margin-top: 26px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+  font-size: .9375rem;
+  line-height: 1.47;
+  color: var(--muted);
+}
+
+/* 8. The method chapter: how-i-build.html
+   ==========================================================================
+   The long form of Smithy's sheet. It opens the way every sheet does, with the
+   complex challenge and the simple answer, and then runs as eight openers at
+   poster scale with their plates and lists set across the page. */
+
+.chapter-head {
+  background: var(--c);
+  color: var(--on-c);
+}
+
+.chapter-head__in {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 16px var(--gutter) 22px;
+}
+
+.chapter-head h1 {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: clamp(3.25rem, 14.6vw, 3.6rem);
+  line-height: .9;
+  letter-spacing: -.025em;
+  margin: 18px 0 24px -.03em;
+  max-width: 6.4em;
+  text-wrap: balance;
+}
+
+/* The two fields every sheet has, set on the header itself. */
+.chapter-head__pair { max-width: 33em; }
+
+.chapter-head__pair div {
+  padding: 11px 0 13px;
+  border-top: 1px solid currentColor;
+  border-top-color: color-mix(in srgb, currentColor 42%, transparent);
+}
+
+.chapter-head__pair dt { margin-bottom: 4px; }
+
+.chapter-head__pair dd {
+  font-size: 1.1875rem;
+  line-height: 1.42;
+  font-weight: 500;
+  text-wrap: pretty;
+}
+
+/* In this chapter: eight numbered links, the way a plate numbers its trees. */
+
+.toc {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 20px var(--gutter) 0;
+}
+
+.toc .label { color: var(--muted); }
+
+.toc ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+  margin-top: 8px;
+  border-bottom: 1px solid var(--hair);
+}
+
+.toc li { border-top: 1px solid var(--hair); }
+
+.toc a {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: center;
+  min-height: 52px;
+  padding: 7px 0 8px;
+  font-size: .9375rem;
+  line-height: 1.27;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.toc a:hover span:last-child {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+.toc .chip { background: none; color: inherit; }
+.toc a:hover .chip { background: var(--ink); color: var(--paper); }
+
+.chapter {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 56px var(--gutter) 0;
+}
+
+.chapter__head {
+  padding-top: 10px;
+  border-top: 2px solid var(--ink);
+}
+
+.chapter__head .label { color: var(--muted); }
+
+.chapter__head h2 {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: clamp(2.25rem, 10.2vw, 2.75rem);
+  line-height: .94;
+  letter-spacing: -.02em;
+  margin: 12px 0 20px -.02em;
+  max-width: 9em;
+  text-wrap: balance;
+}
+
+.chapter__body {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.chapter__body > p { max-width: var(--measure); }
+
+.sub {
+  margin-top: 14px;
+  color: var(--muted);
+}
+
+/* Then and now: the two paragraphs of the balanced approach, side by side on a desk. */
+
+.thennow {
+  display: grid;
+  gap: 16px;
+}
+
+.thennow > div {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.thennow .label { color: var(--muted); }
+.thennow p { max-width: var(--measure); }
+
+/* The seats, then and now */
+
+.seats { border-bottom: 1px solid var(--hair); }
+
+.seat {
+  display: grid;
+  gap: 4px;
+  padding: 11px 0 13px;
+  border-top: 1px solid var(--hair);
+}
+
+.seat dt { font-weight: 600; }
+
+.seat dd {
+  display: grid;
+  grid-template-columns: 3.4em minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: baseline;
+}
+
+.seat .label { color: var(--muted); }
+
+/* The parts */
+
+.parts {
+  display: grid;
+  border-bottom: 1px solid var(--hair);
+}
+
+.parts div {
+  padding: 11px 0 13px;
+  border-top: 1px solid var(--hair);
+}
+
+.parts dt { font-weight: 600; }
+
+/* Plates 2 and 3: a strip of eight stages with one dot each. */
+
+.plate--strip { margin-top: 4px; }
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  margin-top: 14px;
+}
+
+.strip span { position: relative; }
+
+.strip span::before {                /* the line a card travels */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 15px;
+  height: 1.5px;
+  background: var(--ink);
+}
+
+.strip span:last-child::before { right: auto; width: 31px; }
+
+.dot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  font: normal 700 .8125rem/1 var(--sans);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.dot.on {
+  background: var(--root);
+  border-color: var(--root);
+  color: var(--paper);
+}
+
+.dot.empty { border-style: dashed; }
+
+/* The same eight stages in words. A two-column key on a phone, under the dots on a desk. */
+
+.stages {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  column-gap: 16px;
+  margin-top: 14px;
+  counter-reset: stage;
+  border-bottom: 1px solid var(--hair);
+  font-size: .9375rem;
+  line-height: 1.47;
+}
+
+.stages li {
+  counter-increment: stage;
+  display: grid;
+  grid-template-columns: 1.5em minmax(0, 1fr);
+  padding: 6px 0 7px;
+  border-top: 1px solid var(--hair);
+}
+
+.stages li::before {
+  content: counter(stage);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+/* Three rules about the board. */
+
+.trio {
+  display: grid;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.trio p { max-width: var(--measure); }
+
+.events {
+  margin-top: 16px;
+  border-bottom: 1px solid var(--hair);
+}
+
+.events li {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  column-gap: 14px;
+  padding: 11px 0 13px;
+  border-top: 1px solid var(--hair);
+}
+
+.events .dot {
+  grid-row: span 2;
+  width: 26px;
+  height: 26px;
+  font-size: .75rem;
+}
+
+.events .label {
+  align-self: center;
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+  color: var(--muted);
+}
+
+.events .is-empty p { color: var(--muted); }
+.events .stamp { margin-left: .2em; }
+
+/* Plate 3, second row: the same item on one line drawn to scale. Its length is 4 hours
+   30 minutes, and each mark sits at the minute its event happened. */
+
+.tscale { margin-top: 20px; }
+
+.tscale__title {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+}
+
+.tscale__title span:last-child { color: var(--muted); }
+
+.tscale__line {
+  position: relative;
+  height: 62px;
+  margin: 2px 7px 0;                 /* room for half a mark at each end */
+}
+
+.tscale__line::before {
+  content: "";
+  position: absolute;
+  inset: 31px 0 auto;
+  height: 1.5px;
+  background: var(--ink);
+}
+
+.tscale .tick {
+  position: absolute;
+  left: var(--at);
+  top: 32px;
+  width: 1px;
+  height: 7px;
+  margin-left: -.5px;
+  background: var(--ink);
+}
+
+.tscale .tick span {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  font: normal 600 .75rem/1 var(--sans);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.tscale .mark {
+  position: absolute;
+  left: var(--at);
+  top: 25px;
+  width: 13px;
+  height: 13px;
+  margin-left: -6.5px;
+  border-radius: 50%;
+  background: var(--root);
+}
+
+.tscale .mark b {
+  position: absolute;
+  bottom: 17px;
+  left: 50%;
+  transform: translateX(-50%);
+  font: normal 700 .75rem/1 var(--sans);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+/* The story of the item, and the one number it comes down to. */
+
+.spread {
+  display: grid;
+  gap: 20px;
+}
+
+.spread > p:first-child { max-width: var(--measure); }
+
+.bigfact {
+  display: grid;
+  gap: 8px;
+}
+
+.bigfact b {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: clamp(3.25rem, 15.4vw, 4rem);
+  line-height: .85;
+  letter-spacing: -.025em;
+  white-space: nowrap;
+}
+
+.bigfact span {
+  font-size: .9375rem;
+  line-height: 1.47;
+  color: var(--muted);
+}
+
+/* The loop: a numbered key. */
+
+.steps {
+  display: grid;
+  counter-reset: step;
+  border-bottom: 1px solid var(--hair);
+}
+
+.steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  align-content: start;
+  column-gap: 8px;
+  padding: 14px 0 16px;
+  border-top: 1px solid var(--hair);
+}
+
+.steps li::before {
+  content: counter(step);
+  grid-row: span 2;
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: 2.6rem;
+  line-height: .8;
+}
+
+.steps h3 {
+  font-size: 1.1875rem;
+  line-height: 1.37;
+  font-weight: 600;
+}
+
+.steps p {
+  margin-top: 3px;
+  max-width: var(--measure);
+}
+
+.after {
+  display: grid;
+  gap: 14px;
+}
+
+.aside-line {
+  max-width: var(--measure);
+  font-weight: 600;
+}
+
+.stamps {
+  display: grid;
+  gap: 10px;
+}
+
+.stamps div {
+  display: grid;
+  gap: 6px;
+}
+
+.stamps dt { color: var(--muted); }
+
+.stamps dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stamps .stamp { vertical-align: 0; }
+
+/* Conventions: twelve rules from the ledger. */
+
+.conventions {
+  counter-reset: rule;
+  border-bottom: 1px solid var(--hair);
+}
+
+.conventions li {
+  counter-increment: rule;
+  display: grid;
+  grid-template-columns: 2.1em minmax(0, 1fr);
+  padding: 10px 0 11px;
+  border-top: 1px solid var(--hair);
+  break-inside: avoid;
+}
+
+.conventions li::before {
+  content: counter(rule);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+/* On the board: nine short sheets. */
+
+.board {
+  display: grid;
+  gap: 18px;
+}
+
+.card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-width: 0;
+}
+
+.card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 14px 10px;
+  background: var(--c);
+  color: var(--on-c);
+}
+
+.card__head b {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-variant-numeric: lining-nums;  /* an id is a code: its figures stand on the line */
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: -.005em;
+  order: -1;
+}
+
+.card__title {
+  padding: 10px 0 12px;
+  text-wrap: pretty;
+}
+
+.card__extra { color: var(--muted); }
+
+.card__meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-block: 1px solid var(--hair);
+}
+
+.card__meta div { padding: 8px 0 9px; }
+.card__meta dt { color: var(--muted); }
+
+/* The record so far */
+
+.counts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+  border-bottom: 1px solid var(--hair);
+}
+
+.counts li {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 14px 0 16px;
+  border-top: 1px solid var(--hair);
+}
+
+.counts b {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: clamp(2.75rem, 13vw, 3.5rem);
+  line-height: .85;
+  letter-spacing: -.02em;
+}
+
+.counts span {
+  font-size: .9375rem;
+  line-height: 1.47;
+}
+
+.close {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 64px var(--gutter) 0;
+}
+
+.close p:first-child {
+  max-width: 15em;
+  font-family: var(--serif);
+  font-weight: 900;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: clamp(1.9rem, 8.4vw, 3.25rem);
+  line-height: .98;
+  letter-spacing: -.018em;
+  text-wrap: balance;
+}
+
+.close__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+  margin-top: 20px;
+}
+
+.close__links a {
+  position: relative;
+  display: inline-block;
+  margin: 8px 0;
+  font-weight: 600;
+}
+
+/* 9. The missing sheet: 404.html
+   ========================================================================== */
+
+.missing {
+  max-width: 600px;
+  margin: 18px auto 0;
+}
+
+/* 10. Wider than a phone
+   ========================================================================== */
+
+/* The plate's lettering is drawn in the plate's own units, so it would grow with the drawing.
+   These three steps keep it near the size of a field label at every width. */
+
+.stand { container: stand / inline-size; }
+
+@container stand (max-width: 300px) {
+  .scale text { font-size: 11.5px; }
+  .scale .scale__unit { font-size: 10.5px; }
+  .tree .num { font-size: 12.5px; }
+  .tree .tag { font-size: 11px; }
+  .roots__label { font-size: 11.5px; }
+  .readout { font-size: 11.5px; }
+  .bracket { display: none; }        /* too small to letter: the note under the key says it */
+}
+
+@container stand (min-width: 440px) {
+  .scale text { font-size: 8.4px; }
+  .scale .scale__unit { font-size: 7.4px; }
+  .bracket text { font-size: 7.2px; }
+  .tree .num { font-size: 9.6px; }
+  .tree .ring { r: 7.6px; }
+  .tree .tag { font-size: 8px; }
+  .roots__label { font-size: 8.6px; }
+  .readout { font-size: 8.4px; }
+}
+
+@container stand (min-width: 540px) {
+  .scale text { font-size: 7.3px; }
+  .scale .scale__unit { font-size: 6.5px; }
+  .bracket text { font-size: 6.5px; }
+  .tree .num { font-size: 8.5px; }
+  .tree .ring { r: 6.9px; }
+  .tree .tag { font-size: 7px; }
+  .roots__label { font-size: 7.4px; }
+  .readout { font-size: 7.3px; }
+  .bracket path,
+  .scale line { stroke-width: .7; }
+}
+
+@media (min-width: 480px) and (max-width: 959px) {
+  .cover h1 { text-wrap: balance; }  /* two even lines while the cover is one column */
+}
+
+@media (min-width: 480px) {
+  .cover h1 { font-size: clamp(4rem, 2.2rem + 7.4vw, 9rem); }
+  .chapter-head h1 { font-size: clamp(3.6rem, 1.9rem + 5.8vw, 7.5rem); }
+  .bigfact b { font-size: clamp(4rem, 2.2rem + 4.6vw, 6.25rem); }
+}
+
+@media (min-width: 600px) {
+  :root { --pad: 26px; }
+
+  .sheets__grid { padding: 0 var(--gutter); }
+  .sheet { width: 100%; max-width: 600px; margin-inline: auto; }
+  .stand { max-width: 700px; }
+  .howto__list { max-width: 40em; }
+  .foot__cols { grid-template-columns: minmax(0, 1fr) auto; gap: 48px; }
+  .board { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 28px; }
+  .counts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .parts { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+}
+
+@media (min-width: 760px) {
+  .sheets__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(28px, 4.4vw, 64px);
+  }
+
+  .sheets__grid--one { grid-template-columns: minmax(0, 1fr); }
+
+  /* Each sheet lends its two rows to the grid, so the headers of a row are one height. */
+  .sheet {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 2;
+    align-content: start;
+    max-width: none;
+  }
+
+  .sheet__body { padding-bottom: 60px; }
+  .sheets--author .sheet__body { padding-bottom: 0; }
+  .rule { margin-top: 84px; margin-bottom: 30px; }
+
+  .toc ol { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 28px; }
+
+  /* A chapter opens at poster scale, across the page. */
+  .chapter__head h2 {
+    font-size: clamp(2.75rem, 1.3rem + 3.5vw, 4.25rem);
+    margin: 14px 0 26px -.02em;
+    max-width: none;
+  }
+
+  .thennow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(28px, 4.4vw, 64px);
+  }
+
+  .stages {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+    column-gap: 0;
+    margin-top: 10px;
+    border-bottom: 0;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .stages li { display: block; padding: 0 10px 0 0; border-top: 0; }
+  .stages li::before { content: none; }
+
+  .events li { grid-template-columns: 26px 10.5em minmax(0, 1fr); align-items: baseline; }
+  .events .dot { grid-row: auto; align-self: start; }
+  .events .label { align-self: start; }
+
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 36px; }
+  .conventions { columns: 2; column-gap: 36px; }
+  .seat { grid-template-columns: 8em minmax(0, 1fr) minmax(0, 2fr); column-gap: 24px; }
+  .seat dd { grid-template-columns: none; gap: 2px; align-content: start; }
+  .stamps div { grid-template-columns: 6em minmax(0, 1fr); align-items: baseline; }
+}
+
+@media (min-width: 960px) {
+  :root {
+    --pad: 28px;
+    --colgap: clamp(48px, 5.55vw, 80px);
+    --g: clamp(28px, 4.4vw, 64px);
+  }
+
+  .masthead { padding-top: 12px; }
+
+  /* The front stands in two columns: the cover, the paragraph and the legend on the left,
+     the plate and its key on the right. Floats keep each column packed, and the page is
+     still written in the order a phone reads it. */
+  .front { display: flow-root; }
+
+  .cover,
+  .cover__more,
+  .howto {
+    float: left;
+    clear: left;
+    width: calc(50% - var(--colgap) / 2);
+  }
+
+  .front .plate,
+  .keywrap {
+    float: right;
+    clear: right;
+    width: calc(50% - var(--colgap) / 2);
+  }
+
+  .front .plate { margin-top: 12px; }
+  .cover h1 { margin: 26px 0 30px -.035em; }
+  .cover__by { font-size: 1.375rem; line-height: 1.3; }
+  .cover__more { margin-top: 14px; padding-top: 0; border-top: 0; }
+  .cover__small { margin-top: 26px; max-width: var(--measure); }
+  .keywrap { margin-top: 26px; }
+  .howto { margin-top: 44px; }
+
+  /* The whole plate fits a laptop screen: it gives up width before it loses its roots. */
+  .stand { max-width: max(400px, (100svh - 186px) * .972); }
+
+  /* The author's sheet: three facts, two columns, then the record as five dated columns. */
+  .author__facts { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--g); }
+  .author__facts > .field { padding-right: 0; border-top: 0; }
+  .author__facts > .field:nth-child(1) { grid-column: 1 / span 3; }
+  .author__facts > .field:nth-child(2) { grid-column: 4 / span 3; }
+  .author__facts > .field:nth-child(3) { grid-column: 7 / span 6; }
+
+  .author__cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--g);
+  }
+
+  .sheet--author .sheet__head { padding-bottom: 34px; }
+  .sheet--author .sheet__line { font-size: 1.625rem; line-height: 1.25; }
+  .motto { margin-top: 16px; font-size: 2.75rem; }
+
+  .author__record {
+    margin-top: 22px;
+    padding-top: 12px;
+    border-top: 2px solid var(--ink);
+  }
+
+  .record {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0 28px;
+    margin-top: 8px;
+  }
+
+  .record li {
+    grid-template-columns: none;
+    align-content: start;
+    gap: 9px;
+    padding-top: 14px;
+    border-top: 1px solid var(--hair);
+  }
+
+  .record time {
+    font-size: 1.75rem;
+    line-height: 1;
+    letter-spacing: -.012em;
+  }
+
+  .record span {
+    font-size: .9375rem;
+    line-height: 1.47;
+  }
+
+  .prose > .record { max-width: none; }
+  .record__rest { margin-top: 8px; }
+
+  /* The method chapter */
+  .chapter-head__in {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--colgap);
+    align-items: end;
+    padding-bottom: 40px;
+  }
+
+  .chapter-head .sheet__kicker { grid-column: 1 / -1; }
+  .chapter-head h1 { margin: 40px 0 6px -.03em; }
+  .chapter-head__pair dd { font-size: 1.25rem; line-height: 1.4; }
+
+  .toc { padding-top: 30px; }
+  .chapter { padding-top: 92px; }
+  .chapter__body { gap: 18px; }
+
+  /* Four seats side by side. Their three rows are shared, so every "then" and every "now" line up. */
+  .seats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid var(--hair);
+  }
+
+  .seat {
+    grid-template-columns: none;
+    grid-template-rows: subgrid;
+    grid-row: span 3;
+    row-gap: 10px;
+    padding: 14px 22px 18px;
+    border-top: 0;
+    border-left: 1px solid var(--hair);
+  }
+
+  .seat:first-child { padding-left: 0; border-left: 0; }
+  .seat:last-child { padding-right: 0; }
+  .seat dt { font-size: 1.1875rem; line-height: 1.37; }
+
+  /* Four parts named after a forge in the first row, the two more in the second. */
+  .parts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .parts div:nth-child(n+5) { grid-column: span 2; }
+
+  .trio {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 28px;
+    margin-top: 12px;
+  }
+
+  .trio p { padding-top: 12px; border-top: 1px solid var(--hair); }
+
+  .after {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: var(--colgap);
+    align-items: start;
+    margin-top: 6px;
+  }
+
+  .spread {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--colgap);
+    align-items: end;
+  }
+
+  .bigfact b { font-size: min(6.25rem, 7.3vw); }   /* always inside its five columns */
+
+  .conventions { columns: 3; }
+
+  .close { padding-top: 104px; }
+  .foot { margin-top: 110px; }
+
+  /* The footer's sprout is drawn at the plate's scale here too: one month is 17 px. */
+  .foot__ground { height: 78px; }
+  .foot__ground::before { top: 19.4px; }
+  .foot__ground svg { width: 153px; height: 74.8px; }
+}
+
+@media (min-width: 1200px) {
+  .sheets__grid--short { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 32px; }
+  .board { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .counts { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0 28px; }
+
+  /* The loop as two rows of four, each step under its numeral. */
+  .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 32px; }
+  .steps li { grid-template-columns: none; padding: 18px 0 24px; }
+
+  .steps li::before {
+    grid-row: auto;
+    margin-bottom: 16px;
+    font-size: 4.5rem;
+    line-height: .8;
+  }
+
+  /* Plate 3 becomes one strip: each event sits under the column it landed in, as on Plate 2. */
+  .plate--item .strip { display: none; }
+
+  .plate--item .events {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    margin-top: 14px;
+    border-bottom: 0;
+  }
+
+  .plate--item .events li {
+    position: relative;
+    display: block;
+    padding: 0 18px 0 0;
+    border-top: 0;
+  }
+
+  .plate--item .events li::before {  /* the line a card travels */
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 15px;
+    height: 1.5px;
+    background: var(--ink);
+  }
+
+  .plate--item .events li:last-child::before { right: auto; width: 31px; }
+
+  .plate--item .events .dot {
+    width: 31px;
+    height: 31px;
+    margin-bottom: 10px;
+    font-size: .8125rem;
+  }
+
+  .plate--item .events .label {
+    display: block;
+    min-height: 0;
+    margin-bottom: 6px;
+  }
+
+  .plate--item .events p {
+    font-size: .9375rem;
+    line-height: 1.47;
+  }
+
+  .plate--item .events .stamp {
+    display: table;
+    margin: 7px 0 0;
+  }
+
+  .plate--item .tscale { margin-top: 30px; }
+
+  .plate--item figcaption {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 28px;
+    max-width: none;
+    margin-top: 18px;
+  }
+}
+
+/* 10b. On a desk every fold stands open
+   ==========================================================================
+   Where the browser can show a closed part through ::details-content, a desk shows each
+   fold open with no summary, as the page was drawn. Elsewhere it stays a fold, closed until
+   tapped, and nothing is lost. */
+
+@supports selector(::details-content) {
+  @media (min-width: 960px) {
+    .fold { border-top: 0; }
+    .fold > summary { display: none; }
+    .fold::details-content { content-visibility: visible; display: block; }
+
+    .fold__title,
+    .keywrap .key caption {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
+      white-space: normal;
+    }
+
+    .keywrap.fold { margin-top: 26px; }
+    .howto.fold { margin-top: 44px; border-top: 2px solid var(--ink); }
+    .sheet__body > .fields + .fold { border-top: 1px solid var(--hair); }
+    .fold--prose > .prose { border-top: 1px solid var(--hair); padding-top: 12px; }
+    .author__col > .fold:last-of-type { border-bottom: 0; }
+    .sheet--short .fold--sheet > summary { border-bottom: 0; }
+  }
+}
+
+@media (min-width: 960px) {
+  .sheet--short .sheet__name { font-size: min(92cqw / var(--r), 14cqw, 4.5rem); margin-bottom: .28em; }
+}
+
+/* 11. Motion: one growth
+   ==========================================================================
+   The stand grows from its ground line once, in about a second. Then the roots
+   draw themselves, in about a second more. Nothing else on the site moves.
+   The growth is CSS. Without the script it plays as the page opens. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .stand .grow {
+    animation: grow calc(460ms + var(--m) * 22ms) cubic-bezier(.2, .8, .2, 1) calc(160ms + var(--i) * 55ms) both;
+  }
+
+  .stand .num,
+  .stand .tag {
+    animation: appear .32s ease-out calc(440ms + var(--i) * 55ms + var(--m) * 16ms) both;
+  }
+
+  .stand .bracket { animation: appear .4s ease-out 980ms both; }
+
+  .stand .rv { animation: draw var(--d) var(--e) calc(1250ms + var(--t)) both; }
+
+  .stand .node {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pop .28s cubic-bezier(.3, 1.5, .5, 1) calc(1230ms + var(--t)) both;
+  }
+
+  .stand .roots__label { animation: appear .45s ease-out calc(1300ms + var(--t)) both; }
+
+  /* Held by the script until the stand is on screen. */
+  .stand.is-waiting .grow,
+  .stand.is-waiting .node { animation: none; transform: scale(0); }
+
+  .stand.is-waiting .num,
+  .stand.is-waiting .tag,
+  .stand.is-waiting .bracket,
+  .stand.is-waiting .roots__label { animation: none; opacity: 0; }
+
+  .stand.is-waiting .ring,
+  .stand.is-waiting .readout { opacity: 0 !important; }
+
+  .stand.is-waiting .rv { animation: none; stroke-dashoffset: 1; }
+
+  /* Under a test driver the stand is drawn finished, so screenshots and CI runs hold still. */
+  .is-still .stand * { animation: none !important; }
+}
+
+@keyframes grow { from { transform: scale(.35, 0); } }
+@keyframes appear { from { opacity: 0; } }
+@keyframes draw { from { stroke-dashoffset: 1; } }
+@keyframes pop { from { transform: scale(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after { transition: none !important; animation: none !important; }
+}
+
+/* A pointer over a row of the key picks out its tree, and the other way round.
+   On Smithy, everything its roots do not reach steps back. */
+
+@media (hover: hover) {
+  .tree { transition: opacity .18s ease-out; }
+  .key tbody tr { transition: background-color .18s ease-out; }
+  .key tbody tr:hover { background: var(--wash); }
+
+  .front:has(.key tbody tr:hover) .tree,
+  .front:has(.stand .tree:hover) .tree,
+  .front:has(.stand .roots:hover) .tree { opacity: .26; }
+
+  .front:has(.key .k1:hover) .tree.t1,
+  .front:has(.key .k2:hover) .tree.t2,
+  .front:has(.key .k3:hover) .tree.t3,
+  .front:has(.key .k4:hover) .tree.t4,
+  .front:has(.key .k5:hover) .tree.t5,
+  .front:has(.key .k6:hover) .tree.t6,
+  .front:has(.key .k7:hover) .tree.t7,
+  .front:has(.key .k8:hover) .tree.t8,
+  .front:has(.key .k9:hover) .tree.t9,
+  .front:has(.key .k10:hover) .tree.t10,
+  .front:has(.key .k8:hover) .tree:is(.t1, .t2, .t3, .t6, .t9, .t10),
+  .front:has(.stand .t8:hover) .tree:is(.t1, .t2, .t3, .t6, .t9, .t10),
+  .front:has(.stand .roots:hover) .tree:is(.t1, .t2, .t3, .t6, .t8, .t9, .t10),
+  .front:has(.stand .tree:hover) .stand .tree:hover { opacity: 1; }
+
+  .front:has(.stand .t1:hover) .k1,
+  .front:has(.stand .t2:hover) .k2,
+  .front:has(.stand .t3:hover) .k3,
+  .front:has(.stand .t4:hover) .k4,
+  .front:has(.stand .t5:hover) .k5,
+  .front:has(.stand .t6:hover) .k6,
+  .front:has(.stand .t7:hover) .k7,
+  .front:has(.stand .t8:hover) .k8,
+  .front:has(.stand .t9:hover) .k9,
+  .front:has(.stand .t10:hover) .k10,
+  .front:has(.stand .roots:hover) .k8 { background: var(--wash); }
+
+  .front:has(.key tbody tr:hover) .stand .readout,
+  .front:has(.stand .tree:hover) .stand .readout { opacity: 0; }
+
+  .front:has(.key .k1:hover) .stand .r1,
+  .front:has(.stand .t1:hover) .stand .r1,
+  .front:has(.key .k2:hover) .stand .r2,
+  .front:has(.stand .t2:hover) .stand .r2,
+  .front:has(.key .k3:hover) .stand .r3,
+  .front:has(.stand .t3:hover) .stand .r3,
+  .front:has(.key .k4:hover) .stand .r4,
+  .front:has(.stand .t4:hover) .stand .r4,
+  .front:has(.key .k5:hover) .stand .r5,
+  .front:has(.stand .t5:hover) .stand .r5,
+  .front:has(.key .k6:hover) .stand .r6,
+  .front:has(.stand .t6:hover) .stand .r6,
+  .front:has(.key .k7:hover) .stand .r7,
+  .front:has(.stand .t7:hover) .stand .r7,
+  .front:has(.key .k8:hover) .stand .r8,
+  .front:has(.stand .t8:hover) .stand .r8,
+  .front:has(.key .k9:hover) .stand .r9,
+  .front:has(.stand .t9:hover) .stand .r9,
+  .front:has(.key .k10:hover) .stand .r10,
+  .front:has(.stand .t10:hover) .stand .r10 { opacity: 1; }
+}
+
+/* 12. Forced colours: the system picks the palette, the marks keep their meaning
+   ========================================================================== */
+
+@media (forced-colors: active) {
+  :root {
+    --paper: Canvas;
+    --ink: CanvasText;
+    --muted: CanvasText;
+    --hair: CanvasText;
+    --hair-faint: GrayText;
+    --root: CanvasText;
+  }
+
+  .status__bar i.on,
+  .months i.on,
+  .dot.on,
+  .chip {
+    forced-color-adjust: none;
+    background: CanvasText;
+    border-color: CanvasText;
+    color: Canvas;
+  }
+
+  .sheet__head,
+  .card__head,
+  .chapter-head { border-bottom: 2px solid CanvasText; }
+}
+
+/* 13. Print: the guide on paper
+   ========================================================================== */
+
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --hair: #999; --hair-faint: #ccc; }
+  .skip, .masthead nav, .notes summary::after { display: none; }
+  .sheet, .card, .steps li, .seat { break-inside: avoid; }
+  .front { display: block; }
+  .cover, .cover__more, .howto, .front .plate, .keywrap { float: none; width: auto; }
+  a { text-decoration-color: currentColor; }
+}

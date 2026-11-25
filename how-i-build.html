@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How I build with agents &middot; Luis Herrada</title>
+  <meta name="description" content="How Luis Herrada builds software with AI agents: Smithy, a board that moves only on facts, a ledger of decisions and one short list of what needs him.">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#EEF0E6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1C150F" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23EEF0E6'/%3E%3Cpath d='M15 26V15h2v11z' fill='%2317211C'/%3E%3Cpath d='M16 17c0-6-4-10-10-10 0 6 4 10 10 10zM16 15c0-6 4-10 10-10 0 6-4 10-10 10z' fill='%23A6481F'/%3E%3Crect x='5' y='25' width='22' height='2' fill='%2317211C'/%3E%3C/svg%3E">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/fraunces-v38-latin.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/instrument-sans-v4-latin.woff2">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<!--
+  A field guide to what I build.
+
+  Sheet          this site
+  Kind           personal site
+  Status         preview
+  Where it runs  static files: no framework, no tracking, complete without JavaScript
+  Sources        written by build/build.py from build/counts.json (a rebuild overwrites this file)
+  Last revised   2026-11-25
+-->
+<body class="page-method">
+<a class="skip" href="#main">Skip to the content</a>
+<header class="masthead">
+  <a class="masthead__name" href="index.html">Luis Herrada</a>
+  <nav aria-label="Site">
+    <ul>
+      <li><a href="index.html">Guide</a></li>
+      <li><a href="how-i-build.html" aria-current="page">How I build</a></li>
+      <li><a href="index.html#record">Record</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main">
+  <header class="chapter-head c-smithy">
+    <div class="chapter-head__in">
+      <p class="sheet__kicker"><span>The method chapter</span> <a href="index.html#smithy">Smithy&rsquo;s sheet</a></p>
+      <h1>How I build with agents</h1>
+      <dl class="chapter-head__pair">
+        <div><dt>The complex challenge</dt><dd>AI agents can write code faster than one person can follow.</dd></div>
+        <div><dt>The simple answer</dt><dd>Smithy is my answer: a personal system where agents do the building and I can still see the design, the decisions and the state of everything.</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <nav class="toc" aria-labelledby="toc-title">
+    <h2 class="label" id="toc-title">In this chapter</h2>
+    <ol>
+      <li><a href="#approach"><span class="chip" aria-hidden="true">1</span><span>A balanced approach</span></a></li>
+      <li><a href="#parts"><span class="chip" aria-hidden="true">2</span><span>The parts</span></a></li>
+      <li><a href="#life"><span class="chip" aria-hidden="true">3</span><span>The life of a work item</span></a></li>
+      <li><a href="#loop"><span class="chip" aria-hidden="true">4</span><span>The loop, in eight steps</span></a></li>
+      <li><a href="#item"><span class="chip" aria-hidden="true">5</span><span>One real item, start to finish</span></a></li>
+      <li><a href="#conventions"><span class="chip" aria-hidden="true">6</span><span>Conventions</span></a></li>
+      <li><a href="#board"><span class="chip" aria-hidden="true">7</span><span>On the board</span></a></li>
+      <li><a href="#numbers"><span class="chip" aria-hidden="true">8</span><span>The record so far</span></a></li>
+    </ol>
+  </nav>
+
+  <section class="chapter" id="approach" aria-labelledby="approach-title">
+    <header class="chapter__head">
+      <p class="label">Method, 1 of 8</p>
+      <h2 id="approach-title">A balanced approach, ten years on</h2>
+    </header>
+    <div class="chapter__body">
+      <div class="thennow">
+        <div>
+          <p class="label">Then, 2016</p>
+          <p>In 2016 I started an agency called Vordem. Its home page put our way of working under one heading, &ldquo;A balanced approach&rdquo;: strategists, developers, designers and product managers on the same problem, looking for a simple and elegant answer. We were ten people and shipped 10+ products.</p>
+        </div>
+        <div>
+          <p class="label">Now, 2026</p>
+          <p>The workshop I run today works the same way, with agents in most of the seats. One shapes an idea into a work item with me. One argues with the design before any code exists. One builds. A panel of reviewers checks correctness, security, QA and UX from the diff and the evidence, and never sees the plan. The decisions stay with me.</p>
+        </div>
+      </div>
+      <h3 class="label sub">The seats, then and now</h3>
+      <dl class="seats">
+        <div class="seat">
+          <dt>Strategy</dt>
+          <dd><span class="label">Then</span> A strategist.</dd>
+          <dd><span class="label">Now</span> An agent and I shape an idea into a work item with a problem, context, acceptance criteria and a test plan.</dd>
+        </div>
+        <div class="seat">
+          <dt>Design</dt>
+          <dd><span class="label">Then</span> Designers.</dd>
+          <dd><span class="label">Now</span> Bigger items get a written design, and an agent argues with it before any code exists.</dd>
+        </div>
+        <div class="seat">
+          <dt>Development</dt>
+          <dd><span class="label">Then</span> Developers.</dd>
+          <dd><span class="label">Now</span> The smiths. Each claims an item, works in its own copy of the repo and opens a pull request.</dd>
+        </div>
+        <div class="seat">
+          <dt>Product</dt>
+          <dd><span class="label">Then</span> Product managers.</dd>
+          <dd><span class="label">Now</span> A board that moves only on facts, and one list of what needs me.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="chapter" id="parts" aria-labelledby="parts-title">
+    <header class="chapter__head">
+      <p class="label">Method, 2 of 8</p>
+      <h2 id="parts-title">The parts</h2>
+    </header>
+    <div class="chapter__body">
+      <p>Smithy has four parts named after a forge, and two more I use every day.</p>
+      <dl class="parts">
+        <div><dt>The shop floor</dt><dd>A board of work items. Columns change only through events.</dd></div>
+        <div><dt>The ledger</dt><dd>Decision records. Short, numbered, never rewritten, only superseded.</dd></div>
+        <div><dt>The tools on the wall</dt><dd>Reusable skills and harnesses the agents pick up: a design review, the gauntlet, end-to-end runs, reports.</dd></div>
+        <div><dt>The smiths</dt><dd>Claude Code sessions on my own machines.</dd></div>
+        <div><dt>Needs you</dt><dd>The one list of what waits on me: questions, steps for my hands, reviews.</dd></div>
+        <div><dt>The window</dt><dd>The web view of the record. It reads. I steer through a session.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="chapter" id="life" aria-labelledby="life-title">
+    <header class="chapter__head">
+      <p class="label">Method, 3 of 8</p>
+      <h2 id="life-title">The life of a work item</h2>
+    </header>
+    <div class="chapter__body">
+      <figure class="plate plate--strip" aria-labelledby="plate-2-title">
+        <div class="plate__head">
+          <h3 class="label" id="plate-2-title">Plate 2&thinsp;&middot;&thinsp;The eight columns</h3>
+          <p class="label">The form</p>
+        </div>
+        <div class="strip" aria-hidden="true"><span><i class="dot">1</i></span><span><i class="dot">2</i></span><span><i class="dot">3</i></span><span><i class="dot">4</i></span><span><i class="dot">5</i></span><span><i class="dot">6</i></span><span><i class="dot">7</i></span><span><i class="dot">8</i></span></div>
+        <ol class="stages">
+          <li>Grooming</li>
+          <li>Backlog</li>
+          <li>Next up</li>
+          <li>In dev</li>
+          <li>In QA</li>
+          <li>In code review</li>
+          <li>To be deployed</li>
+          <li>Done</li>
+        </ol>
+      </figure>
+      <div class="trio">
+        <p>A card moves only when something real happens: a claim, a gate verdict, a pull request marked ready, a merge, a deploy, an answer. There is no command to move a card.</p>
+        <p>Needs input is a flag over any column. It is raised only for a blocker, a design decision, a destructive action or a question of intent.</p>
+        <p>An item leaves grooming only when its definition is complete for its size: a problem, context and acceptance criteria, then a design, a test plan and risks for bigger items, plus a diagram and a design review for the biggest.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="loop" aria-labelledby="loop-title">
+    <header class="chapter__head">
+      <p class="label">Method, 4 of 8</p>
+      <h2 id="loop-title">The loop, in eight steps</h2>
+    </header>
+    <div class="chapter__body">
+      <ol class="steps">
+        <li><h3>Shape</h3><p>An idea becomes a work item with a problem, context, acceptance criteria and a test plan. Its mode is set here: autonomous or review.</p></li>
+        <li><h3>Review the design</h3><p>Bigger items get a written design and an adversarial review before any code exists.</p></li>
+        <li><h3>Build</h3><p>An agent claims the item, works in its own copy of the repo and opens a pull request.</p></li>
+        <li><h3>Pass the gates</h3><p><code>make ci</code> on the exact commit. A gauntlet of reviewers for correctness, security, QA and UX, who see the diff and the evidence and never the plan. An end-to-end run against a real local stack. Each gate leaves a stamp: a verdict tied to a commit.</p></li>
+        <li><h3>Land</h3><p>An autonomous item merges and deploys when every stamp is green, and leaves a summary to read later. A review item stops at a ready pull request and waits for me.</p></li>
+        <li><h3>Ask only what matters</h3><p>Critical questions arrive with options, a recommended answer, the cost to reverse and what happens if I do nothing. The agent then moves to other work. Every other judgment call is made, logged with its reason and reviewed later.</p></li>
+        <li><h3>Learn</h3><p>On a fixed rhythm each session turns what it learned into a skill, a note or a new work item.</p></li>
+        <li><h3>Pace</h3><p>A governor starts new runs only when there is headroom, so a long night of work never hits a wall.</p></li>
+      </ol>
+      <div class="after">
+        <p class="aside-line">Calls feed the record. After a call with my partner an agent writes the notes and files the action items.</p>
+        <dl class="stamps">
+          <div><dt>Gates</dt><dd><span class="stamp">ci</span> <span class="stamp">review</span> <span class="stamp">qa</span> <span class="stamp">design-review</span> <span class="stamp">deploy</span></dd></div>
+          <div><dt>Verdicts</dt><dd><span class="stamp">pass</span> <span class="stamp">pass with notes</span> <span class="stamp">blocked</span> <span class="stamp">needs human</span> <span class="stamp">skipped</span> <span class="stamp">error</span></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="item" aria-labelledby="item-title">
+    <header class="chapter__head">
+      <p class="label">Method, 5 of 8</p>
+      <h2 id="item-title">One real item, start to finish</h2>
+    </header>
+    <div class="chapter__body">
+      <div class="spread">
+        <p><b>VP-0010</b>, &ldquo;Copy fix: stop promising a daily set until one exists&rdquo;. The vim-puzzles dashboard still said &ldquo;Daily vim puzzles&rdquo; after the daily set was gone. An agent found the gap while grooming the app&rsquo;s backlog: the new About page would have repeated a promise the product no longer kept. It raised one question for me, with two options and a recommended answer. I had told the agents not to get blocked, so the recommended answer was taken and logged for me to read. Thirteen minutes later the fix was built and had passed CI. Fourteen minutes after that it had passed review. It was deployed four and a half hours after the decision. The line it left on the dashboard is the app&rsquo;s line today: &ldquo;Vim puzzles, scored against par.&rdquo;</p>
+        <p class="bigfact"><b>4&nbsp;h 30&nbsp;min</b> <span>from the decision to production</span></p>
+      </div>
+      <figure class="plate plate--strip plate--item" aria-labelledby="plate-3-title">
+        <div class="plate__head">
+          <h3 class="label" id="plate-3-title">Plate 3&thinsp;&middot;&thinsp;VP-0010</h3>
+          <p class="label">Seven of eight</p>
+        </div>
+        <div class="strip" aria-hidden="true"><span><i class="dot on">1</i></span><span><i class="dot on">2</i></span><span><i class="dot on">3</i></span><span><i class="dot on">4</i></span><span><i class="dot empty">5</i></span><span><i class="dot on">6</i></span><span><i class="dot on">7</i></span><span><i class="dot on">8</i></span></div>
+        <ol class="events">
+          <li>
+            <i class="dot on" aria-hidden="true">1</i>
+            <span class="label">Grooming</span>
+            <p><b>Filed</b>, <span class="nb">2026-10-19</span>.</p>
+          </li>
+          <li>
+            <i class="dot on" aria-hidden="true">2</i>
+            <span class="label">Backlog</span>
+            <p><b>Groomed</b> the same day. Its definition is complete: a small item, copy only, gates ci and review, one question open.</p>
+          </li>
+          <li>
+            <i class="dot on" aria-hidden="true">3</i>
+            <span class="label">Next up</span>
+            <p><b>Decided</b>, <span class="nb">2026-10-20</span>: the recommended answer, drop the promise. The item is ranked.</p>
+          </li>
+          <li>
+            <i class="dot on" aria-hidden="true">4</i>
+            <span class="label">In dev</span>
+            <p><b>Claimed and built</b>, 13 minutes later. A branch and a pull request. <span class="stamp">ci: pass</span></p>
+          </li>
+          <li class="is-empty">
+            <i class="dot empty" aria-hidden="true">5</i>
+            <span class="label">In QA</span>
+            <p>No stop. A copy fix has no QA gate.</p>
+          </li>
+          <li>
+            <i class="dot on" aria-hidden="true">6</i>
+            <span class="label">In code review</span>
+            <p><b>Reviewed</b>, 27 minutes after the decision. <span class="stamp">review: pass</span></p>
+          </li>
+          <li>
+            <i class="dot on" aria-hidden="true">7</i>
+            <span class="label">To be deployed</span>
+            <p><b>Merged</b>, 2 hours 39 minutes after the decision.</p>
+          </li>
+          <li>
+            <i class="dot on" aria-hidden="true">8</i>
+            <span class="label">Done</span>
+            <p><b>Deployed</b>, 4 hours 30 minutes after the decision. <span class="stamp">deploy: pass</span></p>
+          </li>
+        </ol>
+        <div class="tscale">
+          <p class="label tscale__title"><span>The same item, to scale</span> <span>One line, 4 hours 30 minutes long</span></p>
+          <div class="tscale__line" aria-hidden="true"><i class="tick" style="--at:0%"><span>0</span></i><i class="tick" style="--at:22.22%"><span>1&nbsp;h</span></i><i class="tick" style="--at:44.44%"><span>2&nbsp;h</span></i><i class="tick" style="--at:66.67%"><span>3&nbsp;h</span></i><i class="tick" style="--at:88.89%"><span>4&nbsp;h</span></i><i class="mark" style="--at:0.00%"><b>3</b></i><i class="mark" style="--at:4.81%"><b>4</b></i><i class="mark" style="--at:10.00%"><b>6</b></i><i class="mark" style="--at:58.89%"><b>7</b></i><i class="mark" style="--at:100.00%"><b>8</b></i></div>
+        </div>
+        <figcaption>
+          <p>The card visits seven of the eight columns. It never stops in In QA: a copy fix has no QA gate.</p>
+          <p>To scale, the line runs from the decision (3) to the deploy (8). The build (4) and the review (6) fall inside its first 27 minutes. The merge (7) comes at 2 hours 39 minutes.</p>
+          <p>Private record, simplified from the item&rsquo;s own log. Dates are UTC. Elapsed times count from the decision.</p>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="chapter" id="conventions" aria-labelledby="conventions-title">
+    <header class="chapter__head">
+      <p class="label">Method, 6 of 8</p>
+      <h2 id="conventions-title">Conventions</h2>
+    </header>
+    <div class="chapter__body">
+      <p>Twelve rules from the ledger, shortened.</p>
+      <ol class="conventions">
+        <li>Record decisions as short records. Bodies never change. A new record supersedes an old one.</li>
+        <li>Columns are derived from facts.</li>
+        <li>Convention over configuration: the standard make targets are the contract with every project.</li>
+        <li>An item&rsquo;s mode is set at grooming: autonomous items land and deploy when green, review items wait for me.</li>
+        <li>The window is a viewer. Every change goes through a session and the API.</li>
+        <li>Reports are a first-class record.</li>
+        <li>Every working session turns its lessons into skills.</li>
+        <li>Gated pull requests land by default.</li>
+        <li>Nothing waits for me unless it is destructive.</li>
+        <li>Everything that waits on me lives in one list.</li>
+        <li>Pace the agents with a governor.</li>
+        <li>Calls feed the record: each transcript becomes a summary and work items.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="chapter" id="board" aria-labelledby="board-title">
+    <header class="chapter__head">
+      <p class="label">Method, 7 of 8</p>
+      <h2 id="board-title">On the board</h2>
+    </header>
+    <div class="chapter__body">
+      <p>Nine real work items that are safe to show, with mode and state.</p>
+      <ul class="board">
+        <li class="card c-site" id="hm-0001">
+          <div class="card__head"><span class="label">This site</span><b>HM-0001</b></div>
+          <p class="card__title">Five design directions for herrada.me, each a working prototype, critiqued, refined and curated. <span class="card__extra">Filed <span class="nb">2026-11-25</span>.</span></p>
+          <dl class="card__meta"><div><dt>Mode</dt><dd>Autonomous</dd></div><div><dt>State</dt><dd>In dev</dd></div></dl>
+        </li>
+        <li class="card c-site" id="hm-0002">
+          <div class="card__head"><span class="label">This site</span><b>HM-0002</b></div>
+          <p class="card__title">Build the herrada.me direction Luis picks.</p>
+          <dl class="card__meta"><div><dt>Mode</dt><dd>Review</dd></div><div><dt>State</dt><dd>Held</dd></div></dl>
+        </li>
+        <li class="card c-vim" id="vp-0002">
+          <div class="card__head"><span class="label">vim-puzzles</span><b>VP-0002</b></div>
+          <p class="card__title">Readability pass on the Solarized palette: every text pair at WCAG AA, a visible visual-mode selection.</p>
+          <dl class="card__meta"><div><dt>Mode</dt><dd>Autonomous</dd></div><div><dt>State</dt><dd>Done</dd></div></dl>
+        </li>
+        <li class="card c-vim" id="vp-0003">
+          <div class="card__head"><span class="label">vim-puzzles</span><b>VP-0003</b></div>
+          <p class="card__title">About page as window 3, a vim-style 404 and error boundary, per-route document titles.</p>
+          <dl class="card__meta"><div><dt>Mode</dt><dd>Autonomous</dd></div><div><dt>State</dt><dd>Done</dd></div></dl>
+        </li>
+        <li class="card c-vim" id="vp-0006">
+          <div class="card__head"><span class="label">vim-puzzles</span><b>VP-0006</b></div>
+          <p class="card__title">Twelve puzzles for the unused tags and six one-key motion warm-ups (corpus to 200).</p>
+          <dl class="card__meta"><div><dt>Mode</dt><dd>Autonomous</dd></div><div><dt>State</dt><dd>Done</dd></div></dl>
+        </li>
+        <li class="card c-vim" id="vp-0007">
+          <div class="card__head"><span class="label">vim-puzzles</span><b>VP-0007</b></div>
+          <p class="card__title">Phones and touch: a desktop-keyboard notice in the player, a status bar that never clips.</p>
+          <dl class="card__meta"><div><dt>Mode</dt><dd>Autonomous</dd></div><div><dt>State</dt><dd>Done</dd></div></dl>
+        </li>
+        <li class="card c-vim" id="vp-0008">
+          <div class="card__head"><span class="label">vim-puzzles</span><b>VP-0008</b></div>
+          <p class="card__title">Keyboard flow: Enter and r after a solve, ex commands for reset, skip, give up and quit.</p>
+          <dl class="card__meta"><div><dt>Mode</dt><dd>Autonomous</dd></div><div><dt>State</dt><dd>Done</dd></div></dl>
+        </li>
+        <li class="card c-vim" id="vp-0010">
+          <div class="card__head"><span class="label">vim-puzzles</span><b>VP-0010</b></div>
+          <p class="card__title">Copy fix: stop promising a daily set until one exists.</p>
+          <dl class="card__meta"><div><dt>Mode</dt><dd>Autonomous</dd></div><div><dt>State</dt><dd>Done</dd></div></dl>
+        </li>
+        <li class="card c-arbopedia" id="ar-0001">
+          <div class="card__head"><span class="label">arbopedia</span><b>AR-0001</b></div>
+          <p class="card__title">Stop posting Instagram stories, keep the daily feature posts.</p>
+          <dl class="card__meta"><div><dt>Mode</dt><dd>Autonomous</dd></div><div><dt>State</dt><dd>Done</dd></div></dl>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="chapter" id="numbers" aria-labelledby="numbers-title">
+    <header class="chapter__head">
+      <p class="label">Method, 8 of 8</p>
+      <h2 id="numbers-title">The record so far</h2>
+    </header>
+    <div class="chapter__body">
+      <p>Smithy began on <time datetime="2026-10-16"><span class="nb">2026-10-16</span></time>. Private record, read <span class="nb">2026-11-25</span>.</p>
+      <ul class="counts">
+        <li><b>9</b> <span>projects on one board</span></li>
+        <li><b>676</b> <span>work items, 248 of them done</span></li>
+        <li><b>1,154</b> <span>gate verdicts</span></li>
+        <li><b>63</b> <span>decision records in Smithy&rsquo;s own ledger, more than 250 across seven of my projects</span></li>
+        <li><b>184</b> <span>reports</span></li>
+        <li><b>40</b> <span>days old on the day it was read</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="close" aria-label="The close">
+    <p>Smithy is its own first project: it was built with itself from the first day. This site is on the board too.</p>
+    <p class="close__links"><a href="index.html#smithy">Back to Smithy&rsquo;s sheet</a> <a href="index.html#plate">See the plate</a></p>
+  </section>
+</main>
+<footer class="foot" id="colophon">
+  <div class="foot__ground" aria-hidden="true">
+    <svg viewBox="0 0 90 44" width="90" height="44" focusable="false">
+      <path class="foot__root" d="M0 36.5C11 37.6 19.5 32.6 30 33.2S44.6 32.4 48.4 26.8S51.8 20.6 52 15.6"/>
+      <circle class="foot__node" cx="52" cy="15.6" r="2.4"/>
+      <g class="foot__sprout" transform="translate(52 12)"><path d="M-0.9 0V-4.8h1.9V0z"/><path d="M0 -4.2C-0.1 -6.8 -2.1 -8.7 -5 -8.9C-5.5 -6.8 -3.1 -4.1 0 -4.2z"/><path d="M0 -4.2C0.1 -7.4 2.4 -9.8 5.6 -10C6.1 -7.4 3.5 -4.1 0 -4.2z"/></g>
+      <g class="foot__figure"><circle cx="24" cy="3.55" r="1.55"/><rect x="22.25" y="5.45" width="3.5" height="3.9" rx="1.1"/><rect x="22.4" y="8.6" width="1.3" height="2.4"/><rect x="24.3" y="8.6" width="1.3" height="2.4"/></g>
+    </svg>
+  </div>
+  <div class="foot__cols">
+    <div>
+      <h2 class="label">Colophon</h2>
+      <p>Preview. Drawn by AI agents as a work item on my own board.</p>
+      <p class="foot__small">This site is tree 10 on <a href="index.html#tree-10">the plate</a>: planted <span class="nb">2026-11-25</span>, one month tall, on Smithy&rsquo;s board. Set in Fraunces and Instrument Sans.</p>
+    </div>
+    <div>
+      <h2 class="label">Elsewhere</h2>
+      <ul class="foot__links">
+        <li><a href="https://www.linkedin.com/in/luisehk">LinkedIn</a></li>
+        <li><a href="https://github.com/luisehk">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="foot__legal"><span>&copy; 2026 Luis Herrada</span> <span>Preview.</span></p>
+</footer>
+</body>
+</html>

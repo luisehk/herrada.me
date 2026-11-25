@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # Static checks for `make ci` (RK-0029). Nothing here talks to a cluster.
 #
-#   1. GitHub Pages publishes the site alone. Jekyll skips paths with a part
-#      that starts with '.' or '_' and the names _config.yml excludes; every
-#      other tracked file publishes, and each must be CNAME, index.html,
-#      style.css or a file under images/.
+#   1. GitHub Pages publishes the site alone, until Pages goes off on
+#      2026-12-02. Jekyll skips paths with a part that starts with '.' or '_'
+#      and the names _config.yml excludes; every other tracked file publishes,
+#      and each must be CNAME, one of the three pages (index.html,
+#      how-i-build.html, 404.html), style.css, script.js or a file under fonts/
+#      or assets/ (HM-0002). The build in build/ stays out.
 #   2. k8s/deployment.yml has no leading document marker (Jekyll would read it
 #      as front matter), keeps the one image line `make cd` pins, and names
 #      the herrada-me namespace alone. The pod keeps its hardening: no
@@ -36,11 +38,11 @@ while IFS= read -r f; do
 	[ -n "$skip" ] && continue
 	published="$published $f"
 	case "$f" in
-	CNAME | index.html | style.css | images/*) ;;
+	CNAME | index.html | how-i-build.html | 404.html | style.css | script.js | fonts/* | assets/*) ;;
 	*) bad "GitHub Pages would publish $f; add it to _config.yml's exclude list" ;;
 	esac
 done < <(git ls-files)
-for f in CNAME index.html style.css; do
+for f in CNAME index.html how-i-build.html 404.html style.css script.js; do
 	case " $published " in *" $f "*) ;; *) bad "GitHub Pages would not publish $f" ;; esac
 done
 ok "GitHub Pages publishes:$published"

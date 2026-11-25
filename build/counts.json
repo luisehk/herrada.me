@@ -1,0 +1,87 @@
+{
+  "about": "Every count and date the guide prints, with the date it was read. build/build.py writes index.html, how-i-build.html and 404.html from this file, and make ci fails when the committed pages differ from a rebuild. Months are numbers, 1 for January. Counts come from Luis's private record and are counts only: no titles, no content.",
+  "read": "2026-11-25",
+  "edition": "November 2026",
+  "shipping_since": 2008,
+  "plate": [
+    {"n": 1, "name": "arbopedia", "months": 9, "planted": "2023-07-13", "board": "yes", "colour": "arbopedia", "sheet": "arbopedia"},
+    {"n": 2, "name": "Rentaventa", "months": 27, "planted": "2024-08", "board": "yes", "colour": "rentaventa", "sheet": "rentaventa"},
+    {"n": 3, "name": "budgeter", "months": 6, "planted": "2026-01-29", "board": "yes", "colour": "slate", "sheet": "budgeter"},
+    {"n": 4, "name": "pyplatformer", "months": 1, "planted": "2026-08-06", "board": "no", "colour": "games", "sheet": "minigames"},
+    {"n": 5, "name": "minigames", "months": 1, "planted": "2026-08-14", "board": "no", "colour": "games", "sheet": "minigames"},
+    {"n": 6, "name": "vim-puzzles", "months": 3, "planted": "2026-08-20", "board": "yes", "colour": "vim", "sheet": "vim-puzzles"},
+    {"n": 7, "name": "lichess-irl", "months": 1, "planted": "2026-08-27", "board": "no", "colour": "lichess", "sheet": "lichess-irl"},
+    {"n": 8, "name": "Smithy", "months": 2, "planted": "2026-10-16", "board": "own", "colour": "smithy", "sheet": "smithy"},
+    {"n": 9, "name": "rentaventa-meet", "months": 1, "planted": "2026-10-20", "board": "yes", "colour": "slate", "sheet": "rentaventa-meet"},
+    {"n": 10, "name": "This site", "months": 1, "planted": "2026-11-25", "board": "yes", "colour": "site", "sheet": "colophon"}
+  ],
+  "projects": {
+    "smithy": {
+      "read": "2026-11-25",
+      "worked": [10, 11],
+      "work_items": 676,
+      "work_items_done": 248,
+      "gate_verdicts": 1154,
+      "decisions": 63,
+      "reports": 184,
+      "projects_on_board": 9,
+      "age_days": 40
+    },
+    "rentaventa": {
+      "read": "2026-11-25",
+      "worked": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+      "began": "2024-08",
+      "repositories": 10,
+      "decisions": 86
+    },
+    "arbopedia": {
+      "read": "2026-11-25",
+      "worked": [7, 8, 9, 10],
+      "months_by_year": {"2023": 4, "2024": 1, "2026": 4},
+      "sheets": 396,
+      "pages_read": 1421,
+      "printed_works": 10,
+      "decisions": 65
+    },
+    "vim-puzzles": {
+      "read": "2026-11-25",
+      "worked": [8, 9, 10],
+      "puzzles": 200,
+      "categories": 11,
+      "lessons": 16,
+      "decisions": 11
+    },
+    "lichess-irl": {
+      "read": "2026-11-25",
+      "worked": [8],
+      "markers": 4,
+      "decisions": 3
+    },
+    "minigames": {
+      "read": "2026-11-25",
+      "worked": [8],
+      "games": 13,
+      "tests_at_least": 570,
+      "weeks": 1,
+      "decisions": 10,
+      "first_game": "2026-08-14",
+      "last_game": "2026-08-21"
+    },
+    "budgeter": {
+      "read": "2026-11-25",
+      "worked": [1, 2, 3, 4, 6, 10],
+      "decisions": 0
+    },
+    "rentaventa-meet": {
+      "read": "2026-11-25",
+      "worked": [10],
+      "decisions": 18
+    }
+  },
+  "decisions_across_projects": {"read": "2026-11-25", "more_than": 250, "projects": 7},
+  "vp0010": {
+    "filed": "2026-10-19",
+    "decided": "2026-10-20",
+    "minutes_after_decision": {"built": 13, "reviewed": 27, "merged": 159, "deployed": 270}
+  }
+}
