@@ -348,7 +348,7 @@
         {"name": "merged", "minutes": 159, "note": "<span class=\"col\">Column: To be deployed</span>"},
         {"name": "deployed", "minutes": 270, "note": "<span class=\"stamp\">deploy: pass</span> <span class=\"col\">Column: Done</span>"}
       ],
-      "close": "The card visits seven of the eight columns. It never stops in In QA: a copy fix has no QA gate. Dates are UTC."
+      "close": "The card visits seven of the eight columns. It never stops in In&nbsp;QA: a copy fix has no QA gate. Dates are UTC."
     },
     "rules": {
       "kind": "twelve decisions from the ledger, shortened",

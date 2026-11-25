@@ -761,10 +761,25 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 }
 @media (min-width: 960px) { .menu { --fact-h: 4.5rem; } } /* two lines from here up; every fact fits from 890px, and a count can grow */
 
+/* A short desk, such as a laptop's browser under 900px tall, tightens the marquee,
+   the hook and the hint, and rows lose 2px (Bumpy's 49px reach then pokes 5px over
+   the row above). The menu then fits one screen from 790px, in both schemes. */
+@media (min-width: 820px) and (max-height: 899.98px) {
+  .home { --row: 44px; }
+  .home .marquee { padding-top: 8px; margin-bottom: 20px; }
+  .home .lede { font-size: 1rem; line-height: 1.5rem; }
+  .home .hook { padding-top: 8px; }
+  .home .hint { padding-top: 12px; }
+}
+@media (prefers-color-scheme: light) and (min-width: 820px) and (max-height: 899.98px) {
+  .home { --band-pad: 14px; }
+}
+
 /* On a desk the menu is one screen, with its hint line at the foot, as in the game.
    The page starts under the fold. A very tall window stops stretching it at 61rem,
-   and an upright one is left alone. */
-@media (min-width: 820px) and (min-height: 720px) and (orientation: landscape) {
+   and an upright one is left alone. Below 790px tall the menu does not fit, so the
+   page simply scrolls. */
+@media (min-width: 820px) and (min-height: 790px) and (orientation: landscape) {
   .home .menu {
     display: flex;
     flex-direction: column;

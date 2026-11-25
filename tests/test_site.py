@@ -198,6 +198,7 @@ class TestBuild(unittest.TestCase):
             "row link": lambda d: d["rows"][0].update(open="javascript:alert(1)"),
             "project link": lambda d: d["home"]["projects"][0]["link"].update(href="javascript:alert(1)"),
             "site link": lambda d: d["site"]["links"][0].update(href="javascript:alert(1)"),
+            "year": lambda d: d["site"].update(year='2026</span><script>x</script>'),
         }
         for name, change in changes.items():
             with self.subTest(change=name), self.assertRaises(ValueError):

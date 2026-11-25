@@ -129,7 +129,7 @@ class Site:
         self.check_ids()
 
     def check_ids(self):
-        """Ids and colours go into attributes and file names unchanged, so each must be plain."""
+        """Ids, colours and the year go into pages unchanged, so each must be plain."""
         home, board = self.data["home"], self.data["how_i_build"]["board"]
         ids = [(f"rows.{r['id']}", r["id"]) for r in self.data["rows"]]
         ids += [(f"home.projects.{p['id']}", p["id"]) for p in home["projects"]]
@@ -144,6 +144,9 @@ class Site:
         for p in home["projects"]:
             if not isinstance(p.get("block"), str) or not BLOCK.match(p["block"]):
                 raise ValueError(f"home.projects.{p['id']}.block: {str(p.get('block'))[:40]!r} is not a colour like #E65A5A")
+        year = self.site.get("year")
+        if not isinstance(year, int) or isinstance(year, bool):
+            raise ValueError("site.year must be a whole number")
         hrefs = [(f"rows.{r['id']}.open", r["open"]) for r in self.data["rows"]]
         hrefs += [(f"home.projects.{p['id']}.link", p["link"]["href"]) for p in home["projects"]]
         hrefs += [("site.links", link["href"]) for link in self.site["links"]]
