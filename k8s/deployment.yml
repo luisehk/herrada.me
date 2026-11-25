@@ -36,12 +36,21 @@ spec:
       labels:
         app: herrada-me
     spec:
+      # A static site never talks to the API server, so no token is mounted.
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       imagePullSecrets:
       - name: ghcr-pull-secret
       containers:
       - name: herrada-me
         image: ghcr.io/luisehk/herrada-me:latest
         imagePullPolicy: Always
+        # The root master's switch down to the nginx user is a setuid() call,
+        # not an escalation, so nginx runs with this off.
+        securityContext:
+          allowPrivilegeEscalation: false
         ports:
         - containerPort: 80
         resources:
@@ -83,8 +92,11 @@ spec:
 ---
 # www to the apex, once: http and https on www both land on https://herrada.me/
 # with the path kept. The regex never matches the apex, so it is not redirected.
-# There is no redirect-https Middleware: Cloudflare's proxy sends plain HTTP
-# visitors to port 80, and a redirect there would loop under the Flexible mode.
+# There is no redirect-https Middleware. The zone is on Full (ADR 0062), and the
+# origin never redirects anyway: Cloudflare sends plain HTTP visitors to port 80,
+# a redirect there would loop if the zone were ever on Flexible, and RK-0029
+# criterion 3 keeps plain HTTP on the apex unredirected, as GitHub Pages does
+# today.
 # Kept in this namespace (self-contained); the Ingress addresses it as
 # <namespace>-<name>@kubernetescrd.
 apiVersion: traefik.io/v1alpha1

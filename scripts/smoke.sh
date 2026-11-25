@@ -4,9 +4,12 @@
 # Runs the image on 127.0.0.1, on the first free port from 8650 to 8659, and
 # checks what it serves: the three site files byte for byte, /health, a 404 for
 # a missing path and for every repo file that must not ship, dot paths denied,
-# the security headers, no redirect on plain HTTP for either host, the web root
-# holding the site files alone, and the image's HEALTHCHECK reaching healthy.
-# The container is stopped on exit (it runs with --rm, so stopping removes it).
+# the security headers, the cache policy (the page no-cache, assets ten minutes
+# on a 200 or a 304, a 404 never cached publicly), no redirect on plain HTTP for
+# either host, the web root holding the site files alone, and the image's
+# HEALTHCHECK reaching healthy. The container runs with no-new-privileges, as
+# the pod runs with allowPrivilegeEscalation off. It is stopped on exit (it runs
+# with --rm, so stopping removes it).
 #
 #   scripts/smoke.sh <image>
 set -uo pipefail
@@ -33,7 +36,7 @@ bad() { checks=$((checks + 1)); failed=$((failed + 1)); echo "FAILED  $*"; }
 port=""
 for p in $(seq 8650 8659); do
 	if (exec 3<>"/dev/tcp/127.0.0.1/$p") 2>/dev/null; then continue; fi
-	if docker run -d --rm --name "$name" -p "127.0.0.1:$p:80" "$image" >/dev/null 2>"$tmp/run.err"; then
+	if docker run -d --rm --name "$name" --security-opt no-new-privileges -p "127.0.0.1:$p:80" "$image" >/dev/null 2>"$tmp/run.err"; then
 		port="$p"
 		started=1
 		break
@@ -76,9 +79,17 @@ for h in X-Frame-Options X-Content-Type-Options Referrer-Policy; do
 	if [ -n "$v" ]; then ok "GET / has $h: $v"; else bad "GET / has no $h header"; fi
 done
 if header server | grep -q '[0-9]'; then bad "GET / names the nginx version: $(header server)"; else ok "GET / hides the nginx version"; fi
+cc="$(header cache-control)"
+if [ "$cc" = no-cache ]; then ok "GET / has Cache-Control: no-cache"; else bad "GET / has Cache-Control '$cc', expected no-cache"; fi
 
 req /style.css
 if [ "$code" = 200 ] && cmp -s "$tmp/body" style.css; then ok "GET /style.css -> 200, unchanged"; else bad "GET /style.css -> $code, expected 200 with style.css"; fi
+cc="$(header cache-control)"
+if [ "$cc" = "public, max-age=600" ]; then ok "GET /style.css has Cache-Control: $cc"; else bad "GET /style.css has Cache-Control '$cc', expected public, max-age=600"; fi
+lm="$(header last-modified)"
+req /style.css -H "If-Modified-Since: $lm"
+cc="$(header cache-control)"
+if [ "$code" = 304 ] && [ "$cc" = "public, max-age=600" ]; then ok "a conditional GET /style.css -> 304 with Cache-Control: $cc"; else bad "a conditional GET /style.css -> $code with Cache-Control '$cc', expected 304 with public, max-age=600"; fi
 
 for f in images/*; do
 	req "/$f"
@@ -87,6 +98,8 @@ done
 req /images/avatar.webp
 ct="$(header content-type)"
 if [ "$code" = 200 ] && [ "$ct" = image/webp ]; then ok "GET /images/avatar.webp is image/webp"; else bad "GET /images/avatar.webp -> $code as '$ct', expected 200 as image/webp"; fi
+cc="$(header cache-control)"
+if [ "$cc" = "public, max-age=600" ]; then ok "GET /images/avatar.webp has Cache-Control: $cc"; else bad "GET /images/avatar.webp has Cache-Control '$cc', expected public, max-age=600"; fi
 
 req /health
 if [ "$code" = 200 ] && [ "$(tr -d '\n' < "$tmp/body")" = healthy ]; then ok "GET /health -> 200 healthy"; else bad "GET /health -> $code '$(head -c 40 "$tmp/body")', expected 200 healthy"; fi
@@ -95,6 +108,12 @@ if [ "$code" = 200 ] && [ "$(tr -d '\n' < "$tmp/body")" = healthy ]; then ok "GE
 req /no-such-page
 if [ "$code" = 404 ]; then ok "GET /no-such-page -> 404"; else bad "GET /no-such-page -> $code, expected 404"; fi
 if [ -n "$(header X-Content-Type-Options)" ] && [ -n "$(header X-Frame-Options)" ]; then ok "the 404 keeps the security headers"; else bad "the 404 has no security headers"; fi
+
+# A 404 on an asset-like path is never cached publicly.
+req /images/missing.webp
+cc="$(header cache-control)"
+if [ "$code" = 404 ]; then ok "GET /images/missing.webp -> 404"; else bad "GET /images/missing.webp -> $code, expected 404"; fi
+if [ -n "$cc" ] && ! printf '%s' "$cc" | grep -qi public; then ok "the asset 404 has Cache-Control: $cc"; else bad "the asset 404 has Cache-Control '$cc', expected one without public"; fi
 
 # Repo files that must not ship.
 for p in /CNAME /Makefile /app.mk /docker/Dockerfile /k8s/deployment.yml /docker/nginx.conf /_config.yml /scripts/smoke.sh /50x.html; do

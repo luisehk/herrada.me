@@ -7,7 +7,9 @@
 #      style.css or a file under images/.
 #   2. k8s/deployment.yml has no leading document marker (Jekyll would read it
 #      as front matter), keeps the one image line `make cd` pins, and names
-#      the herrada-me namespace alone.
+#      the herrada-me namespace alone. The pod keeps its hardening: no
+#      ServiceAccount token, the RuntimeDefault seccomp profile and no
+#      privilege escalation.
 #   3. app.mk deploys from master: no origin/main is left from vim-puzzles.
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 1
@@ -47,6 +49,10 @@ n="$(grep -cE '^[[:space:]]*image: ghcr\.io/luisehk/herrada-me:latest$' "$m")"
 if [ "$n" = 1 ]; then ok "$m has one image line ghcr.io/luisehk/herrada-me:latest"; else bad "$m has $n image lines ghcr.io/luisehk/herrada-me:latest, expected 1"; fi
 others="$(grep -E '^[[:space:]]*namespace:' "$m" | grep -vE 'namespace: herrada-me$' || true)"
 if [ -z "$others" ]; then ok "$m names namespace herrada-me alone"; else bad "$m names another namespace: $(echo $others)"; fi
+for want in 'automountServiceAccountToken: false' 'type: RuntimeDefault' 'allowPrivilegeEscalation: false'; do
+	n="$(grep -cE "^[[:space:]]*$want\$" "$m")"
+	if [ "$n" = 1 ]; then ok "$m sets $want"; else bad "$m has $n lines '$want', expected 1"; fi
+done
 
 # 3. app.mk.
 if grep -nE 'origin[/ ]main' app.mk; then bad "app.mk still names origin main"; else ok "app.mk deploys from origin/master"; fi
