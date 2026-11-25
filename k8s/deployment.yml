@@ -1,0 +1,143 @@
+# herrada.me on the k3s node (RK-0029), vim-puzzles' shape in namespace herrada-me.
+# No leading document marker on purpose: GitHub Pages builds this repo with
+# Jekyll until RK-0029's step D4, and Jekyll reads a file that opens with one as
+# front matter. _config.yml keeps k8s/ out of that build as well.
+
+# Namespace. rentaventa-k8s's deploy role (template/manifests/deploy-rbac/herrada-me.yml)
+# creates it and grants the deploy account get and patch on it by name.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: herrada-me
+
+---
+# Deployment
+#
+# The image tag below is the substitution target for both `make cd` and
+# `make deploy`, which rewrite it to the commit sha before applying (see app.mk).
+# Deploying an immutable per-commit tag, rather than restarting a mutable one in
+# place, is what makes `kubectl rollout undo` a real rollback: each revision
+# pins a different image instead of the same moving tag.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: herrada-me
+  namespace: herrada-me
+  labels:
+    app: herrada-me
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: herrada-me
+  template:
+    metadata:
+      labels:
+        app: herrada-me
+    spec:
+      imagePullSecrets:
+      - name: ghcr-pull-secret
+      containers:
+      - name: herrada-me
+        image: ghcr.io/luisehk/herrada-me:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "20m"
+          limits:
+            memory: "64Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 2
+          periodSeconds: 10
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: herrada-me-service
+  namespace: herrada-me
+spec:
+  selector:
+    app: herrada-me
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP
+
+---
+# www to the apex, once: http and https on www both land on https://herrada.me/
+# with the path kept. The regex never matches the apex, so it is not redirected.
+# There is no redirect-https Middleware: Cloudflare's proxy sends plain HTTP
+# visitors to port 80, and a redirect there would loop under the Flexible mode.
+# Kept in this namespace (self-contained); the Ingress addresses it as
+# <namespace>-<name>@kubernetescrd.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-www
+  namespace: herrada-me
+spec:
+  redirectRegex:
+    regex: "^https?://www\\.herrada\\.me/(.*)"
+    replacement: "https://herrada.me/${1}"
+    permanent: true
+
+---
+# Ingress
+# cert-manager derives the Certificate from the tls: block below; there is no
+# standalone Certificate resource. The solver is HTTP-01, so the order completes
+# once herrada.me and www.herrada.me point at the node (RK-0029 D3). Until then
+# Traefik serves its default certificate, which Cloudflare's Full mode accepts.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: herrada-me-ingress
+  namespace: herrada-me
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: herrada-me-redirect-www@kubernetescrd
+spec:
+  tls:
+  - hosts:
+    - herrada.me
+    - www.herrada.me
+    secretName: herrada-me-tls
+  rules:
+  - host: herrada.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: herrada-me-service
+            port:
+              number: 80
+  - host: www.herrada.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: herrada-me-service
+            port:
+              number: 80

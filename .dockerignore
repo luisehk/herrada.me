@@ -1,0 +1,7 @@
+# An allowlist: the build context is the site files and the nginx config, and
+# nothing else (no .git, no k8s, no make files, no CNAME).
+*
+!index.html
+!style.css
+!images
+!docker/nginx.conf
