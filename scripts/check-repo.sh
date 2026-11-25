@@ -8,9 +8,12 @@
 #   2. k8s/deployment.yml has no leading document marker (Jekyll would read it
 #      as front matter), keeps the one image line `make cd` pins, and names
 #      the herrada-me namespace alone. The pod keeps its hardening: no
-#      ServiceAccount token, the RuntimeDefault seccomp profile and no
-#      privilege escalation.
-#   3. app.mk deploys from master: no origin/main is left from vim-puzzles.
+#      ServiceAccount token, the RuntimeDefault seccomp profile, no privilege
+#      escalation and every capability dropped (the four nginx needs are added
+#      back by name).
+#   3. app.mk deploys from master: no origin/main is left from vim-puzzles. Its
+#      copy_pull_secret creates the Secret and never applies it (rentaventa-k8s
+#      ADR 0005: Secrets applied only if absent).
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 1
 
@@ -49,13 +52,23 @@ n="$(grep -cE '^[[:space:]]*image: ghcr\.io/luisehk/herrada-me:latest$' "$m")"
 if [ "$n" = 1 ]; then ok "$m has one image line ghcr.io/luisehk/herrada-me:latest"; else bad "$m has $n image lines ghcr.io/luisehk/herrada-me:latest, expected 1"; fi
 others="$(grep -E '^[[:space:]]*namespace:' "$m" | grep -vE 'namespace: herrada-me$' || true)"
 if [ -z "$others" ]; then ok "$m names namespace herrada-me alone"; else bad "$m names another namespace: $(echo $others)"; fi
-for want in 'automountServiceAccountToken: false' 'type: RuntimeDefault' 'allowPrivilegeEscalation: false'; do
-	n="$(grep -cE "^[[:space:]]*$want\$" "$m")"
+# Fixed strings, matched against whole lines with the indent stripped.
+for want in 'automountServiceAccountToken: false' 'type: RuntimeDefault' 'allowPrivilegeEscalation: false' 'drop: ["ALL"]'; do
+	n="$(sed 's/^[[:space:]]*//' "$m" | grep -cxF -- "$want")"
 	if [ "$n" = 1 ]; then ok "$m sets $want"; else bad "$m has $n lines '$want', expected 1"; fi
 done
 
 # 3. app.mk.
 if grep -nE 'origin[/ ]main' app.mk; then bad "app.mk still names origin main"; else ok "app.mk deploys from origin/master"; fi
+# The recipe runs from its target line to the first blank line.
+recipe="$(sed -n '/^copy_pull_secret:/,/^$/p' app.mk)"
+if ! grep -qF 'create secret docker-registry ghcr-pull-secret' <<<"$recipe"; then
+	bad "app.mk's copy_pull_secret does not create ghcr-pull-secret with kubectl create"
+elif grep -qE '[[:space:]]apply([[:space:]]|$)' <<<"$recipe"; then
+	bad "app.mk's copy_pull_secret runs kubectl apply (rentaventa-k8s ADR 0005: create only if absent)"
+else
+	ok "app.mk's copy_pull_secret creates ghcr-pull-secret and never applies it"
+fi
 
 echo "check-repo: $checks checks, $failed failed"
 [ "$failed" -eq 0 ]

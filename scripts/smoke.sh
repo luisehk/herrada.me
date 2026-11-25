@@ -6,10 +6,12 @@
 # a missing path and for every repo file that must not ship, dot paths denied,
 # the security headers, the cache policy (the page no-cache, assets ten minutes
 # on a 200 or a 304, a 404 never cached publicly), no redirect on plain HTTP for
-# either host, the web root holding the site files alone, and the image's
-# HEALTHCHECK reaching healthy. The container runs with no-new-privileges, as
-# the pod runs with allowPrivilegeEscalation off. It is stopped on exit (it runs
-# with --rm, so stopping removes it).
+# either host, the nginx master's capability set, the web root holding the site
+# files alone, and the image's HEALTHCHECK reaching healthy. The container runs
+# with no-new-privileges and every capability dropped but CHOWN, SETGID, SETUID
+# and NET_BIND_SERVICE, as the pod runs with allowPrivilegeEscalation off and
+# the same capabilities. It is stopped on exit (it runs with --rm, so stopping
+# removes it).
 #
 #   scripts/smoke.sh <image>
 set -uo pipefail
@@ -36,7 +38,9 @@ bad() { checks=$((checks + 1)); failed=$((failed + 1)); echo "FAILED  $*"; }
 port=""
 for p in $(seq 8650 8659); do
 	if (exec 3<>"/dev/tcp/127.0.0.1/$p") 2>/dev/null; then continue; fi
-	if docker run -d --rm --name "$name" --security-opt no-new-privileges -p "127.0.0.1:$p:80" "$image" >/dev/null 2>"$tmp/run.err"; then
+	if docker run -d --rm --name "$name" --security-opt no-new-privileges \
+		--cap-drop ALL --cap-add CHOWN --cap-add SETGID --cap-add SETUID --cap-add NET_BIND_SERVICE \
+		-p "127.0.0.1:$p:80" "$image" >/dev/null 2>"$tmp/run.err"; then
 		port="$p"
 		started=1
 		break
@@ -137,6 +141,11 @@ for host in herrada.me www.herrada.me; do
 	if [ "$code" = 200 ]; then ok "plain HTTP GET /health for $host -> 200"; else bad "plain HTTP GET /health for $host -> $code, expected 200"; fi
 	no_redirect "plain HTTP GET /health for $host"
 done
+
+# The nginx master runs with the four capabilities alone: CHOWN (bit 0), SETGID
+# (6), SETUID (7) and NET_BIND_SERVICE (10) make the bounding set 0x4c1.
+capbnd="$(docker exec "$name" awk '/^CapBnd:/ { print $2 }' /proc/1/status 2>/dev/null)"
+if [ "$capbnd" = 00000000000004c1 ]; then ok "the nginx master's capability bounding set is CHOWN, SETGID, SETUID and NET_BIND_SERVICE"; else bad "the nginx master's capability bounding set is '$capbnd', expected 00000000000004c1"; fi
 
 # The web root holds the site files and nothing else.
 want="$( { printf '%s\n' index.html style.css; git ls-files images; } | sort)"

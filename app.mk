@@ -112,14 +112,27 @@ delete-deployment:
 # namespace. The scoped deploy file cannot read another namespace's Secret, so
 # this runs with the operator file, named on the command line:
 #   make copy_pull_secret CD_KUBECONFIG=$(HOME)/.kube/linode.yaml DRY_RUN=1
-# Only the name and the namespace are kept from the source's metadata. The Secret
-# goes from kubectl to python to kubectl on pipes and is never printed. DRY_RUN
-# makes the apply a server-side dry run.
+# Secrets are applied only if absent (rentaventa-k8s ADR 0005), as
+# rentaventa-rooms/provision.sh copies this one: an existing copy in herrada-me
+# is left as it is. Otherwise the source's .dockerconfigjson goes from kubectl
+# to base64 to kubectl create on pipes and is never printed. DRY_RUN makes the
+# create a server-side dry run. A rotated token means deleting herrada-me's copy
+# by hand before rerunning.
 copy_pull_secret:
 	@echo "Copying ghcr-pull-secret from vim-puzzles to $(KUBE_NAMESPACE) with $(CD_KUBECONFIG)$(if $(CD_DRY), (server-side dry run),)..."
-	@set -o pipefail; $(KUBECTL) -n vim-puzzles get secret ghcr-pull-secret -o json \
-		| python3 -I -c 'import json,sys; s=json.load(sys.stdin); s["metadata"]={"name":s["metadata"]["name"],"namespace":"$(KUBE_NAMESPACE)"}; print(json.dumps(s))' \
-		| $(KUBECTL) apply $(if $(CD_DRY),--dry-run=server,) -f -
+	@set -o pipefail; \
+	have="$$($(KUBECTL) -n $(KUBE_NAMESPACE) get secret ghcr-pull-secret --ignore-not-found -o name </dev/null)" \
+		|| { echo "copy_pull_secret: cannot read $(KUBE_NAMESPACE)/ghcr-pull-secret" >&2; exit 1; }; \
+	if [ -n "$$have" ]; then \
+		echo "copy_pull_secret: $(KUBE_NAMESPACE)/ghcr-pull-secret exists and is applied only if absent (rentaventa-k8s ADR 0005): left as it is"; \
+		exit 0; \
+	fi; \
+	type="$$($(KUBECTL) -n vim-puzzles get secret ghcr-pull-secret -o jsonpath='{.type}' </dev/null)" \
+		|| { echo "copy_pull_secret: cannot read vim-puzzles/ghcr-pull-secret" >&2; exit 1; }; \
+	[ "$$type" = kubernetes.io/dockerconfigjson ] \
+		|| { echo "copy_pull_secret: vim-puzzles/ghcr-pull-secret is of type '$${type:-none}', not kubernetes.io/dockerconfigjson" >&2; exit 1; }; \
+	$(KUBECTL) -n vim-puzzles get secret ghcr-pull-secret -o jsonpath='{.data.\.dockerconfigjson}' </dev/null | base64 -d \
+		| $(KUBECTL) -n $(KUBE_NAMESPACE) create secret docker-registry ghcr-pull-secret --from-file=.dockerconfigjson=/dev/stdin $(if $(CD_DRY),--dry-run=server,) -o name
 
 # ---------------------------------------------------------------------------
 # CD from a forge: `make cd` (vim-puzzles ADRs 0009 and 0010; Smithy ADRs 0014
