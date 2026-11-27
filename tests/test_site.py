@@ -322,10 +322,21 @@ class TestContentRules(unittest.TestCase):
             print(EXCLUDED_NOTE, file=sys.stderr)
             self.skipTest(EXCLUDED_NOTE)
         for path in tracked_text_files():
-            hits = excluded_hits(path.read_text(encoding="utf-8", errors="replace"), names)
-            with self.subTest(file=str(path.relative_to(ROOT))):
-                # the message names the file and never the word
-                self.assertFalse(hits, f"{path.relative_to(ROOT)} holds an excluded name")
+            rel = str(path.relative_to(ROOT))
+            with self.subTest(file=rel):
+                self.check_file(rel, path.read_text(encoding="utf-8", errors="replace"), names)
+
+    def check_file(self, rel, text, names):
+        # self.fail, not assertFalse(hits, ...): unittest's long message would print repr(hits), the word itself, into
+        # the CI log. The message names the file and never the word.
+        if excluded_hits(text, names):
+            self.fail(f"{rel} holds an excluded name")
+
+    def test_the_excluded_name_failure_never_prints_the_word(self):
+        with self.assertRaises(self.failureException) as caught:
+            self.check_file("index.html", "Worked with ZQSTANDIN in 2015.", ["zqstandin"])
+        self.assertEqual(str(caught.exception), "index.html holds an excluded name")
+        self.assertNotIn("zqstandin", str(caught.exception).lower())
 
     def test_the_excluded_name_check_finds_whole_words(self):
         # a stand-in word, so the mechanism is proven without the real name
