@@ -23,8 +23,10 @@
 {{rows}}
     </fieldset>
 
-    <!-- The pane. Each row's figure says what the thing is above its drawing, so the
-         first screen informs before it plays. Each drawing is its still frame, and the
+    <!-- The pane. The lede above it says who and what, so the first screen informs
+         before it plays. Each row's figure holds its fact first, so a screen reader and
+         a page without styles meet it before the drawing. On screen the stylesheet sets
+         it under the pane, after the hook. Each drawing is its still frame, and the
          stylesheet holds the loops. -->
     <div class="stage" role="group" aria-label="Preview of the chosen row">
 
@@ -40,7 +42,7 @@
       <span class="hint-game-keys">Left/Right move <span aria-hidden="true">&middot;</span> Esc leave</span>
       <span class="hint-game-touch">drag to move <span aria-hidden="true">&middot;</span> tap stop to leave</span>
     </p>
-    <p class="hint-more"><a href="#read">Or scroll. It is all below, as a plain page.</a></p>
+    <p class="hint-more"><a href="#read">Or scroll. It is all below, as a plain page.</a>{{hint_bumpy}}</p>
   </div>
 
   <p class="vh" role="status" data-status></p>
@@ -51,8 +53,7 @@
 
   <section class="sec sec-hero">
     <div class="sec-wide">
-      <p class="hero-line">{{hero}}</p>
-      <p class="creed">{{creed}}</p>
+      <p class="hero-line">{{creed}}</p>
     </div>
   </section>
 
@@ -78,11 +79,11 @@
     </div>
   </section>
 
-  <h2 class="vh" id="h-projects">Projects</h2>
+  <h2 class="grp" id="h-projects">projects</h2>
 
 {{projects}}
 
-  <h2 class="vh" id="h-more">One line each</h2>
+  <h2 class="grp" id="h-more">one line each</h2>
 
 {{lines}}
 
@@ -102,6 +103,16 @@
     </div>
   </section>
 
+  <section class="sec sec-record" id="record" tabindex="-1">
+    <div class="sec-head">
+      <h2 class="sec-name" id="h-record">record</h2>
+      <p class="sec-kind">{{record_kind}}</p>
+      <p class="sec-esc"><span class="sec-esc-key">Esc goes back to the menu</span> <a class="sec-back" href="#menu">back to the menu</a></p>
+    </div>
+{{record_years}}
+    <p class="years-after">{{record_after}}</p>
+  </section>
+
   <section class="sec sec-beyond" id="beyond">
     <div class="sec-head">
       <h2 class="sec-name" id="h-beyond">beyond code</h2>
@@ -112,16 +123,6 @@
     </div>
 {{beyond_rows}}
     <p class="motto">{{motto}}</p>
-  </section>
-
-  <section class="sec sec-record" id="record" tabindex="-1">
-    <div class="sec-head">
-      <h2 class="sec-name" id="h-record">record</h2>
-      <p class="sec-kind">{{record_kind}}</p>
-      <p class="sec-esc"><span class="sec-esc-key">Esc goes back to the menu</span> <a class="sec-back" href="#menu">back to the menu</a></p>
-    </div>
-{{record_years}}
-    <p class="years-after">{{record_after}}</p>
   </section>
 
 </div>

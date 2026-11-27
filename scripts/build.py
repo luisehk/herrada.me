@@ -287,6 +287,8 @@ class Site:
             if row.get("note"):
                 label_class += " row-label-two"
                 label += f' <span class="row-note">{esc(row["note"])}</span>'
+            if row["motion"] == "game":
+                label += ' <span class="row-tag" aria-hidden="true">play</span>'
             acts = []
             if row["motion"] == "game":
                 acts.append('<button class="row-go row-play" type="button" data-play hidden>'
@@ -318,9 +320,11 @@ class Site:
             game = row["motion"] == "game"
             desc = " data-game-desc" if game else ""
             art = "\n".join("          " + line if line else line for line in self.art(f"pane-{rid}.html").split("\n"))
+            # who Bumpy is, said once, only while he is on (as not_found.bumpy_line)
+            fact = row.get("fact_bumpy", row["fact"]) if self.bumpy else row["fact"]
             out += [
                 f'      <figure class="pv pv-{rid}">',
-                f'        <figcaption class="fact" id="fact-{rid}"><span{desc}>{self.text(row["fact"], where + ".fact")}</span></figcaption>',
+                f'        <figcaption class="fact" id="fact-{rid}"><span{desc}>{self.text(fact, where + ".fact")}</span></figcaption>',
                 f'        <div class="screen"{" data-game" if game else ""}>',
                 f'          <span class="screen-title" aria-hidden="true">{esc(row["label"])}</span>',
                 art,
@@ -330,13 +334,22 @@ class Site:
             if row.get("alt"):
                 out.append(f'        <p class="vh" data-alt>{esc(row["alt"])}</p>')
             out += ["      </figure>", ""]
-        controls = []
-        if self.bumpy:
-            controls.append('        <button class="pane-btn" type="button" data-bumpy-toggle hidden>Hide Bumpy</button>')
-        controls.append('        <button class="pane-btn pane-pause" type="button" data-pause hidden>'
-                        '<span data-pause-word>pause</span><span class="vh"> the pane</span></button>')
-        out += ['      <div class="pane-ctl">', *controls, "      </div>"]
+        # the pane's one control, pause. Hide Bumpy sits at the foot of the menu (hint_bumpy)
+        out += [
+            '      <div class="pane-ctl">',
+            '        <button class="pane-btn pane-pause" type="button" data-pause hidden>'
+            '<span data-pause-word>pause</span><span class="vh"> the pane</span></button>',
+            "      </div>",
+        ]
         return "\n".join(out)
+
+    def hint_bumpy(self):
+        """Hide Bumpy, beside the way out at the foot of the menu. The dot and the button
+        break as one, and the stylesheet hides both while the script has not shown it."""
+        if not self.bumpy:
+            return ""
+        return (' <span class="hint-bumpy"><span aria-hidden="true">&middot;</span>'
+                ' <button class="hint-btn" type="button" data-bumpy-toggle hidden>Hide Bumpy</button></span>')
 
     def section_head(self, tag, sid, name, kind, esc_line=False, extra=""):
         lines = ['    <div class="sec-head">', f'      <{tag} class="sec-name" id="h-{sid}">{name}</{tag}>']
@@ -366,7 +379,7 @@ class Site:
                 '    <div class="sec-body">',
                 f'      <p class="lead">{self.text(p["lead"], w + ".lead")}</p>',
                 '      <dl class="pair">',
-                f'        <div><dt>the complex challenge</dt><dd>{self.text(p["challenge"], w + ".challenge")}</dd></div>',
+                f'        <div><dt>{esc(p.get("challenge_label", "the complex challenge"))}</dt><dd>{self.text(p["challenge"], w + ".challenge")}</dd></div>',
                 f'        <div><dt>the simple answer</dt><dd>{self.text(p["answer"], w + ".answer")}</dd></div>',
                 "      </dl>",
             ]
@@ -396,11 +409,12 @@ class Site:
             lid = line["id"]
             opened = line.get("open", False)
             tab = ' tabindex="-1"' if opened else ""
+            text = line.get("text_bumpy", line["text"]) if self.bumpy else line["text"]
             out.append(f'  <section class="sec sec-line" id="{esc(lid)}"{tab}>')
             out += self.section_head("h3", lid, esc(line["name"]), self.text(line["kind"], f"home.lines.{lid}.kind"), opened)
             out += [
                 '    <div class="sec-body">',
-                f'      <p>{self.text(line["text"], f"home.lines.{lid}.text")}</p>',
+                f'      <p>{self.text(text, f"home.lines.{lid}.text")}</p>',
                 "    </div>",
                 "  </section>",
                 "",
@@ -432,7 +446,7 @@ class Site:
             lede=self.text(s["lede"], "site.lede"),
             rows=self.rows_html(),
             panes=self.panes_html(),
-            hero=self.text(home["hero"], "home.hero"),
+            hint_bumpy=self.hint_bumpy(),
             creed=self.text(home["creed"], "home.creed"),
             about=self.text(home["about"]["body"], "home.about.body"),
             about_kind=self.text(home["about"]["kind"], "home.about.kind"),
@@ -567,7 +581,6 @@ class Site:
             balanced="\n".join(f"      <p>{self.text(p, w + '.balanced')}</p>" for p in h["balanced"]["body"]),
             seats="\n".join(seats),
             parts_kind=self.text(h["parts"]["kind"], w + ".parts"),
-            parts_intro=self.text(h["parts"]["intro"], w + ".parts"),
             parts=self.rows_dl(h["parts"]["rows"], w + ".parts", "parts rows"),
             board_kind=self.text(b["kind"], w + ".board"),
             columns="".join(f"<li>{esc(c)}</li>" for c in b["columns"]),

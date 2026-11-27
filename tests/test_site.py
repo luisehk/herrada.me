@@ -8,16 +8,21 @@ T-HM-2-2  the content rules: no excluded name, no email, no phone number, no
 T-HM-2-3  no request to another host: fonts, styles, scripts and images are the site's own
 T-HM-2-4  a preview is never indexed and says "Preview"
 T-HM-2-5  every internal link and fragment resolves
-T-HM-2-6  the first screen informs before it plays: the lede, and each fact above its loop
+T-HM-2-6  the first screen informs before it plays: the lede in the marquee, and each
+          fact first in its figure's HTML, on screen under the pane after the hook
 T-HM-2-7  Bumpy is one switch in the data file
 T-HM-2-8  the font is self-hosted under the OFL
 T-HM-2-9  the stylesheet knows every row
+
+Also here: the page opens on the creed and ends on the motto, and the weight and the
+contrast the Lighthouse scores rest on.
 
 The excluded-name check reads the names from HM_EXCLUDED_NAME, which the gate sets.
 Without it the check prints a note and skips.
 """
 
 import copy
+import html
 import json
 import os
 import re
@@ -108,6 +113,78 @@ def tracked_text_files():
             continue
         files.append(path)
     return files
+
+
+# The weight the Lighthouse scores rest on, in raw bytes (the home page loaded 206,871
+# and script.js was 19,045 when these were set).
+FIRST_LOAD_LIMIT = 250_000
+SCRIPT_LIMIT = 30_000
+IMAGE_LIMIT = 120_000
+IMAGE_SUFFIXES = (".png", ".webp", ".jpg", ".jpeg", ".gif", ".svg", ".avif")
+
+
+def first_load_bytes(root, name):
+    """What a first visit to one page loads: the page, its stylesheet and script, the
+    preloaded font and every image that is not marked lazy."""
+    source = (Path(root) / name).read_text(encoding="utf-8")
+    files = set()
+    for tag, attrs in Page(source).tags:
+        rel = attrs.get("rel")
+        if tag == "link" and rel in ("stylesheet", "preload"):
+            files.add(attrs["href"])
+        elif tag == "script" and attrs.get("src"):
+            files.add(attrs["src"])
+        elif tag == "img" and attrs.get("loading") != "lazy" and not attrs["src"].startswith("data:"):
+            files.add(attrs["src"])
+    return len(source.encode("utf-8")) + sum((Path(root) / f.lstrip("/")).stat().st_size for f in files)
+
+
+# Text pairs at 4.5 to 1 and focus rings at 3 to 1, in both schemes. The pane's colours
+# never change, so the light scheme reads them from the dark one.
+TEXT_PAIRS = (
+    ("--text", "--ground"), ("--bright", "--ground"), ("--dim", "--ground"), ("--title", "--ground"),
+    ("--sel-text", "--sel"),
+    ("--band-title", "--band"), ("--band-text", "--band"), ("--band-dim", "--band"), ("--band-sel-text", "--band-sel"),
+    ("--pane-text", "--pane"), ("--pane-dim", "--pane"), ("--white", "--pane"), ("--yellow", "--pane"), ("--green", "--pane"),
+    ("--night", "--yellow"), ("--night", "--blue"),
+)
+FOCUS_PAIRS = (("--focus", "--ground"), ("--focus", "--sel"))
+DAY_FOCUS_PAIRS = (("--band-title", "--band"),)  # by day the ring in the band takes the band's ink
+
+
+def colour_tokens(css):
+    """The dark scheme's tokens (the first :root block) and the light scheme's (the
+    :root block of the first light query, over the dark ones)."""
+    def tokens(block):
+        return dict(re.findall(r"(--[a-z-]+):\s*(#[0-9A-Fa-f]{6})\s*;", block))
+    dark = tokens(re.search(r":root\s*\{(.*?)\}", css, re.S).group(1))
+    light = re.search(r"@media \(prefers-color-scheme: light\) \{\s*:root\s*\{(.*?)\}", css, re.S).group(1)
+    return dark, {**dark, **tokens(light)}
+
+
+def contrast(a, b):
+    def luminance(hex_colour):
+        rgb = [int(hex_colour[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+        r, g, b_ = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb]
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b_
+    hi, lo = sorted((luminance(a), luminance(b)), reverse=True)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def weak_pairs(css):
+    """Every pair under its floor, as 'scheme fg on bg: ratio'."""
+    dark, light = colour_tokens(css)
+    weak = []
+    for scheme, tokens in (("dark", dark), ("light", light)):
+        checks = [(TEXT_PAIRS, 4.5), (FOCUS_PAIRS, 3.0)]
+        if scheme == "light":
+            checks.append((DAY_FOCUS_PAIRS, 3.0))
+        for pairs, floor in checks:
+            for fg, bg in pairs:
+                ratio = contrast(tokens[fg], tokens[bg])
+                if ratio < floor:
+                    weak.append(f"{scheme} {fg} on {bg}: {ratio:.2f}")
+    return weak
 
 
 class TestBuild(unittest.TestCase):
@@ -252,6 +329,15 @@ class TestContentRules(unittest.TestCase):
         self.assertEqual(split_names(""), [])
         self.assertEqual(split_names(None), [])
 
+    def test_status_is_never_rounded_up(self):
+        # four sentences that said a little more than is true (the refine's R4)
+        gone = ("Then my projects", "the first of thirteen tiny games", "Every project I own", "plays the same eight levels")
+        for name in PAGES + ("src/site.json",):
+            source = read(name)
+            for words in gone:
+                with self.subTest(file=name, words=words):
+                    self.assertNotIn(words, source)
+
     def test_no_email_in_any_tracked_file(self):
         for path in tracked_text_files():
             with self.subTest(file=str(path.relative_to(ROOT))):
@@ -370,7 +456,10 @@ class TestLinks(unittest.TestCase):
 
 
 class TestFirstScreen(unittest.TestCase):
-    """T-HM-2-6: it says who Luis is and what each thing is before anything plays."""
+    """T-HM-2-6: it says who Luis is and what each thing is before anything plays. The
+    lede in the marquee says who and what. Each fact is first in its figure's HTML, so a
+    screen reader and a page without styles meet it before the drawing. On screen it
+    sits under the pane, after the hook, and it never animates."""
 
     def test_the_marquee_says_who_and_what_he_builds(self):
         source = read("index.html")
@@ -381,7 +470,7 @@ class TestFirstScreen(unittest.TestCase):
         for name in ("Rentaventa", "Smithy"):
             self.assertIn(name, lede.group(1))
 
-    def test_each_pane_states_its_fact_before_its_loop(self):
+    def test_each_fact_is_first_in_its_figure(self):
         source = read("index.html")
         rows = json.loads(read("src/site.json"))["rows"]
         figures = re.findall(r'<figure class="pv pv-([a-z-]+)">\s*(<[^>]+>)(.*?)</figure>', source, re.S)
@@ -392,6 +481,30 @@ class TestFirstScreen(unittest.TestCase):
                 fact_text = re.sub(r"<[^>]+>", "", rest.split("</figcaption>")[0]).strip()
                 self.assertGreater(len(fact_text), 20)
                 self.assertLess(rest.index("</figcaption>"), rest.index('<div class="screen"'))
+        # on screen the caption reads under the pane: screen, hook, fact
+        css = read("style.css")
+        for n, part in enumerate(("screen", "hook", "fact"), start=1):
+            with self.subTest(order=part):
+                self.assertIn(f".pv > .{part} {{ order: {n}; }}", css)
+
+    def test_every_fact_holds_two_lines(self):
+        # 82 characters at most, placeholders expanded and tags stripped, so that every
+        # fact holds two lines at 360px wide and the list under the pane never jumps
+        site = build.Site()
+        for row in site.data["rows"]:
+            for key in ("fact", "fact_bumpy"):
+                if key not in row:
+                    continue
+                text = html.unescape(re.sub(r"<[^>]+>", "", site.text(row[key])))
+                with self.subTest(row=row["id"], key=key):
+                    self.assertLessEqual(len(text), 82, text)
+
+    def test_the_playable_row_says_play(self):
+        # the tag is the script's (style.css shows it with .js), and it stays out of the row's name
+        source = read("index.html")
+        label = re.search(r'<label class="[^"]*" for="s-minigames">(.*?)</label>', source, re.S).group(1)
+        self.assertIn('<span class="row-tag" aria-hidden="true">play</span>', label)
+        self.assertIn(".js .row-radio:not(:checked) + .row-label .row-tag { display: flex; }", read("style.css"))
 
     def test_a_section_opened_from_the_menu_has_a_way_back_for_touch(self):
         # Esc is for a keyboard. A touch screen shows the link instead (style.css), and
@@ -435,6 +548,14 @@ class TestBumpySwitch(unittest.TestCase):
         pages = self.build_with(True)
         self.assertIn("data-bumpy", pages["index.html"])
         self.assertIn("data-bumpy-toggle", pages["index.html"])
+        # Hide Bumpy is at the foot of the menu, beside the way out, and not in the pane
+        hint = re.search(r'<p class="hint-more">(.*?)</p>', pages["index.html"], re.S).group(1)
+        self.assertIn('<button class="hint-btn" type="button" data-bumpy-toggle hidden>Hide Bumpy</button>', hint)
+        self.assertNotIn("data-bumpy-toggle", re.search(r'<div class="pane-ctl">(.*?)</div>', pages["index.html"], re.S).group(1))
+        # who he is, said once on the home page: the desk row and the desk line
+        words = Page(pages["index.html"]).words
+        self.assertIn("Bumpy, the menu's cursor, lives there.", words)
+        self.assertIn("Bumpy, the menu's cursor, lives on that desktop.", words)
         self.assertIn('class="bumpy" data-pose="sleep"', pages["404.html"])
         self.assertIn("Bumpy, the menu's cursor,", Page(pages["404.html"]).words)
         self.assertNotIn('class="no-bumpy"', pages["index.html"])
@@ -448,6 +569,11 @@ class TestBumpySwitch(unittest.TestCase):
                 self.assertNotIn("Bumpy", Page(source).words)
                 self.assertNotIn("Hide Bumpy", source)
         self.assertIn("row-missing-block", pages["404.html"])
+        data = json.loads(read("src/site.json"))
+        desk_row = next(r for r in data["rows"] if r["id"] == "the-desk")
+        desk_line = next(line for line in data["home"]["lines"] if line["id"] == "the-desk")
+        self.assertIn(f'<figcaption class="fact" id="fact-the-desk"><span>{desk_row["fact"]}</span></figcaption>', pages["index.html"])
+        self.assertIn(f"<p>{desk_line['text']}</p>", pages["index.html"])
 
     def test_the_preview_keeps_bumpy(self):
         self.assertTrue(json.loads(read("src/site.json"))["site"]["bumpy"])
@@ -482,12 +608,84 @@ class TestStylesheetKnowsEveryRow(unittest.TestCase):
     def test_each_row_has_its_pane_rule_and_cursor_index(self):
         css = read("style.css")
         rows = json.loads(read("src/site.json"))["rows"]
-        self.assertIn(f".pv-{rows[0]['id']} {{ display: block; }}", css)
+        self.assertIn(f".pv-{rows[0]['id']} {{ display: grid; }}", css)
         for i, row in enumerate(rows[1:], start=1):
             rid = row["id"]
             with self.subTest(row=rid):
                 self.assertIn(f".select:has(#s-{rid}:checked) .pv-{rid}", css)
                 self.assertIn(f".list:has(#s-{rid}:checked) {{ --i: {i}; }}", css)
+
+
+class TestPage(unittest.TestCase):
+    """The page under the menu opens on the creed and ends on the motto."""
+
+    def test_the_page_opens_on_the_creed_alone(self):
+        source = read("index.html")
+        creed = json.loads(read("src/site.json"))["home"]["creed"]
+        hero = re.search(r'<section class="sec sec-hero">(.*?)</section>', source, re.S).group(1)
+        self.assertEqual(re.findall(r"<p[^>]*>(.*?)</p>", hero), [creed])
+
+    def test_the_groups_are_named_and_the_motto_comes_last(self):
+        source = read("index.html")
+        self.assertIn('<h2 class="grp" id="h-projects">projects</h2>', source)
+        self.assertIn('<h2 class="grp" id="h-more">one line each</h2>', source)
+        order = [source.index(f'id="{sid}"') for sid in ("how-i-work", "record", "beyond")]
+        self.assertEqual(order, sorted(order))
+        doc = source[source.index('<div class="doc wrap" id="read">'):source.index("</main>")]
+        last = re.findall(r"<p[^>]*>(.*?)</p>", doc, re.S)[-1]
+        self.assertIn("<b>just start and keep practicing.</b>", last)
+
+
+class TestWeight(unittest.TestCase):
+    """The weight the Lighthouse scores rest on."""
+
+    def test_a_first_load_stays_under_the_budget(self):
+        for name in PAGES:
+            with self.subTest(page=name):
+                self.assertLess(first_load_bytes(ROOT, name), FIRST_LOAD_LIMIT)
+
+    def test_the_script_stays_small(self):
+        self.assertLess((ROOT / "script.js").stat().st_size, SCRIPT_LIMIT)
+
+    def test_no_image_is_heavy(self):
+        names = subprocess.run(["git", "ls-files", "images", "assets"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.split()
+        self.assertTrue(names)
+        for name in names:
+            if name.endswith(IMAGE_SUFFIXES):
+                with self.subTest(image=name):
+                    self.assertLess((ROOT / name).stat().st_size, IMAGE_LIMIT)
+
+    def test_every_img_has_a_width_and_a_height(self):
+        for name in PAGES:
+            for tag, attrs in Page(read(name)).tags:
+                if tag == "img":
+                    with self.subTest(page=name, src=attrs.get("src", "")[:40]):
+                        self.assertRegex(attrs.get("width", ""), r"^\d+$")
+                        self.assertRegex(attrs.get("height", ""), r"^\d+$")
+
+    def test_the_budget_catches_a_heavy_page(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for name in PAGES + ("style.css", "script.js"):
+                shutil.copy(ROOT / name, root / name)
+            shutil.copytree(ROOT / "fonts", root / "fonts")
+            self.assertLess(first_load_bytes(root, "index.html"), FIRST_LOAD_LIMIT)
+            with open(root / "style.css", "a", encoding="utf-8") as css:
+                css.write("/*" + "x" * FIRST_LOAD_LIMIT + "*/")
+            self.assertGreaterEqual(first_load_bytes(root, "index.html"), FIRST_LOAD_LIMIT)
+
+
+class TestContrast(unittest.TestCase):
+    """Text at 4.5 to 1 and focus rings at 3 to 1, read from the stylesheet's own tokens."""
+
+    def test_every_pair_meets_its_floor(self):
+        self.assertEqual(weak_pairs(read("style.css")), [])
+
+    def test_the_check_catches_a_weak_token(self):
+        css = read("style.css")
+        self.assertIn("--dim: #8C91AF;", css)
+        self.assertTrue(weak_pairs(css.replace("--dim: #8C91AF;", "--dim: #3A3F5C;", 1)))
+        self.assertTrue(weak_pairs(css.replace("--focus: #3C4876;", "--focus: #E8E8E2;", 1)))
 
 
 if __name__ == "__main__":

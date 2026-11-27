@@ -351,7 +351,15 @@
     const IDLE_DESC = desc.textContent;
     // a touch screen has no Enter to press, so its notes name only the tap
     const touch = () => matchMedia('(pointer: coarse)').matches;
-    const idleNote = () => (touch() ? 'Tap to play' : 'Enter or tap to play');
+    // The invitation to play. With a keyboard the word Enter is drawn as a key, like
+    // the j, d, d keys in the vim-puzzles pane.
+    const idleNote = () => {
+      if (touch()) return note.replaceChildren('Tap to play');
+      const key = document.createElement('span');
+      key.className = 'key';
+      key.textContent = 'Enter';
+      note.replaceChildren(key, ' or tap to play');
+    };
     const POSTER = { paddle: 180, bx: 270, by: 96, falling: true, score: 0, lives: 3 };
     const intent = { dir: 0, to: null };
     const keys = { left: false, right: false };
@@ -449,7 +457,7 @@
       screen.removeAttribute('aria-label');
       playWord.textContent = 'play';
       desc.textContent = IDLE_DESC;
-      note.textContent = idleNote();
+      idleNote();
       world = POSTER;
       draw(world);
       if (refocus) radios[mine].focus({ preventScroll: true });
@@ -496,7 +504,7 @@
     screen.addEventListener('focus', () => { if (api.on && held && !paused && world.lives > 0) resume(); });
 
     screen.classList.add('is-ready');
-    note.textContent = idleNote();
+    idleNote();
     return api;
   })();
 })();

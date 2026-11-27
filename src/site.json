@@ -29,7 +29,6 @@
     "smithy_reports": {"value": 184, "read": "2026-11-25", "from": "private record: reports"},
     "smithy_days": {"value": 40, "read": "2026-11-25", "from": "days since Smithy began on 2026-10-16"},
     "adrs_all": {"value": 256, "read": "2026-11-25", "from": "private record: decision records across seven projects"},
-    "rentaventa_adrs": {"value": 86, "read": "2026-11-25", "from": "private record: Rentaventa decision records"},
     "rentaventa_months": {"value": 27, "read": "2026-11-25", "from": "private record: months with work since August 2024"},
     "arbopedia_sheets": {"value": 396, "read": "2026-11-25", "from": "arbopedia.mx: published species sheets"},
     "arbopedia_pages": {"value": 1421, "read": "2026-11-25", "from": "arbopedia: printed pages read"},
@@ -76,7 +75,7 @@
     {
       "id": "minigames", "label": "minigames", "open": "#minigames", "open_name": "minigames", "motion": "game",
       "note": "needs JavaScript to play",
-      "fact": "A real game of catch, the first of thirteen tiny games. Built in one week, August 2026.",
+      "fact": "Thirteen tiny games in one week, August 2026. This is catch, remade for this page.",
       "hook": "catch what falls",
       "alt": "The pane: a paddle at the foot and one block falling."
     },
@@ -89,6 +88,7 @@
     {
       "id": "the-desk", "label": "the desk", "open": "#the-desk", "open_name": "the desk", "motion": "still",
       "fact": "i3, tmux and vim. Distractions blocked.",
+      "fact_bumpy": "i3, tmux and vim. Distractions blocked. Bumpy, the menu's cursor, lives there.",
       "hook": "keyboard first",
       "alt": "The pane: three tiles with thin frames under one status bar."
     },
@@ -100,19 +100,18 @@
     },
     {
       "id": "record", "label": "record", "open": "#record", "open_name": "the record", "motion": "still",
-      "fact": "Four companies, then BanregioLABS, then Vordem: 2008 to 2019. Then my projects.",
+      "fact": "Four companies, then BanregioLABS, then Vordem. The rest is on LinkedIn.",
       "hook": "since 2008",
       "alt": "The pane: three blocks on a line from 2008 to 2019, then one square per project where it began, seven of them in 2026."
     },
     {
       "id": "about", "label": "about", "open": "#about", "open_name": "about", "motion": "still",
-      "fact": "Software engineer in Monterrey, Mexico. The one picture of me on this site.",
+      "fact": "Away from the keyboard: guitar, chess, science articles and a good book.",
       "hook": "just start and keep practicing"
     }
   ],
 
   "home": {
-    "hero": "I build software, and the workshop that builds it with me.",
     "creed": "Simple, maintainable solutions to complex problems.",
     "about": {
       "kind": "software engineer, Monterrey, Mexico",
@@ -131,14 +130,14 @@
         "lead": "The workshop where AI agents build my software and I keep the decisions.",
         "challenge": "AI agents can write code faster than one person can follow.",
         "answer": "A board that moves only on facts, a ledger of decisions, and one short list of what needs me.",
-        "body": ["Smithy is the tool I built to build everything else. Agents do the work and stamp each gate."],
+        "body": ["Smithy is the tool I built to build everything else."],
         "link": {"href": "/how-i-build.html", "label": "How I build with agents"}
       },
       {
         "id": "rentaventa", "name": "Rentaventa", "block": "#F0963C",
         "kind": "a product, built with a partner",
         "state": "Pre-launch. Since August 2024.",
-        "score": "{n:rentaventa_adrs} decision records over {n:rentaventa_months} active months. As of {read:rentaventa_adrs}.",
+        "score": "API, web app, mobile app, WhatsApp agent, Claude connector. {n:rentaventa_months} active months as of {read:rentaventa_months}.",
         "lead": "Rent and sale listings for Monterrey, built for brokers who work from WhatsApp.",
         "challenge": "Brokers in Monterrey live in WhatsApp.",
         "answer": "Meet them there. A broker publishes a listing, sends photos or works a lead in a chat with an agent.",
@@ -162,6 +161,7 @@
         "state": "Live at vim.herrada.me. Never announced.",
         "score": "{n:vim_puzzles} puzzles in {n:vim_categories} categories, {n:vim_lessons} lessons.",
         "lead": "Vim puzzles, scored against par.",
+        "challenge_label": "why I built it",
         "challenge": "I use vim all day, and this is the trainer I wanted.",
         "answer": "{n:vim_puzzles} short puzzles in a real vim emulation, each scored against par. No accounts and no backend.",
         "body": ["Every solution is replayed by the real engine before it ships, so no puzzle goes out unless it is provably solvable at its par. It looks like tmux panes in Solarized Dark, because that is what my terminal looks like."],
@@ -173,6 +173,7 @@
         "state": "Code complete.",
         "score": "First full game on the board: not yet.",
         "lead": "Online chess on a real board.",
+        "challenge_label": "why I built it",
         "challenge": "Chess is better on a real board.",
         "answer": "A webcam above the board, four printed markers at its corners, a voice for the opponent's move, and the space bar as the clock.",
         "body": ["Earlier chess work, December 2025: a 3D piece set for the board package behind the Lichess mobile app. A branch on my public fork, not merged upstream."],
@@ -186,7 +187,7 @@
         "lead": "Thirteen tiny games, one architecture.",
         "challenge": "Thirteen games without thirteen architectures.",
         "answer": "One pure function steps every world. The same seed and the same inputs give the same game, so every game is tested without a screen.",
-        "body": ["Every shape is a placeholder you can swap for your own drawing in two lines. Music and sound effects are generated in code. I built it in a week, and yes, the tiny games have decision records too."],
+        "body": ["Every shape is a placeholder you can swap for your own drawing in two lines. Music and sound effects are generated in code. And yes, the tiny games have decision records too."],
         "frames": [
           {"src": "/assets/game-breakout.png", "alt": "breakout: five rows of bricks, a ball and a paddle"},
           {"src": "/assets/game-snake.png", "alt": "snake: a short green snake and one red square"},
@@ -200,12 +201,13 @@
       }
     ],
     "lines": [
-      {"id": "budgeter", "name": "budgeter", "kind": "live, in Spanish", "open": true,
-       "text": "A budget that stays in your browser. Bank statements in, a budget out, nothing uploaded. It is at least my third try at this since 2015. Try it at <a href=\"https://budgeter.herrada.me\">budgeter.herrada.me</a>."},
+      {"id": "budgeter", "name": "budgeter", "kind": "a personal tool, live, in Spanish", "open": true,
+       "text": "A budget that stays in your browser. Bank statements in, a budget out, nothing uploaded. It is at least my third try at this since 2015. It lives at <a href=\"https://budgeter.herrada.me\">budgeter.herrada.me</a>."},
       {"id": "rentaventa-meet", "name": "rentaventa-meet", "kind": "used by the Rentaventa team, private",
        "text": "Video calls that file their own action items."},
       {"id": "the-desk", "name": "the desk", "kind": "private dotfiles", "open": true,
-       "text": "i3, tmux and vim. Keyboard first, distractions blocked."},
+       "text": "i3, tmux and vim. Keyboard first, distractions blocked.",
+       "text_bumpy": "i3, tmux and vim. Keyboard first, distractions blocked. Bumpy, the menu's cursor, lives on that desktop."},
       {"id": "crispy-wookie", "name": "crispy-wookie", "kind": "earlier, 2015, public",
        "text": "My first try at one place for everything. It is still <a href=\"https://github.com/luisehk/crispy-wookie\">on GitHub</a>."}
     ],
@@ -213,23 +215,23 @@
       "kind": "a balanced approach",
       "body": [
         "From 2016 to 2019 I ran Vordem, a digital product agency. Its home page had a heading I still work by: “A balanced approach.” Strategists, developers, designers and product managers on one problem, looking for the simple answer. Today agents hold most of those seats, and the decisions stay with me.",
-        "I work in a terminal: i3, tmux, vim. Every project I own has one command that has to pass before anything ships, and a written record of why things are the way they are. That holds for the real-estate platform and for the tiny games."
+        "I work in a terminal: i3, tmux, vim. The four rules here hold for the real-estate platform and for the tiny games."
       ],
       "rules": [
         "One command gates every repo. Nothing ships that does not pass.",
-        "I write down why. More than {over:adrs_all} decision records across seven projects, ten of them for thirteen tiny games.",
+        "I write down why. More than {over:adrs_all} decision records across seven projects.",
         "Status is stated as it is. Pre-launch means pre-launch.",
         "Machines check the work. Every vim puzzle is replayed in CI. Every game is replayed from a seed."
       ]
     },
     "beyond": {
       "kind": "away from the keyboard",
-      "body": "Away from the keyboard: guitar, chess, science articles and a good book.",
+      "body": "Guitar, chess, science articles and a good book.",
       "rows": [
-        {"term": "guitar", "text": "Self-taught as a teenager. Mostly leads where a few notes carry the line."},
+        {"term": "guitar", "text": "Self-taught as a teenager. Mostly leads where a few notes carry the line: Time, The Wind Cries Mary, Shine On You Crazy Diamond."},
         {"term": "chess", "text": "Rapid, 15+10. Soon on a real board."}
       ],
-      "motto": "My advice has been the same since 2019: just start and keep practicing."
+      "motto": "My advice has been the same since 2019: <b>just start and keep practicing.</b>"
     },
     "record": {
       "kind": "2008 to 2019",
@@ -257,7 +259,7 @@
       "kind": "ten years on",
       "body": [
         "In 2016 I started an agency called Vordem. Its home page put our way of working under one heading, “A balanced approach”: strategists, developers, designers and product managers on the same problem, looking for a simple and elegant answer. We were ten people and shipped 10+ products.",
-        "The workshop I run today works the same way, with agents in most of the seats. One shapes an idea into a work item with me. One argues with the design before any code exists. One builds. A panel of reviewers checks correctness, security, QA and UX from the diff and the evidence, and never sees the plan. The decisions stay with me."
+        "The workshop I run today works the same way, with agents in most of the seats. The decisions stay with me."
       ]
     },
     "seats": [
@@ -268,7 +270,6 @@
     ],
     "parts": {
       "kind": "four named after a forge, and two more",
-      "intro": "Smithy has four parts named after a forge, and two more I use every day.",
       "rows": [
         {"term": "The shop floor", "text": "A board of work items. Columns change only through events."},
         {"term": "The ledger", "text": "Decision records. Short, numbered, never rewritten, only superseded."},
@@ -307,7 +308,7 @@
     },
     "loop": {
       "kind": "eight levels",
-      "intro": "Every work item plays the same eight levels, in this order. Each picture below is one still frame."
+      "intro": "The loop has eight levels. A small item skips some: a copy fix has no design review and no QA gate."
     },
     "levels": [
       {"name": "Shape", "text": "An idea becomes a work item with a problem, context, acceptance criteria and a test plan. Its mode is set here: autonomous or review.",
@@ -335,7 +336,7 @@
       "paragraphs": [
         "<b>VP-0010</b>, “Copy fix: stop promising a daily set until one exists”. The vim-puzzles dashboard still said “Daily vim puzzles” after the daily set was gone. An agent found the gap while grooming the app's backlog: the new About page would have repeated a promise the product no longer kept.",
         "It raised one question for me, with two options and a recommended answer. I had told the agents not to get blocked, so the recommended answer was taken and logged for me to read.",
-        "Thirteen minutes later the fix was built and had passed CI. Fourteen minutes after that it had passed review. It was deployed four and a half hours after the decision. The line it left on the dashboard is the app's line today: “Vim puzzles, scored against par.”"
+        "Thirteen minutes later the fix was built and had passed CI. Fourteen minutes after that it had passed review. It was deployed four and a half hours after the decision. The line it left on the dashboard is the app's line today: “Vim puzzles, scored against par.” See it at <a href=\"https://vim.herrada.me\">vim.herrada.me</a>."
       ],
       "before": [
         "<b>Filed</b>, {date:2026-10-19}. <span class=\"col\">Column: Grooming</span>",

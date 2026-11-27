@@ -3,10 +3,12 @@
    Contents: the font, tokens, base, top bar and marquee, the menu, Bumpy, the pane
    and its loops, the page, the inner page, the 404, the footer, print.
 
-   Type scale, in rem so the reader's own size holds: 0.75 inside the pane only,
-   0.875 for labels, 0.9375 for facts, 1 for controls, 1.0625 for reading,
-   1.25 for leads, 1.375 for rows on a phone, 1.5 for names and for rows on a desk.
-   Above them the display sizes: the name, the hero line, the creed, the score. */
+   Type scale, in rem so the reader's own size holds: 0.75 for the pane's small print,
+   0.875 for labels, 0.9375 for facts (1 on a wide desk), 1 for controls, 1.0625 for
+   reading and for the lede and the hook on a phone, 1.25 for leads, for the pane's
+   invitation to play and for the lede and the hook on a desk, 1.375 for rows on a
+   phone, 1.5 for names and for rows on a desk. Above them the display sizes: the
+   name, the creed, the motto, the score. */
 
 /* ---------- the font ---------- */
 
@@ -209,15 +211,16 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 .skip {
   position: absolute;
   left: var(--gutter);
-  top: -80px;
+  top: 0;
   z-index: 20;
   padding: 10px 14px;
   background: var(--sel);
   color: var(--sel-text);
   font-weight: 700;
   text-decoration: none;
+  transform: translateY(-120%); /* out of sight at any text size until it takes focus */
 }
-.skip:focus { top: 8px; }
+.skip:focus { top: 8px; transform: none; }
 
 .btn {
   display: inline-flex;
@@ -235,7 +238,7 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 }
 .btn:hover { background: var(--sel); color: var(--sel-text); border-color: var(--sel-text); }
 /* buttons go down two pixels when pressed, like the space bar in the chess pane */
-.btn:active, .row-go:active, .pane-btn:active { translate: 0 2px; }
+.btn:active, .row-go:active, .pane-btn:active, .hint-btn:active { translate: 0 2px; }
 .btn-note { font-weight: 400; color: var(--dim); }
 .btn:hover .btn-note { color: inherit; }
 
@@ -299,7 +302,9 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
   text-wrap: balance;
 }
 /* Who, and what he builds, in one plain sentence: a visitor who never touches the
-   menu still learns it from the first screen (HM-0002). */
+   menu still learns it from the first screen (HM-0002). Under the name it is the
+   largest line, the hook comes second and the fact third. At 17px it takes four
+   lines under 375px wide, so the narrowest phones keep 16px. */
 .lede {
   max-width: 34em;
   margin: 12px auto 0;
@@ -310,8 +315,11 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
   text-wrap: balance;
 }
 .lede b { color: var(--band-title); font-weight: 700; }
+@media (min-width: 375px) {
+  .lede { font-size: 1.0625rem; line-height: 1.625rem; }
+}
 @media (min-width: 820px) {
-  .lede { margin-top: 16px; font-size: 1.1875rem; line-height: 1.75rem; }
+  .lede { max-width: 30em; margin-top: 16px; font-size: 1.25rem; line-height: 1.75rem; }
 }
 
 /* the line under the name breaks only between its parts, and never leaves a dot hanging */
@@ -441,6 +449,20 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 }
 .row-radio:checked + .row-label .row-note { color: inherit; }
 .js .row-note { display: none; }
+/* with the script the playable row says so at its right edge, until it is chosen */
+.row-tag {
+  position: absolute;
+  top: 0;
+  right: 14px;
+  bottom: 0;
+  display: none;
+  align-items: center;
+  color: var(--dim);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0;
+}
+.js .row-radio:not(:checked) + .row-label .row-tag { display: flex; }
 /* on the narrowest phones the playable row keeps one button, play, and the note is set smaller */
 @media (max-width: 359.98px) {
   .js #s-minigames ~ .row-acts a.row-go { display: none; }
@@ -532,16 +554,18 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
   background: var(--ground);
 }
 @media (max-height: 599px) { .stage { position: relative; } }
+/* the pane pins only in an upright window: on a phone on its side it would be all pane */
+@media (max-width: 679.98px) and (min-aspect-ratio: 4/5) { .stage { position: relative; } }
 @media (max-width: 679.98px) { .stage { border-bottom: 2px solid var(--rule); } }
 /* a row that takes focus must come to rest under the pinned pane, never behind it:
-   the pane's top padding, the fact above it, the screen, the hook, less the page's
-   own scroll padding */
-@media (max-width: 679.98px) and (min-height: 600px) {
-  .row-radio { scroll-margin-top: calc((100vw - 2 * var(--gutter)) * 0.75 + var(--fact-h) + 46px); }
+   the screen, the hook's line and its padding (--hook-pad) and the fact block. That
+   is the pinned stage less the page's own 16px scroll padding, with 2px of air. */
+@media (max-width: 679.98px) and (min-height: 600px) and (max-aspect-ratio: 4/5) {
+  .row-radio { scroll-margin-top: calc((100vw - 2 * var(--gutter)) * 0.75 + var(--fact-h) + 1.4rem + var(--hook-pad)); }
 }
 
-.pv { grid-area: 1 / 1; display: none; min-width: 0; }
-.pv-smithy { display: block; }
+.pv { grid-area: 1 / 1; display: none; grid-template-columns: minmax(0, 1fr); min-width: 0; }
+.pv-smithy { display: grid; }
 .select:has(.row-radio:checked:not(#s-smithy)) .pv-smithy { display: none; }
 .select:has(#s-rentaventa:checked) .pv-rentaventa,
 .select:has(#s-arbopedia:checked) .pv-arbopedia,
@@ -552,7 +576,12 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 .select:has(#s-the-desk:checked) .pv-the-desk,
 .select:has(#s-how-i-build:checked) .pv-how-i-build,
 .select:has(#s-record:checked) .pv-record,
-.select:has(#s-about:checked) .pv-about { display: block; }
+.select:has(#s-about:checked) .pv-about { display: grid; }
+/* On screen the caption reads under the pane: the drawing, its hook, then its fact.
+   In the HTML the fact comes first (see .fact below). */
+.pv > .screen { order: 1; }
+.pv > .hook { order: 2; }
+.pv > .fact { order: 3; }
 
 .screen {
   position: relative;
@@ -618,6 +647,20 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 }
 .js .nojs-only { display: none; }
 .screen.is-ready { cursor: pointer; }
+/* the invitation to play, at a lead's size. The paused and round-over notes keep the
+   small size. With a keyboard, Enter is drawn as a key, like the j, d, d keys in the
+   vim-puzzles pane. */
+.screen.is-ready .screen-note { color: var(--white); font-weight: 700; font-size: 1.25rem; }
+.key {
+  display: inline-block;
+  padding: 0 9px;
+  border: 2px solid var(--slate);
+  background: var(--yellow);
+  color: var(--night);
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
 /* a double tap in play must not select the score or the note */
 .screen.is-live { touch-action: none; cursor: default; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .screen.is-live:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
@@ -643,11 +686,12 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
   background: var(--slate);
 }
 
-/* The pane's two controls sit in its top border, opposite the title. Both are about
-   motion: one stops the loops, one puts the cursor's sprite away. */
+/* The pane's one control sits in its top border, opposite the title: it stops the
+   loops. Nothing of the caption is above the pane, so it never covers text. Hide
+   Bumpy is at the foot of the menu, beside the way out. */
 .pane-ctl {
   position: absolute;
-  top: calc(var(--fact-h) + 2px); /* level with the title: both straddle the pane's top border, under the fact */
+  top: 2px; /* level with the title: both straddle the pane's top border */
   right: 10px;
   z-index: 6;
   display: flex;
@@ -673,35 +717,43 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 /* a still pane has nothing to pause (the build marks those rows data-still) */
 .select:has(.row-radio[data-still]:checked) .pane-pause { display: none; }
 
-/* Above the pane: what the thing is and its state, in plain words, so the first
-   screen informs before it plays (HM-0002). It is in the HTML and never animates, so
-   it is there to read at first paint. Every row keeps the same block height, so the
-   pane, its two controls and the list under it never move when the row changes:
-   two lines and the room the pane's title needs, three where the pane is narrow.
-   Under the pane: the hook, in the voice of the game. */
-.menu { --fact-h: 3.875rem; } /* on the menu, so the rows under the pinned pane can read it too */
+/* Under the pane, the caption: the hook in the voice of the game, then the fact,
+   what the thing is and its state in plain words. The lede above the pane does the
+   informing. The fact is first in its figure's HTML, so a screen reader and a page
+   without styles meet it before the drawing, and it never animates, so it is there to
+   read at first paint (HM-0002). Every row keeps the same block height, so the pane
+   and the list under it never move when the row changes: two lines and 14px under
+   them, three lines where the pane is narrowest. */
+.menu {
+  /* on the menu, so the rows under the pinned pane can read them too */
+  --fact-h: 3.5rem;
+  --hook-pad: 16px; /* the hook's padding above and below, together */
+}
 .fact {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: center;
   min-height: var(--fact-h);
-  padding-bottom: 18px;
-  color: var(--bright);
+  padding-bottom: 14px;
+  color: var(--text);
   font-weight: 500;
-  font-size: 1rem;
-  line-height: 1.375rem;
+  font-size: 0.9375rem;
+  line-height: 1.3125rem;
   text-align: center;
 }
 .fact > span { max-width: 31em; text-wrap: balance; }
 .hook {
-  padding: 12px 0 14px;
-  color: var(--title);
+  padding: 12px 0 4px;
+  color: var(--bright);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.0625rem;
   line-height: 1.3;
   text-align: center;
 }
-@media (max-width: 359.98px) { .menu { --fact-h: 5.25rem; } } /* the narrowest phones need a third line */
+@media (max-width: 359.98px) {
+  .menu { --fact-h: 4.8125rem; } /* the narrowest phones need a third line */
+  .hook { font-size: 1rem; } /* at 17px the longest hook is 288px, the whole pane at 320 */
+}
 
 .hint { padding: 14px 0 6px; color: var(--dim); text-align: center; }
 .hint-line { font-weight: 600; font-size: 0.875rem; line-height: 1.4; }
@@ -728,6 +780,26 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
   text-decoration-thickness: 1px;
 }
 .hint-more a:hover { color: var(--sel-text); text-decoration-color: transparent; }
+/* Hide Bumpy joins the way out, set like the scroll link. The dot and the button break
+   as one, and both stay away until the script shows the button. */
+.hint-bumpy { white-space: nowrap; }
+.hint-bumpy:has(> .hint-btn[hidden]) { display: none; }
+.hint-btn {
+  display: inline-block;
+  padding: 12px 0;
+  border: 0;
+  background: none;
+  color: var(--dim);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--dim);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-transform: lowercase;
+  cursor: pointer;
+}
+.hint-btn:hover { background: var(--sel); color: var(--sel-text); text-decoration-color: transparent; }
+.hint-btn[hidden] { display: none; }
 
 /* from a small tablet up the menu takes its true shape: the list beside the pane */
 @media (min-width: 680px) {
@@ -737,9 +809,9 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
     column-gap: clamp(28px, 5vw, 56px);
     align-items: start;
   }
-  .menu { --fact-h: 5.25rem; } /* a narrow pane beside the list: three lines */
+  .menu { --fact-h: 2.625rem; } /* the list beside the pane is the taller column: two lines, nothing under them */
+  .fact { padding-bottom: 0; }
   .stage { position: relative; order: 0; }
-  .hook { padding-bottom: 0; }
   .hint { padding-top: 20px; }
 }
 
@@ -753,33 +825,23 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
     justify-content: center;
   }
   .row-label { font-size: 1.5rem; }
-  .menu { --fact-h: 6.125rem; } /* below 960px the pane is still narrow for the larger type: three 26px lines and the padding */
-  .fact { padding-bottom: 20px; font-size: 1.125rem; line-height: 1.625rem; }
-  .hook { padding-top: 16px; font-size: 1.25rem; }
+  .hook { padding-top: 14px; }
   .hint { padding: 20px 0 0; }
   .hint-line { font-size: 1rem; }
 }
-@media (min-width: 960px) { .menu { --fact-h: 4.5rem; } } /* two lines from here up; every fact fits from 890px, and a count can grow */
-
-/* A short desk, such as a laptop's browser under 900px tall, tightens the marquee,
-   the hook and the hint, and rows lose 2px (Bumpy's 49px reach then pokes 5px over
-   the row above). The menu then fits one screen from 790px, in both schemes. */
-@media (min-width: 820px) and (max-height: 899.98px) {
-  .home { --row: 44px; }
-  .home .marquee { padding-top: 8px; margin-bottom: 20px; }
-  .home .lede { font-size: 1rem; line-height: 1.5rem; }
-  .home .hook { padding-top: 8px; }
-  .home .hint { padding-top: 12px; }
-}
-@media (prefers-color-scheme: light) and (min-width: 820px) and (max-height: 899.98px) {
-  .home { --band-pad: 14px; }
+/* the caption takes its desk sizes where the pane is wide enough for them: from 820
+   to 959px the pane is 311 to 339px wide, and a 20px hook would wrap */
+@media (min-width: 960px) {
+  .menu { --fact-h: 2.75rem; } /* two 22px lines */
+  .fact { font-size: 1rem; line-height: 1.375rem; }
+  .hook { font-size: 1.25rem; }
 }
 
 /* On a desk the menu is one screen, with its hint line at the foot, as in the game.
    The page starts under the fold. A very tall window stops stretching it at 61rem,
-   and an upright one is left alone. Below 790px tall the menu does not fit, so the
-   page simply scrolls. */
-@media (min-width: 820px) and (min-height: 790px) and (orientation: landscape) {
+   and an upright one is left alone. From 795px tall the last hint line ends 12px
+   inside the window in both schemes. Below that the page simply scrolls. */
+@media (min-width: 820px) and (min-height: 795px) and (orientation: landscape) {
   .home .menu {
     display: flex;
     flex-direction: column;
@@ -787,6 +849,46 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
     min-height: min(100svh - 48px, 61rem);
   }
   .home .hint { margin-top: auto; padding-bottom: 22px; }
+}
+
+/* A short desk, such as a laptop's browser under 920px tall, takes its pixels from the
+   marquee and the hint, never from the rows' type or the pane, and rows lose 2px
+   (Bumpy's 49px reach then pokes 5px over the row above). It comes after the
+   one-screen rule, so its 10px under the hint wins over the 22px. On a short laptop
+   the pane takes its size from the height that is left: full size from 708px tall,
+   and its right edge stays on the page's right edge. */
+@media (min-width: 820px) and (max-height: 919.98px) {
+  .home { --row: 44px; }
+  .home .marquee { padding-top: 4px; margin-bottom: 16px; }
+  .home .marquee h1 { font-size: clamp(2.25rem, 1.75rem + 3.33vw, 4rem); }
+  .home .sub { margin-top: 10px; }
+  .home .lede { margin-top: 12px; font-size: 1.0625rem; line-height: 1.625rem; }
+  .home .hook { padding-top: 10px; }
+  .home .hint { padding-top: 8px; padding-bottom: 10px; }
+  .home .stage { width: min(100%, clamp(320px, calc((100svh - 330px) * 4 / 3), 504px)); justify-self: end; }
+}
+@media (prefers-color-scheme: light) and (min-width: 820px) and (max-height: 919.98px) {
+  .home { --band-pad: 10px; }
+}
+
+/* A short phone, such as a browser with its bars showing (about 664px tall), shows the
+   pane and two rows: the top bar, the marquee and the caption tighten. The marquee
+   keeps 12px under it, since the stage pulls up 12px and would cut a paper notch into
+   the yellow band by day. */
+@media (max-width: 679.98px) and (max-height: 759.98px) {
+  .home .top { min-height: 44px; }
+  .home .marquee { padding-top: 2px; margin-bottom: 12px; }
+  .home .sub { margin-top: 6px; }
+  .home .lede { margin-top: 8px; }
+  .home .hook { padding: 8px 0 2px; }
+  .home .fact { padding-bottom: 10px; }
+  .home .menu { --fact-h: 3.25rem; --hook-pad: 10px; } /* two lines and 10px under them */
+}
+@media (max-width: 359.98px) and (max-height: 759.98px) {
+  .home .menu { --fact-h: 4.5625rem; } /* three lines and 10px under them */
+}
+@media (prefers-color-scheme: light) and (max-width: 679.98px) and (max-height: 759.98px) {
+  .home { --band-pad: 8px; }
 }
 
 /* ---------- what the pane draws ---------- */
@@ -816,7 +918,7 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 
 .screen text { font-family: var(--font); font-weight: 700; text-anchor: middle; }
 .lv-num text { fill: var(--night); font-weight: 800; font-size: 17px; }
-.yr text { fill: var(--pane-dim); font-weight: 600; font-size: 11px; }
+.yr text { fill: var(--pane-dim); font-weight: 600; font-size: 14px; }
 
 /* rentaventa */
 .rv-typing { visibility: hidden; }
@@ -839,7 +941,7 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 .li-me line { stroke: var(--white); }
 .li-e5 { fill: var(--night); font-weight: 800; font-size: 22px; }
 .li-cap { fill: var(--pane); stroke: var(--slate); stroke-width: 2; vector-effect: non-scaling-stroke; }
-.li-word { fill: var(--pane-text); font-size: 12px; letter-spacing: 0.14em; }
+.li-word { fill: var(--pane-text); font-size: 14px; letter-spacing: 0.14em; }
 
 /* The loops. Each figure is drawn in the HTML as its still frame, and that is what
    shows without the script, with reduced motion, or when a frame would be wrong.
@@ -1099,7 +1201,7 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 /* a touch screen has no Esc: it gets a link back to the menu instead, while the section is open */
 .sec-back {
   display: none;
-  padding-block: 10px;
+  padding-block: 13px;
   color: var(--dim);
   text-decoration-color: var(--dim);
   text-decoration-thickness: 1px;
@@ -1126,13 +1228,26 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 .sec-body { min-width: 0; }
 .sec-body > * + * { margin-top: 14px; }
 .sec-body p { text-wrap: pretty; }
-.sec-body p > a:not(.btn) { position: relative; }
-.sec-body p > a:not(.btn)::after { content: ""; position: absolute; inset: -11px -3px; }
-.lead, .motto {
+.sec-body p > a:not(.btn), .sec-side p > a:not(.btn) { position: relative; }
+/* a link in running text reaches 44px or more for a finger at the reading size */
+.sec-body p > a:not(.btn)::after, .sec-side p > a:not(.btn)::after { content: ""; position: absolute; inset: -12px -3px; }
+.lead {
   color: var(--bright);
   font-weight: 600;
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+/* The page's last words: the lead-in at the reading size, then the advice itself on its
+   own line, the page's second display line. */
+.motto { color: var(--text); font-weight: 500; font-size: 1.0625rem; line-height: 1.6875rem; }
+.motto b {
+  display: block;
+  margin-top: 4px;
+  color: var(--title);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+  line-height: 1.08;
+  text-wrap: balance;
 }
 .pair { display: grid; row-gap: 10px; }
 .sec-body > .pair { margin-top: 16px; }
@@ -1204,6 +1319,7 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
 .sec-head > .face { position: absolute; top: 0; right: 0; }
 
 .sec-hero { padding-block: 20px 22px; }
+/* the page opens on his creed, the one line here he wrote himself */
 .hero-line {
   max-width: 17em;
   color: var(--bright);
@@ -1213,13 +1329,23 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
   letter-spacing: -0.012em;
   text-wrap: balance;
 }
-.creed {
-  margin-top: 18px;
-  color: var(--title);
-  font-weight: 600;
-  font-size: clamp(1.125rem, 1.03rem + 0.4vw, 1.375rem);
-  line-height: 1.35;
+
+/* The page's two groups are named the way a pane's title sits in its border: a label
+   set into a 2px rule that runs to the right edge. On a desk the label stands on the
+   axis of the names. */
+.grp {
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+  color: var(--dim);
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 20px;
+  text-transform: lowercase;
 }
+.grp::before, .grp::after { content: ""; border-top: 2px solid var(--frame); }
+.grp::before { flex: 0 0 12px; margin-right: 7px; }
+.grp::after { flex: 1; margin-left: 7px; }
 
 .sec-line { padding-block: 14px; row-gap: 6px; }
 .sec-line .sec-name { font-size: 1.25rem; }
@@ -1249,6 +1375,8 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
   }
   .sec-head > .face { position: static; margin-top: 16px; }
   .sec-hero { padding-block: 18px 30px; }
+  .grp { margin-top: 40px; }
+  .grp::before { flex-basis: 61px; }
   .sec-line { padding-block: 16px; }
   .sec-line .sec-name { font-size: 1.5rem; }
 
@@ -1273,7 +1401,7 @@ p, dl, dd, ul, ol, figure, h1, h2, h3, h4 { margin: 0; }
   .rows dt { padding-left: 68px; font-size: 1.25rem; line-height: 1.6875rem; }
   .sec-record .sec-head, .sec-beyond .sec-head { position: static; }
   .sec-record .years-after { grid-column: 2; margin-top: 4px; }
-  .sec-beyond .motto { grid-column: 2; margin-top: 10px; }
+  .sec-beyond .motto { grid-column: 2; margin-top: 22px; }
 }
 
 /* ---------- the inner page: how to play ---------- */
@@ -1529,6 +1657,18 @@ code {
   white-space: nowrap;
 }
 
+/* By day every screen stays a screen: its tab is dark too, so no paper notch cuts into
+   a dark frame (the pane, the level stills, the level map, the splits). */
+@media (prefers-color-scheme: light) {
+  .screen-title, .pane-btn, .board::before, .run::before { background: var(--pane); color: var(--pane-dim); }
+  .pane-btn:hover { color: var(--white); }
+}
+
+/* figures that line up: every digit one width where numbers stack or count */
+.hud, .split-time, .score dt, .chip, .items b, .ledger li::before, .run-pre li::before, .splits li::before {
+  font-variant-numeric: tabular-nums;
+}
+
 @media (min-width: 560px) and (max-width: 819.98px) {
   .parts > div, .score > div { display: grid; grid-template-columns: 10.5rem minmax(0, 1fr); column-gap: 16px; align-items: baseline; }
   .score > div { grid-template-columns: 9.25rem minmax(0, 1fr); }
@@ -1696,9 +1836,15 @@ code {
     --band: #fff; --band-title: #000; --band-text: #111; --band-dim: #444; --band-pad: 0px;
   }
   .top, .marquee { background: none; border-image: none; }
-  .skip, .top nav, .hint, .row-acts, .pane-ctl, .bumpy, .list::after, .go { display: none; }
+  .skip, .top nav, .hint, .row-acts, .row-radio:checked ~ .row-acts, .pane-ctl, .bumpy, .list::after { display: none; }
+  /* Links that leave the site print as plain text with their address after the label.
+     Only the jumps within the page are left out, with the dot before the footer's. */
+  a[href^="#"], .go:has(> a[href^="#"]), .foot-links span:has(+ a[href^="#"]) { display: none; }
+  .btn { min-height: 0; padding: 0; border: 0; }
+  a[href^="https:"]::after { content: " (" attr(href) ")" !important; position: static !important; } /* over the touch targets' empty ::after */
   .stage { position: static; }
   .sec, .level { break-inside: avoid; }
-  .sec-head { position: static; }
+  .sec-head { position: relative; } /* the avatar stays in the about section */
+  p { max-width: 34em; }
   a { text-decoration: none; }
 }
