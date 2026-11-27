@@ -3,7 +3,7 @@
     python3 -B -m unittest discover -s tests -p 'test_*.py'
 
 T-HM-2-1  the pages are what src/site.json writes, and every count has a read date
-T-HM-2-2  the content rules: no excluded employer, no email, no phone number, no
+T-HM-2-2  the content rules: no excluded name, no email, no phone number, no
           internal hostname, links only to the brief's public list
 T-HM-2-3  no request to another host: fonts, styles, scripts and images are the site's own
 T-HM-2-4  a preview is never indexed and says "Preview"
@@ -12,11 +12,14 @@ T-HM-2-6  the first screen informs before it plays: the lede, and each fact abov
 T-HM-2-7  Bumpy is one switch in the data file
 T-HM-2-8  the font is self-hosted under the OFL
 T-HM-2-9  the stylesheet knows every row
+
+The excluded-name check reads the names from HM_EXCLUDED_NAME, which the gate sets.
+Without it the check prints a note and skips.
 """
 
 import copy
-import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -45,9 +48,18 @@ ALLOWED_LINKS = {
     "https://github.com/luisehk/crispy-wookie",
 }
 ALLOWED_SUBDOMAINS = {"vim.herrada.me", "budgeter.herrada.me"}
-# Words that must never appear in this public repo, stored as hashes so the check does
-# not print them itself: the employer the house rules exclude.
-BANNED_WORD_HASHES = {"68416e05c11caecd29ca6ed1d7cf2647568eb85df313c3eaea173da806d7fd09"}
+EXCLUDED_NOTE = "note: HM_EXCLUDED_NAME is not set, so the excluded-name check is skipped. The gate sets it."
+
+
+def split_names(value):
+    """One or more excluded names from one value: lower case, split on commas and spaces."""
+    return [name for name in re.split(r"[,\s]+", (value or "").lower()) if name]
+
+
+def excluded_hits(text, names):
+    """The names from `names` that `text` holds as a whole [a-z0-9]+ word."""
+    words = set(re.findall(r"[a-z0-9]+", text.lower()))
+    return {name for name in names if name in words}
 
 
 class Page(HTMLParser):
@@ -218,12 +230,27 @@ class TestBuild(unittest.TestCase):
 class TestContentRules(unittest.TestCase):
     """T-HM-2-2"""
 
-    def test_no_excluded_employer_in_any_tracked_file(self):
+    def test_no_excluded_name_in_any_tracked_file(self):
+        names = split_names(os.environ.get("HM_EXCLUDED_NAME"))
+        if not names:
+            print(EXCLUDED_NOTE, file=sys.stderr)
+            self.skipTest(EXCLUDED_NOTE)
         for path in tracked_text_files():
-            words = set(re.findall(r"[a-z0-9]+", path.read_text(encoding="utf-8", errors="replace").lower()))
-            hits = {hashlib.sha256(w.encode()).hexdigest() for w in words} & BANNED_WORD_HASHES
+            hits = excluded_hits(path.read_text(encoding="utf-8", errors="replace"), names)
             with self.subTest(file=str(path.relative_to(ROOT))):
-                self.assertFalse(hits, "a word the house rules exclude is in this file")
+                # the message names the file and never the word
+                self.assertFalse(hits, f"{path.relative_to(ROOT)} holds an excluded name")
+
+    def test_the_excluded_name_check_finds_whole_words(self):
+        # a stand-in word, so the mechanism is proven without the real name
+        names = split_names("Zqstandin, other-stand xqsecond")
+        self.assertEqual(names, ["zqstandin", "other-stand", "xqsecond"])
+        self.assertEqual(excluded_hits("Worked with ZQSTANDIN in 2015.", names), {"zqstandin"})
+        self.assertEqual(excluded_hits("a word: xqsecond.", names), {"xqsecond"})
+        self.assertEqual(excluded_hits("zqstandins and azqstandin are other words", names), set())
+        self.assertEqual(excluded_hits("nothing to see", names), set())
+        self.assertEqual(split_names(""), [])
+        self.assertEqual(split_names(None), [])
 
     def test_no_email_in_any_tracked_file(self):
         for path in tracked_text_files():

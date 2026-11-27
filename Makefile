@@ -43,6 +43,7 @@ ci-check:
 # HM-0002: the pages match src/site.json, the site checks (content rules, no
 # third-party request, noindex on a preview, links, the first screen, the Bumpy
 # switch, the font) and the catch replay. Standard library Python and Node only.
+# The gate passes HM_EXCLUDED_NAME for the excluded-name check, which skips without it.
 ci-site:
 	python3 -B scripts/build.py --check
 	python3 -B -m unittest discover -s tests -p 'test_*.py'
