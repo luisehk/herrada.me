@@ -34,6 +34,8 @@ PLACEHOLDER = re.compile(r"\{(n|over|read|date):([A-Za-z0-9_-]+)\}")
 # screen. style.css shows one of them, and script.js gives the link the same path as Esc.
 SEC_ESC = ('      <p class="sec-esc"><span class="sec-esc-key">Esc goes back to the menu</span>'
            ' <a class="sec-back" href="#menu">back to the menu</a></p>')
+# The address a shared link unfurls from: og:url and og:image are absolute.
+ORIGIN = "https://herrada.me"
 # Ids land in id="...", class names and file names, and a block colour in a style attribute.
 ID = re.compile(r"^[A-Za-z0-9-]+$")
 BLOCK = re.compile(r"^#[0-9A-Fa-f]{6}$")
@@ -211,8 +213,10 @@ class Site:
     def bumpy(self):
         return bool(self.site["bumpy"])
 
-    def head(self, title, description, body_class, noindex=False, home=False):
+    def head(self, title, description, body_class, path, noindex=False, home=False):
         icon = self.art("favicon-bumpy.txt") if self.bumpy else self.art("favicon-block.txt")
+        # the link card and the home-screen icon follow site.bumpy, as the favicon does
+        look = "bumpy" if self.bumpy else "block"
         lines = [
             "<!doctype html>",
             f'<html lang="en"{"" if self.bumpy else " class=" + chr(34) + "no-bumpy" + chr(34)}>',
@@ -230,6 +234,13 @@ class Site:
             '<meta name="theme-color" content="#181A2E" media="(prefers-color-scheme: dark)">',
             '<meta name="theme-color" content="#F0C85A" media="(prefers-color-scheme: light)">',
             f'<link rel="icon" href="data:image/svg+xml,{icon}">',
+            f'<link rel="apple-touch-icon" href="/assets/touch-icon-{look}.png">',
+            '<meta property="og:type" content="website">',
+            f'<meta property="og:title" content="{esc(title)}">',
+            f'<meta property="og:description" content="{esc(description)}">',
+            f'<meta property="og:url" content="{ORIGIN}{path}">',
+            f'<meta property="og:image" content="{ORIGIN}/assets/share-card-{look}.png">',
+            '<meta name="twitter:card" content="summary_large_image">',
             '<link rel="preload" href="/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>',
             '<link rel="stylesheet" href="/style.css">',
             '<script src="/script.js" defer></script>',
@@ -437,7 +448,7 @@ class Site:
                       'loading="lazy" decoding="async">')
         return self.template(
             "index.html",
-            head=self.head(s["title"], s["description"], "home", home=True),
+            head=self.head(s["title"], s["description"], "home", "/", home=True),
             top=self.top("home"),
             name=esc(s["name"]),
             label=esc(s["label"]),
@@ -570,7 +581,7 @@ class Site:
         ]
         return self.template(
             "how-i-build.html",
-            head=self.head(f"{h['title']} · {self.site['name']}", h["description"], "inner"),
+            head=self.head(f"{h['title']} · {self.site['name']}", h["description"], "inner", "/how-i-build.html"),
             top=self.top("how"),
             kicker=esc(h["kicker"]),
             title=esc(h["title"]),
@@ -630,7 +641,7 @@ class Site:
             line = nf["plain_line"]
         return self.template(
             "404.html",
-            head=self.head(f"{nf['title']} · {self.site['name']}", nf["description"], "inner lost", noindex=True),
+            head=self.head(f"{nf['title']} · {self.site['name']}", nf["description"], "inner lost", "/404.html", noindex=True),
             top=self.top("lost"),
             title=esc(nf["title"]),
             sub=self.text(nf["sub"], "not_found.sub"),

@@ -14,8 +14,8 @@ T-HM-2-7  Bumpy is one switch in the data file
 T-HM-2-8  the font is self-hosted under the OFL
 T-HM-2-9  the stylesheet knows every row
 
-Also here: the page opens on the creed and ends on the motto, and the weight and the
-contrast the Lighthouse scores rest on.
+Also here: the page opens on the creed and ends on the motto, the link card and the
+home-screen icon, and the weight and the contrast the Lighthouse scores rest on.
 
 The excluded-name check reads the names from HM_EXCLUDED_NAME, which the gate sets.
 Without it the check prints a note and skips.
@@ -27,6 +27,7 @@ import json
 import os
 import re
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
@@ -113,6 +114,14 @@ def tracked_text_files():
             continue
         files.append(path)
     return files
+
+
+def png_size(path):
+    """(width, height) from a PNG's header, or None when the file is not a PNG."""
+    head = Path(path).read_bytes()[:24]
+    if head[:8] != b"\x89PNG\r\n\x1a\n" or head[12:16] != b"IHDR":
+        return None
+    return struct.unpack(">II", head[16:24])
 
 
 # The weight the Lighthouse scores rest on, in raw bytes (the home page loaded 206,871
@@ -568,6 +577,9 @@ class TestBumpySwitch(unittest.TestCase):
                 self.assertNotIn('class="bumpy"', source)
                 self.assertNotIn("Bumpy", Page(source).words)
                 self.assertNotIn("Hide Bumpy", source)
+                # no page points at a Bumpy file: not the link card, not the touch icon
+                for url in re.findall(r'"(/assets/[^"]+|https://herrada\.me/[^"]*)"', source):
+                    self.assertNotIn("bumpy", url)
         self.assertIn("row-missing-block", pages["404.html"])
         data = json.loads(read("src/site.json"))
         desk_row = next(r for r in data["rows"] if r["id"] == "the-desk")
@@ -634,6 +646,39 @@ class TestPage(unittest.TestCase):
         doc = source[source.index('<div class="doc wrap" id="read">'):source.index("</main>")]
         last = re.findall(r"<p[^>]*>(.*?)</p>", doc, re.S)[-1]
         self.assertIn("<b>just start and keep practicing.</b>", last)
+
+
+class TestShareCard(unittest.TestCase):
+    """The link card and the home-screen icon: a pasted link unfurls with a picture."""
+
+    SIZES = {"share-card": (1200, 630), "touch-icon": (180, 180)}
+
+    def test_the_files_are_pngs_of_their_size(self):
+        for stem, size in self.SIZES.items():
+            for look in ("bumpy", "block"):
+                path = ROOT / "assets" / f"{stem}-{look}.png"
+                with self.subTest(file=path.name):
+                    self.assertTrue(path.is_file())
+                    self.assertEqual(png_size(path), size)
+                    self.assertLess(path.stat().st_size, IMAGE_LIMIT)
+
+    def test_every_page_carries_the_card_and_the_icon(self):
+        for name in PAGES:
+            source = read(name)
+            with self.subTest(page=name):
+                og = dict(re.findall(r'<meta property="(og:[a-z]+)" content="([^"]*)">', source))
+                title = html.unescape(re.search(r"<title>(.*?)</title>", source).group(1))
+                description = re.search(r'<meta name="description" content="([^"]*)">', source).group(1)
+                self.assertEqual(og.get("og:type"), "website")
+                self.assertEqual(html.unescape(og.get("og:title", "")), title)
+                self.assertEqual(og.get("og:description"), description)
+                for key in ("og:url", "og:image"):
+                    self.assertTrue(og.get(key, "").startswith("https://herrada.me/"), key)
+                self.assertTrue((ROOT / og["og:image"].removeprefix("https://herrada.me/")).is_file())
+                self.assertIn('<meta name="twitter:card" content="summary_large_image">', source)
+                icon = re.search(r'<link rel="apple-touch-icon" href="(/assets/[^"]+)">', source)
+                self.assertIsNotNone(icon)
+                self.assertTrue((ROOT / icon.group(1).lstrip("/")).is_file())
 
 
 class TestWeight(unittest.TestCase):
